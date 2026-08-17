@@ -139,25 +139,21 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             </button>
           </div>
 
-          <div className="space-y-5 text-xs">
+          <div className="space-y-6 text-sm">
             {/* Number of Bots */}
             <div>
-              <label className="block font-bold text-slate-200 mb-2">
+              <label className="block font-black text-slate-200 mb-3 text-sm">
                 عدد الروبوتات المنافسة ({botCount} روبوتات - إجمالي {botCount + 1} لاعبين):
               </label>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-5 gap-3">
                 {[1, 2, 3, 4, 5].map((count) => (
                   <button
                     key={count}
                     type="button"
                     onClick={() => setBotCount(count)}
-                    className={`py-3 rounded-2xl font-black text-sm border-2 transition-all cursor-pointer ${
-                      botCount === count
-                        ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-lg scale-105'
-                        : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
-                    }`}
+                    className={`selector-btn ${botCount === count ? 'selector-btn-active-gold' : ''}`}
                   >
-                    {count}
+                    <span className="text-base font-black font-mono">{count}</span>
                   </button>
                 ))}
               </div>
@@ -165,81 +161,68 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
             {/* Difficulty */}
             <div>
-              <label className="block font-bold text-slate-200 mb-2">مستوى صعوبة وذكاء الروبوتات:</label>
-              <div className="grid grid-cols-3 gap-2">
+              <label className="block font-black text-slate-200 mb-3 text-sm">مستوى ذكاء الروبوتات:</label>
+              <div className="grid grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => setBotDifficulty('easy')}
-                  className={`py-3 rounded-2xl font-bold border-2 transition-all ${
-                    botDifficulty === 'easy'
-                      ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md'
-                      : 'bg-slate-900 text-slate-300 border-slate-700'
-                  }`}
+                  className={`selector-btn ${botDifficulty === 'easy' ? 'selector-btn-active-emerald' : ''}`}
                 >
-                  سهل 🟢
+                  <span>سهل</span>
+                  <span>🟢</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setBotDifficulty('medium')}
-                  className={`py-3 rounded-2xl font-bold border-2 transition-all ${
-                    botDifficulty === 'medium'
-                      ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
-                      : 'bg-slate-900 text-slate-300 border-slate-700'
-                  }`}
+                  className={`selector-btn ${botDifficulty === 'medium' ? 'selector-btn-active-gold' : ''}`}
                 >
-                  متوسط 🟡
+                  <span>متوسط</span>
+                  <span>🟡</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setBotDifficulty('hard')}
-                  className={`py-3 rounded-2xl font-bold border-2 transition-all ${
-                    botDifficulty === 'hard'
-                      ? 'bg-rose-500 text-slate-950 border-rose-400 shadow-md'
-                      : 'bg-slate-900 text-slate-300 border-slate-700'
-                  }`}
+                  className={`selector-btn ${botDifficulty === 'hard' ? 'selector-btn-active-ruby' : ''}`}
                 >
-                  محترف (الهامور) 🔴
+                  <span>الهامور</span>
+                  <span>🔴</span>
                 </button>
               </div>
             </div>
 
             {/* Starting Cash */}
             <div>
-              <label className="block font-bold text-slate-200 mb-2">الرصيد المالي في البداية:</label>
-              <div className="grid grid-cols-3 gap-2">
+              <label className="block font-black text-slate-200 mb-3 text-sm">الرصيد المالي في البداية:</label>
+              <div className="grid grid-cols-3 gap-3">
                 {[1500, 2000, 2500].map((cash) => (
                   <button
                     key={cash}
                     type="button"
                     onClick={() => setStartingCash(cash)}
-                    className={`py-3 rounded-2xl font-bold text-xs border-2 transition-all ${
-                      startingCash === cash
-                        ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
-                        : 'bg-slate-900 text-slate-300 border-slate-700'
-                    }`}
+                    className={`selector-btn ${startingCash === cash ? 'selector-btn-active-gold' : ''}`}
                   >
-                    {cash} ريال
+                    <span>{cash} ريال</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Quick Play Toggle */}
-            <div className="flex items-center justify-between p-3.5 bg-slate-900/80 rounded-2xl border border-slate-800 cursor-pointer">
+            <div className="flex items-center justify-between p-4 bg-slate-900/90 rounded-2xl border border-slate-800 cursor-pointer">
               <div>
                 <span className="font-bold text-white text-sm block">النمط السريع (Quick Mode)</span>
-                <span className="text-[11px] text-slate-400">توزيع عقارين عشوائيين لكل لاعب لتسريع اللعب.</span>
+                <span className="text-xs text-slate-400">توزيع عقارين عشوائيين لكل لاعب لتسريع وتيرة المباراة.</span>
               </div>
               <input
                 type="checkbox"
                 checked={quickMode}
                 onChange={(e) => setQuickMode(e.target.checked)}
-                className="w-5 h-5 accent-amber-500 rounded cursor-pointer"
+                className="w-6 h-6 accent-amber-500 rounded-lg cursor-pointer"
               />
             </div>
 
             {/* Launch Button */}
-            <button onClick={handleStartSolo} className="btn btn-gold btn-lg w-full mt-4 shadow-2xl">
+            <button onClick={handleStartSolo} className="btn btn-gold btn-lg w-full mt-2 shadow-2xl">
               <Crown size={22} />
               <span>بدء المباراة الآن</span>
               <ArrowRight size={20} />
@@ -249,14 +232,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       )}
 
       {/* Footer Info Quick Links */}
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
-        <button onClick={onOpenRules} className="hover:text-amber-400 underline flex items-center gap-1.5 font-bold">
-          <BookOpen size={15} /> شرح قواعد مونوبولي كاملة
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <button onClick={onOpenRules} className="rule-chip-btn">
+          <BookOpen size={18} className="text-amber-400" />
+          <span>شرح قواعد مونوبولي كاملة</span>
         </button>
-        <span>•</span>
-        <span>من 1 إلى 6 لاعبين</span>
-        <span>•</span>
-        <span>دعم كامل للغة العربية</span>
       </div>
     </div>
   );

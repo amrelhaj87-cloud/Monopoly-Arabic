@@ -120,14 +120,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
       {/* Main Grid: Sidebar Navigation Tabs + Content Area */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
         {/* Navigation Tabs (Sidebar) */}
-        <div className="md:col-span-1 flex flex-row md:flex-col gap-2 overflow-x-auto pb-1 md:pb-0">
+        <div className="md:col-span-1 flex flex-row md:flex-col gap-2.5 overflow-x-auto pb-1 md:pb-0">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`tab-pill text-right justify-start px-4 py-3 border-2 ${
-              activeTab === 'profile'
-                ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-lg'
-                : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+            className={`tab-pill text-right justify-start ${activeTab === 'profile' ? 'tab-pill-active' : ''}`}
           >
             <User size={18} />
             <span>الملف والإحصائيات</span>
@@ -135,11 +131,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
 
           <button
             onClick={() => setActiveTab('audio_display')}
-            className={`tab-pill text-right justify-start px-4 py-3 border-2 ${
-              activeTab === 'audio_display'
-                ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-lg'
-                : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+            className={`tab-pill text-right justify-start ${activeTab === 'audio_display' ? 'tab-pill-active' : ''}`}
           >
             <Volume2 size={18} />
             <span>الصوتيات والعرض</span>
@@ -147,11 +139,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
 
           <button
             onClick={() => setActiveTab('cloud')}
-            className={`tab-pill text-right justify-start px-4 py-3 border-2 ${
-              activeTab === 'cloud'
-                ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-lg'
-                : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+            className={`tab-pill text-right justify-start ${activeTab === 'cloud' ? 'tab-pill-active' : ''}`}
           >
             <Database size={18} />
             <span>السحابة و Firebase</span>
@@ -159,11 +147,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
 
           <button
             onClick={() => setActiveTab('rules')}
-            className={`tab-pill text-right justify-start px-4 py-3 border-2 ${
-              activeTab === 'rules'
-                ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-lg'
-                : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'
-            }`}
+            className={`tab-pill text-right justify-start ${activeTab === 'rules' ? 'tab-pill-active' : ''}`}
           >
             <BookOpen size={18} />
             <span>دليل القواعد</span>

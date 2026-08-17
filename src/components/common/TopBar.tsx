@@ -56,43 +56,31 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Main Navigation Tabs */}
-      <div className="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-2xl border border-slate-800">
+      <div className="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shadow-md">
         <button
           onClick={() => onNavigate('home')}
-          className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all ${
-            currentPage === 'home'
-              ? 'bg-amber-500 text-slate-950 shadow-md font-black scale-105'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800'
-          }`}
+          className={`nav-pill ${currentPage === 'home' ? 'nav-pill-active' : ''}`}
         >
-          <Home size={15} />
-          <span className="hidden sm:inline">الرئيسية</span>
+          <Home size={17} />
+          <span>الرئيسية</span>
         </button>
 
         {gameState && (
           <button
             onClick={() => onNavigate('game')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all ${
-              currentPage === 'game'
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black scale-105'
-                : 'text-slate-300 hover:text-white hover:bg-slate-800'
-            }`}
+            className={`nav-pill ${currentPage === 'game' ? 'nav-pill-active' : ''}`}
           >
-            <Gamepad2 size={15} />
+            <Gamepad2 size={17} />
             <span>اللعبة</span>
           </button>
         )}
 
         <button
           onClick={() => onNavigate('settings')}
-          className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all ${
-            currentPage === 'settings'
-              ? 'bg-amber-500 text-slate-950 shadow-md font-black scale-105'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800'
-          }`}
+          className={`nav-pill ${currentPage === 'settings' ? 'nav-pill-active' : ''}`}
         >
-          <Settings size={15} />
-          <span className="hidden sm:inline">الإعدادات والملف</span>
+          <Settings size={17} />
+          <span>الإعدادات والملف</span>
         </button>
       </div>
 
