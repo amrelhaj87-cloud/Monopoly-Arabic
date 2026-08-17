@@ -1,0 +1,40 @@
+import React from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { useGame } from '../../context/GameContext';
+import { AuthModal } from '../auth/AuthModal';
+import { MainMenu } from '../lobby/MainMenu';
+import { CreateRoomModal } from '../lobby/CreateRoomModal';
+import { JoinRoomModal } from '../lobby/JoinRoomModal';
+import { RulesModal } from '../common/RulesModal';
+
+interface HomePageProps {
+  onNavigateToSettings: () => void;
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ onNavigateToSettings }) => {
+  const { user } = useAuth();
+  const [showCreateRoom, setShowCreateRoom] = React.useState(false);
+  const [showJoinRoom, setShowJoinRoom] = React.useState(false);
+  const [showRules, setShowRules] = React.useState(false);
+
+  return (
+    <div className="flex-1 flex flex-col justify-center items-center w-full py-4 animate-fadeIn">
+      {!user ? (
+        /* Player Initial Setup Card */
+        <AuthModal isOpen={true} />
+      ) : (
+        /* Logged In Player Mode Hub */
+        <MainMenu
+          onOpenCreateRoom={() => setShowCreateRoom(true)}
+          onOpenJoinRoom={() => setShowJoinRoom(true)}
+          onOpenRules={() => setShowRules(true)}
+        />
+      )}
+
+      {/* Action Modals */}
+      <CreateRoomModal isOpen={showCreateRoom} onClose={() => setShowCreateRoom(false)} />
+      <JoinRoomModal isOpen={showJoinRoom} onClose={() => setShowJoinRoom(false)} />
+      <RulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
+    </div>
+  );
+};
