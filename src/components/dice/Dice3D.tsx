@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 interface Dice3DProps {
   dice: [number, number];
-  isRolling: boolean;
+  isRolling?: boolean;
   onRollClick?: () => void;
   canRoll?: boolean;
 }
 
-export const Dice3D: React.FC<Dice3DProps> = ({ dice, isRolling, onRollClick, canRoll }) => {
+export const Dice3D: React.FC<Dice3DProps> = ({ dice, isRolling = false, onRollClick, canRoll = false }) => {
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
@@ -19,131 +19,154 @@ export const Dice3D: React.FC<Dice3DProps> = ({ dice, isRolling, onRollClick, ca
   }, [isRolling, dice]);
 
   const renderDiceFace = (value: number) => {
-    // Large, crystal-clear high-contrast dot patterns
-    const dotClasses = "rounded-full shadow-inner transition-transform";
-    const blackDot = `${dotClasses} bg-slate-950 w-3.5 h-3.5 sm:w-4 sm:h-4`;
-    const redDot = `${dotClasses} bg-red-600 w-5 h-5 sm:w-6 sm:h-6 shadow-md`;
-
     switch (value) {
       case 1:
         return (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className={redDot} />
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="dice-dot-red" />
           </div>
         );
       case 2:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2">
-            <div className={`${blackDot} self-start`} />
-            <div className={`${blackDot} self-end`} />
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px' }}>
+            <div className="dice-dot-black" style={{ alignSelf: 'flex-start' }} />
+            <div className="dice-dot-black" style={{ alignSelf: 'flex-end' }} />
           </div>
         );
       case 3:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2">
-            <div className={`${blackDot} self-start`} />
-            <div className={`${blackDot} self-center`} />
-            <div className={`${blackDot} self-end`} />
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px' }}>
+            <div className="dice-dot-black" style={{ alignSelf: 'flex-start' }} />
+            <div className="dice-dot-black" style={{ alignSelf: 'center' }} />
+            <div className="dice-dot-black" style={{ alignSelf: 'flex-end' }} />
           </div>
         );
       case 4:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2">
-            <div className="flex justify-between">
-              <div className={blackDot} />
-              <div className={blackDot} />
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="dice-dot-black" />
+              <div className="dice-dot-black" />
             </div>
-            <div className="flex justify-between">
-              <div className={blackDot} />
-              <div className={blackDot} />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="dice-dot-black" />
+              <div className="dice-dot-black" />
             </div>
           </div>
         );
       case 5:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2 relative">
-            <div className="flex justify-between">
-              <div className={blackDot} />
-              <div className={blackDot} />
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px', position: 'relative' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="dice-dot-black" />
+              <div className="dice-dot-black" />
             </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className={redDot} style={{ width: '14px', height: '14px' }} />
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="dice-dot-red" style={{ width: '16px', height: '16px' }} />
             </div>
-            <div className="flex justify-between">
-              <div className={blackDot} />
-              <div className={blackDot} />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="dice-dot-black" />
+              <div className="dice-dot-black" />
             </div>
           </div>
         );
       case 6:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2">
-            <div className="flex justify-between">
-              <div className={blackDot} />
-              <div className={blackDot} />
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="dice-dot-black" />
+              <div className="dice-dot-black" />
             </div>
-            <div className="flex justify-between">
-              <div className={blackDot} />
-              <div className={blackDot} />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="dice-dot-black" />
+              <div className="dice-dot-black" />
             </div>
-            <div className="flex justify-between">
-              <div className={blackDot} />
-              <div className={blackDot} />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="dice-dot-black" />
+              <div className="dice-dot-black" />
             </div>
           </div>
         );
       default:
-        return <span className="font-mono text-3xl font-black text-slate-900">{value}</span>;
+        return <span style={{ fontSize: '2rem', fontWeight: 900, color: '#0f172a' }}>{value}</span>;
     }
   };
 
   const isDouble = dice[0] === dice[1];
-  const total = dice[0] + dice[1];
+  const total = (dice[0] || 1) + (dice[1] || 1);
 
   return (
-    <div className="flex flex-col items-center justify-center my-2 select-none">
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '8px 0', userSelect: 'none' }}>
       {/* Dice Cubes Row */}
       <div
         onClick={canRoll ? onRollClick : undefined}
-        className={`flex items-center gap-4 cursor-pointer p-2 rounded-2xl transition-all ${
-          canRoll ? 'hover:scale-105 hover:bg-amber-500/10' : ''
-        }`}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+          cursor: canRoll ? 'pointer' : 'default',
+          padding: '8px 16px',
+          borderRadius: '20px',
+          background: 'rgba(15, 23, 42, 0.6)',
+          border: '1.5px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+        }}
         title={canRoll ? 'انقر لرمي النرد' : undefined}
       >
         {/* Die 1 */}
-        <div className="flex flex-col items-center gap-1">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
           <div className={`dice-cube-large ${animating ? 'dice-rolling' : ''}`}>
-            {renderDiceFace(dice[0])}
+            {renderDiceFace(dice[0] || 1)}
           </div>
-          <span className="text-xs font-black font-mono bg-slate-900/90 text-amber-400 border border-slate-700 px-2 py-0.5 rounded-full shadow">
-            {dice[0]}
+          <span style={{ fontSize: '0.85rem', fontWeight: 900, background: '#090d16', color: '#f59e0b', border: '1px solid #f59e0b', padding: '2px 10px', borderRadius: '9999px' }}>
+            {dice[0] || 1}
           </span>
         </div>
 
         {/* Plus Symbol */}
-        <span className="text-xl font-black text-slate-400">+</span>
+        <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fcd34d' }}>+</span>
 
         {/* Die 2 */}
-        <div className="flex flex-col items-center gap-1">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
           <div className={`dice-cube-large ${animating ? 'dice-rolling' : ''}`} style={{ animationDelay: '0.08s' }}>
-            {renderDiceFace(dice[1])}
+            {renderDiceFace(dice[1] || 1)}
           </div>
-          <span className="text-xs font-black font-mono bg-slate-900/90 text-amber-400 border border-slate-700 px-2 py-0.5 rounded-full shadow">
-            {dice[1]}
+          <span style={{ fontSize: '0.85rem', fontWeight: 900, background: '#090d16', color: '#f59e0b', border: '1px solid #f59e0b', padding: '2px 10px', borderRadius: '9999px' }}>
+            {dice[1] || 1}
           </span>
         </div>
       </div>
 
       {/* Dice Total Banner */}
-      <div className="mt-1.5 flex items-center gap-2">
-        <div className="bg-slate-950/90 border border-amber-500/40 px-3 py-1 rounded-full shadow flex items-center gap-2 text-xs font-bold">
-          <span className="text-slate-400">المجموع:</span>
-          <span className="text-base font-black font-mono font-gold">{total}</span>
-          <span className="text-[11px] text-slate-300">خطوات</span>
+      <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95))',
+          border: '1.5px solid #f59e0b',
+          padding: '6px 16px',
+          borderRadius: '9999px',
+          boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontSize: '0.9rem',
+          fontWeight: 800
+        }}>
+          <span style={{ color: '#94a3b8' }}>المجموع:</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fde047' }}>{total}</span>
+          <span style={{ color: '#cbd5e1' }}>خطوات</span>
         </div>
 
         {isDouble && !animating && (
-          <span className="text-xs font-black text-amber-300 bg-amber-950/90 border border-amber-500/70 px-3 py-1 rounded-full shadow animate-bounce">
+          <span style={{
+            fontSize: '0.85rem',
+            fontWeight: 900,
+            color: '#fef08a',
+            background: 'rgba(180, 83, 9, 0.8)',
+            border: '1.5px solid #f59e0b',
+            padding: '6px 14px',
+            borderRadius: '9999px',
+            boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)'
+          }}>
             🔥 دبل ({dice[0]} + {dice[1]})!
           </span>
         )}

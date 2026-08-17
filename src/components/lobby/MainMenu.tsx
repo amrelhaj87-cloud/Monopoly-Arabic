@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Bot, Users, PlusCircle, LogIn, Sparkles, BookOpen, Crown, ChevronLeft, ArrowRight, Dices, Trophy, Settings } from 'lucide-react';
+import { Bot, PlusCircle, LogIn, BookOpen, Crown, ChevronLeft, ArrowRight, Dices } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
 import { GameSettings } from '../../types/game';
+import { Dice3D } from '../dice/Dice3D';
+import { audioService } from '../../services/audioService';
 
 interface MainMenuProps {
   onOpenCreateRoom: () => void;
@@ -25,6 +27,21 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   const [startingCash, setStartingCash] = useState<number>(1500);
   const [quickMode, setQuickMode] = useState<boolean>(false);
 
+  // Home preview dice
+  const [previewDice, setPreviewDice] = useState<[number, number]>([5, 6]);
+  const [isRollingPreview, setIsRollingPreview] = useState(false);
+
+  const handleRollPreview = () => {
+    setIsRollingPreview(true);
+    audioService.playDiceRoll();
+    setTimeout(() => {
+      const d1 = Math.floor(Math.random() * 6) + 1;
+      const d2 = Math.floor(Math.random() * 6) + 1;
+      setPreviewDice([d1, d2]);
+      setIsRollingPreview(false);
+    }, 600);
+  };
+
   const handleStartSolo = () => {
     const settings: GameSettings = {
       startingCash,
@@ -40,112 +57,164 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-2 sm:p-4 max-w-5xl mx-auto w-full animate-fadeIn">
-      {/* Player Header Greeting Pill */}
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px', maxWidth: '1000px', width: '100%', margin: '0 auto' }}>
+      
+      {/* 1. Player Header Greeting Pill (التاجر الصغير) */}
       {user && (
-        <div className="flex items-center gap-3 bg-slate-900/80 px-4 py-2 rounded-full border border-slate-700/80 shadow-md mb-6">
-          <span className="text-2xl">{user.photoURL || '👳‍♂️'}</span>
-          <span className="text-xs sm:text-sm font-bold text-slate-200">
-            أهلاً بك، <strong className="text-amber-400 font-black">{user.displayName}</strong>!
+        <div className="user-greeting-pill">
+          <span className="user-greeting-avatar">{user.photoURL || '👳‍♂️'}</span>
+          <span className="user-greeting-name">
+            أهلاً بك يا <strong style={{ color: '#f59e0b', fontWeight: 900 }}>{user.displayName}</strong>!
           </span>
-          <span className="text-[10px] text-emerald-400 font-bold bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
-            {user.stats.gamesWon} انتصارات 🏆
+          <span className="user-greeting-badge">
+            {user.stats?.gamesWon || 0} انتصارات 🏆
           </span>
         </div>
       )}
 
       {/* Hero Title */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black font-gold tracking-tight mb-2">
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <h1 className="font-gold" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, marginBottom: '8px', lineHeight: 1.15 }}>
           مونوبولي العربية
         </h1>
-        <p className="text-slate-300 text-sm sm:text-base max-w-lg mx-auto font-medium">
-          اختر نمط اللعب المفضل وابدأ المزايدات واحتكار أشهر المدن والعواصم العربية!
+        <p style={{ color: '#94a3b8', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto', fontWeight: 600 }}>
+          اشترِ العواصم والمدن العربية، ابنِ الفنادق، وتاجر بذكاء لتصبح ملك العقار الأوحد!
         </p>
       </div>
 
       {!showSoloConfig ? (
-        /* 3 Main Game Mode Cards */
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full">
-          {/* 1. Single Player vs Bots */}
-          <div
-            onClick={() => setShowSoloConfig(true)}
-            className="glass-panel p-6 sm:p-7 flex flex-col items-center text-center cursor-pointer border-2 border-slate-700/80 hover:border-amber-400 hover:scale-[1.02] transition-all group relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 left-0 h-1 bg-amber-400 group-hover:h-1.5 transition-all" />
-            <div className="w-18 h-18 rounded-3xl bg-amber-500/15 border-2 border-amber-500/40 flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              🤖
+        <>
+          {/* 3 Main Game Mode Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', width: '100%', marginBottom: '28px' }}>
+            {/* 1. Single Player vs Bots */}
+            <div
+              onClick={() => setShowSoloConfig(true)}
+              className="glass-panel"
+              style={{
+                padding: '28px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                cursor: 'pointer',
+                border: '2px solid rgba(245, 158, 11, 0.4)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{ width: '70px', height: '70px', borderRadius: '22px', background: 'rgba(245, 158, 11, 0.18)', border: '2px solid rgba(245, 158, 11, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.4rem', marginBottom: '16px', boxShadow: '0 8px 20px rgba(0,0,0,0.5)' }}>
+                🤖
+              </div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '8px' }}>
+                اللعب ضد الذكاء الاصطناعي
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.6, marginBottom: '20px', flex: 1 }}>
+                مباراة فردية فورية ضد 1 إلى 5 روبوتات ذكية بشخصيات وأسماء عربية شهيرة (أبو فهد، شهاب، ليلى...).
+              </p>
+              <button className="btn btn-gold" style={{ width: '100%' }}>
+                <Bot size={20} />
+                <span>بدء مباراة فردية</span>
+              </button>
             </div>
-            <h3 className="text-xl font-black text-white mb-2">اللعب ضد الذكاء الاصطناعي</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-6">
-              مباراة فورية ضد 1 إلى 5 روبوتات ذكية بشخصيات وأسماء عربية شهيرة ومستويات صعوبة متنوعة.
-            </p>
-            <button className="btn btn-gold w-full mt-auto">
-              <Bot size={18} />
-              <span>بدء مباراة فردية</span>
-            </button>
+
+            {/* 2. Create Private Room */}
+            <div
+              onClick={onOpenCreateRoom}
+              className="glass-panel"
+              style={{
+                padding: '28px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                cursor: 'pointer',
+                border: '2px solid rgba(16, 185, 129, 0.4)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{ width: '70px', height: '70px', borderRadius: '22px', background: 'rgba(16, 185, 129, 0.18)', border: '2px solid rgba(16, 185, 129, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.4rem', marginBottom: '16px', boxShadow: '0 8px 20px rgba(0,0,0,0.5)' }}>
+                🏰
+              </div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '8px' }}>
+                إنشاء غرفة خاصة
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.6, marginBottom: '20px', flex: 1 }}>
+                أنشئ غرفة خاصة وشارك كود الغرفة السداسي المباشر مع أصدقائك لتلعبوا معاً أونلاين.
+              </p>
+              <button className="btn btn-emerald" style={{ width: '100%' }}>
+                <PlusCircle size={20} />
+                <span>إنشاء غرفة أصدقاء</span>
+              </button>
+            </div>
+
+            {/* 3. Join Room by Code */}
+            <div
+              onClick={onOpenJoinRoom}
+              className="glass-panel"
+              style={{
+                padding: '28px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                cursor: 'pointer',
+                border: '2px solid rgba(14, 165, 233, 0.4)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{ width: '70px', height: '70px', borderRadius: '22px', background: 'rgba(14, 165, 233, 0.18)', border: '2px solid rgba(14, 165, 233, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.4rem', marginBottom: '16px', boxShadow: '0 8px 20px rgba(0,0,0,0.5)' }}>
+                🔑
+              </div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '8px' }}>
+                الانضمام إلى غرفة
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.6, marginBottom: '20px', flex: 1 }}>
+                لديك كود من صديقك؟ أدخل الكود المباشر المكون من 6 خانات وادخل إلى ردهة الانتظار فوراً.
+              </p>
+              <button className="btn btn-outline" style={{ width: '100%' }}>
+                <LogIn size={20} />
+                <span>أدخل كود الغرفة</span>
+              </button>
+            </div>
           </div>
 
-          {/* 2. Create Private Room */}
-          <div
-            onClick={onOpenCreateRoom}
-            className="glass-panel p-6 sm:p-7 flex flex-col items-center text-center cursor-pointer border-2 border-slate-700/80 hover:border-emerald-400 hover:scale-[1.02] transition-all group relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 left-0 h-1 bg-emerald-400 group-hover:h-1.5 transition-all" />
-            <div className="w-18 h-18 rounded-3xl bg-emerald-500/15 border-2 border-emerald-500/40 flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              🏰
-            </div>
-            <h3 className="text-xl font-black text-white mb-2">إنشاء غرفة خاصة</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-6">
-              أنشئ غرفة خاصة وشارك كود الغرفة السداسي المباشر مع أصدقائك لتلعبوا معاً أونلاين.
-            </p>
-            <button className="btn btn-emerald w-full mt-auto">
-              <PlusCircle size={18} />
-              <span>إنشاء غرفة أصدقاء</span>
-            </button>
+          {/* Interactive 3D Dice Showcase on Home Page */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+            <span style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 800 }}>🎲 نرد اللعبة التفاعلي (انقر للتجربة):</span>
+            <Dice3D
+              dice={previewDice}
+              isRolling={isRollingPreview}
+              onRollClick={handleRollPreview}
+              canRoll={true}
+            />
           </div>
-
-          {/* 3. Join Room by Code */}
-          <div
-            onClick={onOpenJoinRoom}
-            className="glass-panel p-6 sm:p-7 flex flex-col items-center text-center cursor-pointer border-2 border-slate-700/80 hover:border-sky-400 hover:scale-[1.02] transition-all group relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 left-0 h-1 bg-sky-400 group-hover:h-1.5 transition-all" />
-            <div className="w-18 h-18 rounded-3xl bg-sky-500/15 border-2 border-sky-500/40 flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              🔑
-            </div>
-            <h3 className="text-xl font-black text-white mb-2">الانضمام إلى غرفة</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-6">
-              لديك كود من صديقك؟ أدخل الكود المباشر المكون من 6 خانات وادخل إلى ردهة الانتظار فوراً.
-            </p>
-            <button className="btn btn-outline w-full mt-auto hover:border-sky-400">
-              <LogIn size={18} />
-              <span>أدخل كود الغرفة</span>
-            </button>
-          </div>
-        </div>
+        </>
       ) : (
         /* Solo Game Configuration View */
-        <div className="glass-panel p-6 sm:p-8 w-full max-w-xl animate-fadeIn border-2 border-amber-500/40 shadow-2xl">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-700 mb-5">
-            <h3 className="text-xl font-black text-white flex items-center gap-2">
-              <Bot className="text-amber-400" size={22} /> إعدادات اللعب ضد الذكاء الاصطناعي
+        <div className="solo-config-card animate-fadeIn">
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '16px', borderBottom: '1.5px solid rgba(255,255,255,0.12)', marginBottom: '24px' }}>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Bot className="text-amber-400" size={24} /> إعدادات اللعب ضد الذكاء الاصطناعي
             </h3>
             <button
               onClick={() => setShowSoloConfig(false)}
-              className="btn btn-outline btn-sm py-1 px-3 text-xs flex items-center gap-1"
+              className="btn btn-outline btn-sm"
+              style={{ fontSize: '0.85rem' }}
             >
               <ChevronLeft size={16} /> العودة للقائمة
             </button>
           </div>
 
-          <div className="space-y-6 text-sm">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
             {/* Number of Bots */}
             <div>
-              <label className="block font-black text-slate-200 mb-3 text-sm">
+              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '10px', fontSize: '0.95rem' }}>
                 عدد الروبوتات المنافسة ({botCount} روبوتات - إجمالي {botCount + 1} لاعبين):
               </label>
-              <div className="grid grid-cols-5 gap-3">
+              <div className="selector-grid selector-grid-5">
                 {[1, 2, 3, 4, 5].map((count) => (
                   <button
                     key={count}
@@ -153,7 +222,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                     onClick={() => setBotCount(count)}
                     className={`selector-btn ${botCount === count ? 'selector-btn-active-gold' : ''}`}
                   >
-                    <span className="text-base font-black font-mono">{count}</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Outfit, sans-serif' }}>{count}</span>
                   </button>
                 ))}
               </div>
@@ -161,8 +230,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
             {/* Difficulty */}
             <div>
-              <label className="block font-black text-slate-200 mb-3 text-sm">مستوى ذكاء الروبوتات:</label>
-              <div className="grid grid-cols-3 gap-3">
+              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '10px', fontSize: '0.95rem' }}>
+                مستوى ذكاء وخبرة الروبوتات:
+              </label>
+              <div className="selector-grid selector-grid-3">
                 <button
                   type="button"
                   onClick={() => setBotDifficulty('easy')}
@@ -192,8 +263,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
             {/* Starting Cash */}
             <div>
-              <label className="block font-black text-slate-200 mb-3 text-sm">الرصيد المالي في البداية:</label>
-              <div className="grid grid-cols-3 gap-3">
+              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '10px', fontSize: '0.95rem' }}>
+                الرصيد المالي في البداية:
+              </label>
+              <div className="selector-grid selector-grid-3">
                 {[1500, 2000, 2500].map((cash) => (
                   <button
                     key={cash}
@@ -208,33 +281,41 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             </div>
 
             {/* Quick Play Toggle */}
-            <div className="flex items-center justify-between p-4 bg-slate-900/90 rounded-2xl border border-slate-800 cursor-pointer">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px 20px',
+              background: '#090d16',
+              borderRadius: '16px',
+              border: '1.5px solid rgba(255,255,255,0.1)'
+            }}>
               <div>
-                <span className="font-bold text-white text-sm block">النمط السريع (Quick Mode)</span>
-                <span className="text-xs text-slate-400">توزيع عقارين عشوائيين لكل لاعب لتسريع وتيرة المباراة.</span>
+                <span style={{ fontWeight: 900, color: '#ffffff', fontSize: '0.95rem', display: 'block' }}>النمط السريع (Quick Mode)</span>
+                <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>توزيع عقارين عشوائيين لكل لاعب لتسريع وتيرة المباراة.</span>
               </div>
               <input
                 type="checkbox"
                 checked={quickMode}
                 onChange={(e) => setQuickMode(e.target.checked)}
-                className="w-6 h-6 accent-amber-500 rounded-lg cursor-pointer"
+                style={{ width: '24px', height: '24px', accentColor: '#f59e0b', cursor: 'pointer' }}
               />
             </div>
 
             {/* Launch Button */}
-            <button onClick={handleStartSolo} className="btn btn-gold btn-lg w-full mt-2 shadow-2xl">
-              <Crown size={22} />
-              <span>بدء المباراة الآن</span>
-              <ArrowRight size={20} />
+            <button onClick={handleStartSolo} className="btn btn-gold btn-lg" style={{ width: '100%', marginTop: '8px' }}>
+              <Crown size={24} />
+              <span style={{ fontSize: '1.25rem' }}>بدء المباراة الآن</span>
+              <ArrowRight size={22} />
             </button>
           </div>
         </div>
       )}
 
       {/* Footer Info Quick Links */}
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <button onClick={onOpenRules} className="rule-chip-btn">
-          <BookOpen size={18} className="text-amber-400" />
+      <div style={{ marginTop: '32px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+        <button onClick={onOpenRules} className="rules-footer-btn">
+          <BookOpen size={20} style={{ color: '#f59e0b' }} />
           <span>شرح قواعد مونوبولي كاملة</span>
         </button>
       </div>
