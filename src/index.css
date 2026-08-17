@@ -123,77 +123,103 @@ button:active {
   font-weight: 900;
 }
 
-/* Primary Luxury Button Classes */
+/* Richup-Inspired Tactile 3D Arcade Buttons */
 .btn {
   min-height: 48px;
-  padding: 12px 24px;
-  font-size: 1rem;
+  padding: 12px 26px;
+  font-size: 1.02rem;
   font-weight: 900;
   border-radius: 16px;
-  border: 1.5px solid transparent;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  user-select: none;
+  position: relative;
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
 }
 
 .btn-gold {
-  background: linear-gradient(135deg, #fbb825 0%, #f59e0b 50%, #d97706 100%);
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
   color: #080c17;
-  border-color: #fde047;
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 5px 0 #b45309, 0 8px 20px rgba(245, 158, 11, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
 }
 .btn-gold:hover {
-  background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #f59e0b 100%);
-  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.6);
+  background: linear-gradient(180deg, #fcd34d 0%, #fbbf24 100%);
   transform: translateY(-2px);
+  box-shadow: 0 7px 0 #b45309, 0 12px 25px rgba(245, 158, 11, 0.45);
+}
+.btn-gold:active {
+  transform: translateY(4px) !important;
+  box-shadow: 0 1px 0 #b45309, 0 4px 10px rgba(245, 158, 11, 0.3) !important;
 }
 
 .btn-emerald {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
-  color: #080c17;
-  border-color: #6ee7b7;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+  color: #052e16;
+  box-shadow: 0 5px 0 #047857, 0 8px 20px rgba(16, 185, 129, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
 }
 .btn-emerald:hover {
-  background: linear-gradient(135deg, #6ee7b7 0%, #34d399 50%, #10b981 100%);
-  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+  background: linear-gradient(180deg, #6ee7b7 0%, #34d399 100%);
   transform: translateY(-2px);
+  box-shadow: 0 7px 0 #047857, 0 12px 25px rgba(16, 185, 129, 0.45);
+}
+.btn-emerald:active {
+  transform: translateY(4px) !important;
+  box-shadow: 0 1px 0 #047857, 0 4px 10px rgba(16, 185, 129, 0.3) !important;
 }
 
 .btn-ruby {
-  background: linear-gradient(135deg, #fb7185 0%, #f43f5e 50%, #e11d48 100%);
+  background: linear-gradient(180deg, #fb7185 0%, #f43f5e 100%);
   color: #ffffff;
-  border-color: #fca5a5;
-  box-shadow: 0 8px 24px rgba(244, 63, 94, 0.45);
+  box-shadow: 0 5px 0 #be123c, 0 8px 20px rgba(244, 63, 94, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
 }
 .btn-ruby:hover {
-  background: linear-gradient(135deg, #fda4af 0%, #fb7185 50%, #f43f5e 100%);
-  box-shadow: 0 10px 30px rgba(244, 63, 94, 0.6);
+  background: linear-gradient(180deg, #fda4af 0%, #fb7185 100%);
   transform: translateY(-2px);
+  box-shadow: 0 7px 0 #be123c, 0 12px 25px rgba(244, 63, 94, 0.45);
+}
+.btn-ruby:active {
+  transform: translateY(4px) !important;
+  box-shadow: 0 1px 0 #be123c, 0 4px 10px rgba(244, 63, 94, 0.3) !important;
 }
 
 .btn-outline {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
   color: #f8fafc;
+  box-shadow: 0 4px 0 #090d16, 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 .btn-outline:hover {
-  background: rgba(30, 41, 59, 0.95);
+  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
   border-color: #f59e0b;
   color: #fef08a;
   transform: translateY(-2px);
+  box-shadow: 0 6px 0 #090d16, 0 8px 20px rgba(245, 158, 11, 0.25);
+}
+.btn-outline:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #090d16 !important;
 }
 
 .btn-sm {
-  min-height: 38px;
-  padding: 8px 16px;
-  font-size: 0.88rem;
+  min-height: 40px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
   border-radius: 12px;
 }
 
 .btn-lg {
   min-height: 56px;
-  padding: 16px 32px;
-  font-size: 1.18rem;
-  border-radius: 18px;
+  padding: 16px 36px;
+  font-size: 1.25rem;
+  border-radius: 20px;
 }
 
 /* User Greeting Pill (Top Welcome Bar) */
@@ -295,51 +321,68 @@ button:active {
   font-weight: 800;
   border-radius: 16px;
   border: 1.5px solid rgba(255, 255, 255, 0.15);
-  background: #0f172a;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   color: #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 0 #090d16, 0 6px 14px rgba(0, 0, 0, 0.4);
 }
 .selector-btn:hover {
-  background: #1e293b;
+  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
   border-color: rgba(255, 255, 255, 0.3);
   color: #ffffff;
   transform: translateY(-2px);
+  box-shadow: 0 6px 0 #090d16, 0 8px 18px rgba(0, 0, 0, 0.5);
 }
+.selector-btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #090d16 !important;
+}
+
 .selector-btn-active-gold {
-  background: linear-gradient(135deg, #fbb825 0%, #f59e0b 50%, #d97706 100%) !important;
+  background: linear-gradient(180deg, #fcd34d 0%, #f59e0b 100%) !important;
   color: #080c17 !important;
   border-color: #fde047 !important;
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 5px 0 #b45309, 0 8px 22px rgba(245, 158, 11, 0.5) !important;
   font-weight: 900 !important;
-  transform: scale(1.04) !important;
 }
+.selector-btn-active-gold:hover {
+  background: linear-gradient(180deg, #fef08a 0%, #fbbf24 100%) !important;
+  box-shadow: 0 6px 0 #b45309, 0 10px 25px rgba(245, 158, 11, 0.6) !important;
+}
+
 .selector-btn-active-emerald {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%) !important;
-  color: #080c17 !important;
-  border-color: #6ee7b7 !important;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+  background: linear-gradient(180deg, #6ee7b7 0%, #10b981 100%) !important;
+  color: #052e16 !important;
+  border-color: #a7f3d0 !important;
+  box-shadow: 0 5px 0 #047857, 0 8px 22px rgba(16, 185, 129, 0.5) !important;
   font-weight: 900 !important;
-  transform: scale(1.04) !important;
 }
+.selector-btn-active-emerald:hover {
+  background: linear-gradient(180deg, #a7f3d0 0%, #34d399 100%) !important;
+  box-shadow: 0 6px 0 #047857, 0 10px 25px rgba(16, 185, 129, 0.6) !important;
+}
+
 .selector-btn-active-ruby {
-  background: linear-gradient(135deg, #fb7185 0%, #f43f5e 50%, #e11d48 100%) !important;
+  background: linear-gradient(180deg, #fda4af 0%, #f43f5e 100%) !important;
   color: #ffffff !important;
-  border-color: #fca5a5 !important;
-  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.5) !important;
+  border-color: #fecdd3 !important;
+  box-shadow: 0 5px 0 #be123c, 0 8px 22px rgba(244, 63, 94, 0.5) !important;
   font-weight: 900 !important;
-  transform: scale(1.04) !important;
+}
+.selector-btn-active-ruby:hover {
+  background: linear-gradient(180deg, #fecdd3 0%, #fb7185 100%) !important;
+  box-shadow: 0 6px 0 #be123c, 0 10px 25px rgba(244, 63, 94, 0.6) !important;
 }
 
 /* Rule Guide Footer Chip */
 .rules-footer-btn {
-  background: rgba(15, 23, 42, 0.9);
-  border: 2px solid rgba(245, 158, 11, 0.5);
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.5);
   color: #fef08a;
   padding: 12px 28px;
   border-radius: 9999px;
@@ -349,15 +392,19 @@ button:active {
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.2);
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 0 #090d16, 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.15);
 }
 .rules-footer-btn:hover {
-  background: rgba(245, 158, 11, 0.25);
+  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
   border-color: #f59e0b;
   color: #ffffff;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #090d16, 0 10px 25px rgba(245, 158, 11, 0.35);
+}
+.rules-footer-btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #090d16 !important;
 }
 
 /* Input Fields Ergonomics */
