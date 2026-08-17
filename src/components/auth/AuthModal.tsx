@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Sparkles, UserCheck, ShieldAlert } from 'lucide-react';
+import { User, Mail, Sparkles, Dices, ShieldAlert, Check, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { GAME_TOKENS, AVATARS_LIST } from '../../constants/tokens';
 import { PlayerTokenId } from '../../types/game';
@@ -8,6 +8,19 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose?: () => void;
 }
+
+const RANDOM_ARABIC_NAMES = [
+  'الشيخ فهد',
+  'سندباد الصفقات',
+  'تاجر دبي',
+  'الملك شهاب',
+  'أميرة الشرق',
+  'الهامور أبو طلال',
+  'صقر الجزيرة',
+  'ليلى المستثمرة',
+  'سلطان العقارات',
+  'فارس الرياض'
+];
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { 
@@ -19,7 +32,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   } = useAuth();
 
   const [tab, setTab] = useState<'guest' | 'email' | 'register'>('guest');
-  const [guestName, setGuestName] = useState('');
+  const [guestName, setGuestName] = useState('التاجر الصغير');
   const [selectedAvatar, setSelectedAvatar] = useState(AVATARS_LIST[0].emoji);
   const [selectedToken, setSelectedToken] = useState<PlayerTokenId>('falcon');
 
@@ -31,10 +44,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  const handleRandomizeName = () => {
+    const random = RANDOM_ARABIC_NAMES[Math.floor(Math.random() * RANDOM_ARABIC_NAMES.length)];
+    setGuestName(random);
+  };
+
   const handleGuestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!guestName.trim()) {
-      setErrorMsg('يرجى إدخال اسم اللاعب');
+      setErrorMsg('يرجى كتابة اسم اللاعب أو اختيار اسم عشوائي');
       return;
     }
     setErrorMsg('');
@@ -83,153 +101,185 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '480px' }}>
-        {/* Header Icon */}
-        <div className="text-center mb-5">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-3xl mb-2 shadow-inner">
+    <div className="w-full max-w-xl mx-auto p-2 sm:p-4 animate-fadeIn">
+      {/* Welcome Card Container */}
+      <div className="glass-panel p-6 sm:p-8 border-2 border-amber-500/30 shadow-2xl relative overflow-hidden">
+        {/* Glow Header Accent */}
+        <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-amber-400 via-emerald-400 to-amber-500" />
+
+        {/* Brand Header */}
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-4xl mb-3 shadow-inner">
             🎲
           </div>
-          <h2 className="text-2xl font-black font-gold">مونوبولي العربية</h2>
-          <p className="text-xs text-slate-400 mt-1">اختر طريقة الدخول وابدأ رحلة الاحتكار والثراء!</p>
+          <h1 className="text-3xl sm:text-4xl font-black font-gold tracking-tight mb-1">
+            مونوبولي العربية
+          </h1>
+          <p className="text-slate-300 text-xs sm:text-sm max-w-sm mx-auto font-medium">
+            مرحباً بك! جهز شخصيتك وانطلق فوراً للمنافسة واحتكار المدن
+          </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex bg-slate-800/80 p-1 rounded-xl mb-4 border border-slate-700">
+        {/* Ergonomic Mode Tabs */}
+        <div className="flex bg-slate-950/70 p-1.5 rounded-2xl mb-6 border border-slate-800 gap-1">
           <button
+            type="button"
             onClick={() => { setTab('guest'); setErrorMsg(''); }}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-              tab === 'guest' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
+            className={`tab-pill ${
+              tab === 'guest'
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             }`}
           >
-            دخول كزائر 🏃‍♂️
+            <span>🏃‍♂️</span>
+            <span>دخول سريع كزائر</span>
           </button>
+
           <button
+            type="button"
             onClick={() => { setTab('email'); setErrorMsg(''); }}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-              tab === 'email' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
+            className={`tab-pill ${
+              tab === 'email' || tab === 'register'
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             }`}
           >
-            بريد إلكتروني ✉️
+            <span>✉️</span>
+            <span>بريد إلكتروني / جوجل</span>
           </button>
         </div>
 
+        {/* Error Notification */}
         {errorMsg && (
-          <div className="p-3 bg-rose-950/60 border border-rose-500/50 text-rose-200 rounded-xl text-xs mb-4 flex items-center gap-2">
-            <ShieldAlert size={16} className="text-rose-400 shrink-0" />
+          <div className="p-3.5 bg-rose-950/70 border border-rose-500/50 text-rose-200 rounded-xl text-xs mb-5 flex items-center gap-2.5">
+            <ShieldAlert size={18} className="text-rose-400 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        {/* --- Guest Mode Tab --- */}
+        {/* --- 1. Guest Mode Form --- */}
         {tab === 'guest' && (
-          <form onSubmit={handleGuestSubmit} className="space-y-4">
+          <form onSubmit={handleGuestSubmit} className="space-y-5">
+            {/* Player Name with Quick Randomize */}
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">اسمك في اللعبة</label>
-              <input
-                type="text"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                placeholder="مثال: التاجر الصغير، أبو فهد، سندباد..."
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-400 focus:outline-none"
-                maxLength={20}
-                required
-              />
+              <label className="block text-xs font-bold text-slate-200 mb-2">اسمك في اللعبة:</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={guestName}
+                  onChange={(e) => setGuestName(e.target.value)}
+                  placeholder="اكتب اسمك..."
+                  className="input-lux flex-1"
+                  maxLength={20}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={handleRandomizeName}
+                  className="btn btn-outline btn-sm px-3.5 shrink-0 flex items-center gap-1.5"
+                  title="توليد اسم عشوائي"
+                >
+                  <Dices size={16} className="text-amber-400" />
+                  <span>اسم عشوائي</span>
+                </button>
+              </div>
             </div>
 
-            {/* Avatar Picker */}
+            {/* Avatar Selector */}
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">اختر شخصيتك (الأفاتار)</label>
-              <div className="grid grid-cols-4 gap-2">
+              <label className="block text-xs font-bold text-slate-200 mb-2">اختر شخصيتك (الأفاتار):</label>
+              <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                 {AVATARS_LIST.map((av) => (
                   <button
                     key={av.id}
                     type="button"
                     onClick={() => setSelectedAvatar(av.emoji)}
-                    className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all ${
+                    className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 transition-all cursor-pointer ${
                       selectedAvatar === av.emoji
-                        ? 'bg-amber-500/20 border-amber-400 shadow-md scale-105'
-                        : 'bg-slate-800/60 border-slate-700 hover:bg-slate-700/60'
+                        ? 'bg-amber-500/25 border-amber-400 shadow-lg scale-110'
+                        : 'bg-slate-900/60 border-slate-800 hover:border-slate-600 hover:bg-slate-800'
                     }`}
                   >
-                    <span className="text-2xl">{av.emoji}</span>
-                    <span className="text-[10px] text-slate-400 mt-1">{av.name}</span>
+                    <span className="text-2xl sm:text-3xl">{av.emoji}</span>
+                    <span className="text-[9px] font-bold text-slate-300 mt-1 line-clamp-1">{av.name}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Token Pawn Picker */}
+            {/* Token Selector */}
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">اختر قطعتك المفضلة (Token)</label>
-              <div className="grid grid-cols-4 gap-2">
+              <label className="block text-xs font-bold text-slate-200 mb-2">اختر قطعتك على الرقعة (Token):</label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {GAME_TOKENS.map((tk) => (
                   <button
                     key={tk.id}
                     type="button"
                     onClick={() => setSelectedToken(tk.id)}
-                    className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all ${
+                    className={`flex items-center gap-2 p-2.5 rounded-xl border-2 transition-all cursor-pointer ${
                       selectedToken === tk.id
-                        ? 'bg-amber-500/20 border-amber-400 shadow-md scale-105'
-                        : 'bg-slate-800/60 border-slate-700 hover:bg-slate-700/60'
+                        ? 'bg-amber-500/25 border-amber-400 shadow-md scale-[1.03]'
+                        : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
                     }`}
                   >
                     <span className="text-2xl">{tk.emoji}</span>
-                    <span className="text-[10px] text-slate-400 mt-1 line-clamp-1">{tk.name}</span>
+                    <span className="text-xs font-bold text-slate-200">{tk.name}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            <button type="submit" className="btn btn-gold w-full btn-lg mt-2">
-              <Sparkles size={18} />
-              ابدأ اللعب كزائر فوراً
+            {/* Submit Button */}
+            <button type="submit" className="btn btn-gold btn-lg w-full mt-3 shadow-xl">
+              <Sparkles size={20} />
+              <span>ابدأ اللعب الآن كزائر</span>
+              <ArrowRight size={18} />
             </button>
           </form>
         )}
 
-        {/* --- Email / Password Mode Tab --- */}
+        {/* --- 2. Email / Google Mode --- */}
         {(tab === 'email' || tab === 'register') && (
-          <form onSubmit={handleEmailSubmit} className="space-y-3">
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
             {tab === 'register' && (
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">الاسم الكامل</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1.5">الاسم المعروض:</label>
                 <input
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="اسم اللاعب"
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
+                  className="input-lux"
                   required
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">البريد الإلكتروني</label>
+              <label className="block text-xs font-bold text-slate-200 mb-1.5">البريد الإلكتروني:</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@gmail.com"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
+                className="input-lux"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">كلمة المرور</label>
+              <label className="block text-xs font-bold text-slate-200 mb-1.5">كلمة المرور:</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
+                className="input-lux"
                 required
               />
             </div>
 
-            <button type="submit" disabled={isLoading} className="btn btn-gold w-full mt-3">
+            <button type="submit" disabled={isLoading} className="btn btn-gold btn-lg w-full mt-2">
               {isLoading ? 'جاري المعالجة...' : tab === 'register' ? 'إنشاء حساب جديد' : 'تسجيل الدخول'}
             </button>
 
@@ -239,10 +289,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 type="button"
                 onClick={handleGoogleSubmit}
                 disabled={isLoading}
-                className="btn btn-outline w-full mt-2 flex items-center justify-center gap-2"
+                className="btn btn-outline w-full flex items-center justify-center gap-2.5 py-3"
               >
-                <span>🌐</span>
-                <span>المتابعة باستخدام Google / Gmail</span>
+                <span className="text-xl">🌐</span>
+                <span className="text-sm font-bold">المتابعة بحساب Google / Gmail</span>
               </button>
             )}
 
@@ -253,9 +303,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   setTab(tab === 'email' ? 'register' : 'email');
                   setErrorMsg('');
                 }}
-                className="text-xs text-amber-400 hover:underline"
+                className="text-xs text-amber-400 hover:text-amber-300 font-bold underline"
               >
-                {tab === 'email' ? 'ليس لديك حساب؟ أنشئ حساباً الآن' : 'لديك حساب بالفعل؟ سجل دخولك'}
+                {tab === 'email' ? 'ليس لديك حساب؟ أنشئ حساباً جديداً' : 'لديك حساب بالفعل؟ سجل دخولك'}
               </button>
             </div>
           </form>
