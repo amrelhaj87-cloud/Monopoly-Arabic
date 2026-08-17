@@ -20,16 +20,16 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
   const [showTradeModal, setShowTradeModal] = useState(false);
 
   return (
-    <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 w-full animate-fadeIn">
-      {/* Left Sidebar: Active Players, Game History Log, In-Game Chat */}
-      <div className="w-full lg:w-80 flex flex-col gap-3 order-2 lg:order-1">
+    <div className="game-page-layout animate-fadeIn">
+      {/* Sidebar: Players HUD, History, Chat */}
+      <div className="game-sidebar">
         <PlayerListHUD />
         <GameLogDrawer />
         <GameChatDrawer />
       </div>
 
-      {/* Center Arena: 40-Tile Monopoly Board */}
-      <div className="flex-1 flex items-center justify-center order-1 lg:order-2 w-full">
+      {/* Main Board Arena */}
+      <div className="game-board-area">
         <BoardView
           is3D={is3D}
           onOpenManage={() => setShowManageProps(true)}
