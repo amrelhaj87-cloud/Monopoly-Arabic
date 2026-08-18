@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from './context/AuthContext';
 import { useGame } from './context/GameContext';
 import { TopBar, AppPage } from './components/common/TopBar';
@@ -9,10 +9,58 @@ import { RoomLobby } from './components/lobby/RoomLobby';
 
 export const App: React.FC = () => {
   const { user, isLoading } = useAuth();
-  const { room, gameState } = useGame();
+  const { room, gameState, joinRoom } = useGame();
 
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
   const [is3D, setIs3D] = useState<boolean>(true);
+  const initialRoomAttempted = useRef<boolean>(false);
+
+  // Helper to extract room code from URL (path /room/ABC123, hash #/room/ABC123, or ?room=ABC123)
+  const getRoomCodeFromUrl = useCallback((): string | null => {
+    if (typeof window === 'undefined') return null;
+
+    // 1. Check path e.g. /room/654321
+    const pathMatch = window.location.pathname.match(/\/room\/([A-Za-z0-9]+)/i);
+    if (pathMatch && pathMatch[1]) return pathMatch[1].toUpperCase();
+
+    // 2. Check hash e.g. #/room/654321
+    const hashMatch = window.location.hash.match(/#\/?room\/([A-Za-z0-9]+)/i);
+    if (hashMatch && hashMatch[1]) return hashMatch[1].toUpperCase();
+
+    // 3. Check query param e.g. ?room=654321
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
+    if (roomParam) return roomParam.trim().toUpperCase();
+
+    return null;
+  }, []);
+
+  // Handle URL deep link joining once user profile is ready
+  useEffect(() => {
+    if (isLoading || !user || initialRoomAttempted.current || room) return;
+
+    const code = getRoomCodeFromUrl();
+    if (code) {
+      initialRoomAttempted.current = true;
+      joinRoom(code).catch((err) => {
+        console.warn('Auto join room from URL failed:', err);
+      });
+    }
+  }, [user, isLoading, room, joinRoom, getRoomCodeFromUrl]);
+
+  // Sync active room ID to URL (pushState / replaceState)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (room?.id) {
+      const targetPath = `/room/${room.id}`;
+      if (window.location.pathname !== targetPath && !window.location.hash.includes(room.id)) {
+        window.history.replaceState(null, '', targetPath);
+      }
+    } else if (!room && window.location.pathname.startsWith('/room')) {
+      window.history.replaceState(null, '', '/');
+    }
+  }, [room?.id]);
 
   // Automatically switch to 'game' page when a game match starts
   useEffect(() => {
@@ -21,7 +69,7 @@ export const App: React.FC = () => {
     } else if (!room && currentPage === 'game') {
       setCurrentPage('home');
     }
-  }, [gameState, room]);
+  }, [gameState, room, currentPage]);
 
   if (isLoading) {
     return (
@@ -77,3 +125,4 @@ export const App: React.FC = () => {
 };
 
 export default App;
+

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Bot, Crown, CheckCircle2, Circle, Trash2, Send, Copy, Check, Play, UserPlus } from 'lucide-react';
+import { Users, Bot, Crown, CheckCircle2, Circle, Trash2, Send, Copy, Check, Play, UserPlus, Link2 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { useAuth } from '../../context/AuthContext';
 import { GAME_TOKENS, PLAYER_DEFAULT_COLORS } from '../../constants/tokens';
@@ -20,6 +20,7 @@ export const RoomLobby: React.FC = () => {
   const { user } = useAuth();
   const [chatInput, setChatInput] = useState('');
   const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
 
   if (!room || !user) return null;
@@ -32,6 +33,13 @@ export const RoomLobby: React.FC = () => {
     navigator.clipboard.writeText(room.id);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  const handleCopyLink = () => {
+    const inviteUrl = `${window.location.origin}/room/${room.id}`;
+    navigator.clipboard.writeText(inviteUrl);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   };
 
   const handleSendChat = (e: React.FormEvent) => {
@@ -58,19 +66,27 @@ export const RoomLobby: React.FC = () => {
           </p>
         </div>
 
-        {/* Room Code Card */}
-        <div className="flex items-center gap-3 bg-slate-900/90 px-4 py-2 rounded-xl border border-amber-500/40 shadow-inner">
-          <div>
-            <span className="text-[10px] font-bold text-slate-400 block">كود الغرفة للمشاركة:</span>
+        {/* Room Code & Invite Links */}
+        <div className="flex items-center gap-2 bg-slate-900/90 px-4 py-2 rounded-xl border border-amber-500/40 shadow-inner">
+          <div className="ml-2">
+            <span className="text-[10px] font-bold text-slate-400 block">كود الغرفة:</span>
             <span className="text-xl font-mono font-black text-amber-400 tracking-widest">{room.id}</span>
           </div>
           <button
             onClick={handleCopyCode}
-            className="btn btn-gold btn-sm px-3 py-1.5"
+            className="btn btn-outline btn-sm px-2.5 py-1.5 text-xs"
             title="نسخ الكود"
           >
-            {copiedCode ? <Check size={16} /> : <Copy size={16} />}
-            <span>{copiedCode ? 'تم النسخ' : 'نسخ'}</span>
+            {copiedCode ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+            <span>{copiedCode ? 'تم النسخ' : 'نسخ الكود'}</span>
+          </button>
+          <button
+            onClick={handleCopyLink}
+            className="btn btn-gold btn-sm px-3 py-1.5 text-xs"
+            title="نسخ رابط الدعوة المباشر"
+          >
+            {copiedLink ? <Check size={14} /> : <Link2 size={14} />}
+            <span>{copiedLink ? 'تم نسخ الرابط' : 'نسخ الرابط'}</span>
           </button>
         </div>
       </div>

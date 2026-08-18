@@ -36,6 +36,7 @@ export interface TileData {
   mortgageValue?: number;
   taxAmount?: number;
   icon?: string;
+  flag?: string;
   description?: string;
 }
 

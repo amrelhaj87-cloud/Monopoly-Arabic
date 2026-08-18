@@ -13,6 +13,7 @@ interface GameContextType {
   gameState: GameState | null;
   isHost: boolean;
   isMyTurn: boolean;
+  isMovingPawn: boolean;
   currentPlayer: Player | null;
   myPlayer: Player | null;
   selectedTileDetail: TileData | null;
@@ -54,6 +55,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [room, setRoom] = useState<Room | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [selectedTileDetail, setSelectedTileDetail] = useState<TileData | null>(null);
+  const [isMovingPawn, setIsMovingPawn] = useState<boolean>(false);
 
   const botActionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const turnTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -75,7 +77,15 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isHost = Boolean(room && user && room.hostId === user.uid);
   const currentPlayer = gameState ? gameState.players[gameState.currentTurnIndex] : null;
   const myPlayer = gameState && user ? gameState.players.find(p => p.id === user.uid) || null : null;
-  const isMyTurn = Boolean(gameState && currentPlayer && user && currentPlayer.id === user.uid && !currentPlayer.isBot);
+  const isMyTurn = Boolean(
+    gameState && 
+    currentPlayer && 
+    user && 
+    currentPlayer.id === user.uid && 
+    !currentPlayer.isBot && 
+    gameState.phase !== 'moving' && 
+    !isMovingPawn
+  );
 
   // Helper to apply and broadcast game state
   const updateAndBroadcastState = useCallback(async (newState: GameState) => {
@@ -84,6 +94,44 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await RoomService.syncGameState(room.id, newState);
     }
   }, [room]);
+
+  // Animated Pawn Hopping Movement Runner
+  const executeAnimatedRoll = useCallback(async (stateToRoll: GameState, customDice?: [number, number]) => {
+    if (!stateToRoll || stateToRoll.phase === 'moving' || isMovingPawn) return;
+
+    setIsMovingPawn(true);
+    audioService.playDiceRoll();
+
+    const prep = GameEngine.prepareRoll(stateToRoll, customDice);
+    const playerId = prep.state.players[prep.state.currentTurnIndex].id;
+
+    // First update the state with the dice roll values
+    await updateAndBroadcastState(prep.state);
+
+    // If 3 doubles or stayed in jail, no pawn movement
+    if (prep.wentToJail || prep.stayedInJail || prep.stepsToMove === 0) {
+      if (prep.wentToJail) audioService.playJail();
+      setIsMovingPawn(false);
+      return;
+    }
+
+    // Step by step hopping animation
+    let currentState = prep.state;
+    const totalSteps = prep.stepsToMove;
+
+    for (let step = 1; step <= totalSteps; step++) {
+      await new Promise(resolve => setTimeout(resolve, 180));
+      audioService.playStep();
+      currentState = GameEngine.stepPlayerForward(currentState, playerId);
+      setGameState(currentState);
+    }
+
+    // Pause on final destination tile then trigger landing action
+    await new Promise(resolve => setTimeout(resolve, 220));
+    const finalState = GameEngine.finishPlayerLanding(currentState, playerId);
+    setIsMovingPawn(false);
+    await updateAndBroadcastState(finalState);
+  }, [updateAndBroadcastState, isMovingPawn]);
 
   // Handle Game Over stats
   useEffect(() => {
@@ -98,7 +146,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Automated Turn Timer Countdown
   useEffect(() => {
-    if (!gameState || gameState.phase === 'game_over' || gameState.isPaused) return;
+    if (!gameState || gameState.phase === 'game_over' || gameState.isPaused || isMovingPawn) return;
     if (gameState.settings.turnTimeSeconds === 0) return;
 
     const interval = setInterval(() => {
@@ -126,25 +174,32 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [gameState?.currentTurnIndex, gameState?.phase, room]);
+  }, [gameState?.currentTurnIndex, gameState?.phase, room, isMovingPawn]);
 
   // Automated AI Bot Loop
   useEffect(() => {
-    if (!gameState || gameState.phase === 'game_over' || !currentPlayer?.isBot) return;
+    if (!gameState || gameState.phase === 'game_over' || !currentPlayer?.isBot || isMovingPawn) return;
 
     if (botActionTimeoutRef.current) clearTimeout(botActionTimeoutRef.current);
 
     botActionTimeoutRef.current = setTimeout(() => {
       handleBotTurnStep();
-    }, 1200);
+    }, 1100);
 
     return () => {
       if (botActionTimeoutRef.current) clearTimeout(botActionTimeoutRef.current);
     };
-  }, [gameState?.phase, gameState?.currentTurnIndex, gameState?.hasRolled, gameState?.pendingBuyTileId, gameState?.activeAuction]);
+  }, [
+    gameState?.phase, 
+    gameState?.currentTurnIndex, 
+    gameState?.hasRolled, 
+    gameState?.pendingBuyTileId, 
+    gameState?.activeAuction,
+    isMovingPawn
+  ]);
 
-  const handleBotTurnStep = () => {
-    if (!gameState || !currentPlayer || !currentPlayer.isBot) return;
+  const handleBotTurnStep = async () => {
+    if (!gameState || !currentPlayer || !currentPlayer.isBot || isMovingPawn) return;
 
     // 1. In Jail
     if (currentPlayer.inJail && gameState.phase === 'jail_decision') {
@@ -152,25 +207,21 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (decision === 'use_card' && currentPlayer.getOutOfJailCards > 0) {
         audioService.playCardDraw();
         const s = GameEngine.useJailCard(gameState, currentPlayer.id);
-        updateAndBroadcastState(s);
+        await updateAndBroadcastState(s);
       } else if (decision === 'pay' && currentPlayer.cash >= 50) {
         audioService.playCash();
         const s = GameEngine.payJailBail(gameState, currentPlayer.id);
-        updateAndBroadcastState(s);
+        await updateAndBroadcastState(s);
       } else {
         // Roll to escape
-        audioService.playDiceRoll();
-        const s = GameEngine.rollDice(gameState);
-        updateAndBroadcastState(s);
+        await executeAnimatedRoll(gameState);
       }
       return;
     }
 
     // 2. Needs to Roll
     if (gameState.phase === 'roll_dice' && !gameState.hasRolled) {
-      audioService.playDiceRoll();
-      const s = GameEngine.rollDice(gameState);
-      updateAndBroadcastState(s);
+      await executeAnimatedRoll(gameState);
       return;
     }
 
@@ -182,10 +233,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (wantsToBuy) {
           audioService.playPropertyBuy();
           const s = GameEngine.buyProperty(gameState, currentPlayer.id, tile.id);
-          updateAndBroadcastState(s);
+          await updateAndBroadcastState(s);
         } else {
           const s = GameEngine.declineProperty(gameState, tile.id);
-          updateAndBroadcastState(s);
+          await updateAndBroadcastState(s);
         }
       }
       return;
@@ -197,10 +248,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (bid !== null) {
         audioService.playBid();
         const s = GameEngine.placeAuctionBid(gameState, currentPlayer.id, bid);
-        updateAndBroadcastState(s);
+        await updateAndBroadcastState(s);
       } else {
         const s = GameEngine.passAuction(gameState, currentPlayer.id);
-        updateAndBroadcastState(s);
+        await updateAndBroadcastState(s);
       }
       return;
     }
@@ -209,7 +260,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (gameState.phase === 'tile_action' && gameState.activeCard) {
       audioService.playCardDraw();
       const s = GameEngine.executeActiveCard(gameState);
-      updateAndBroadcastState(s);
+      await updateAndBroadcastState(s);
       return;
     }
 
@@ -223,10 +274,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
           currState = GameEngine.buildHouse(currState, currentPlayer.id, b.tileId);
         });
         const endedState = GameEngine.endTurn(currState);
-        updateAndBroadcastState(endedState);
+        await updateAndBroadcastState(endedState);
       } else {
         const s = GameEngine.endTurn(gameState);
-        updateAndBroadcastState(s);
+        await updateAndBroadcastState(s);
       }
     }
   };
@@ -399,21 +450,19 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // --- In-Game Player Actions ---
 
   const rollDice = () => {
-    if (!gameState || !isMyTurn || gameState.hasRolled) return;
-    audioService.playDiceRoll();
-    const newState = GameEngine.rollDice(gameState);
-    updateAndBroadcastState(newState);
+    if (!gameState || !isMyTurn || gameState.hasRolled || isMovingPawn) return;
+    executeAnimatedRoll(gameState);
   };
 
   const buyCurrentProperty = () => {
-    if (!gameState || !myPlayer || gameState.pendingBuyTileId === null) return;
+    if (!gameState || !myPlayer || gameState.pendingBuyTileId === null || isMovingPawn) return;
     audioService.playPropertyBuy();
     const newState = GameEngine.buyProperty(gameState, myPlayer.id, gameState.pendingBuyTileId);
     updateAndBroadcastState(newState);
   };
 
   const declineCurrentProperty = () => {
-    if (!gameState || gameState.pendingBuyTileId === null) return;
+    if (!gameState || gameState.pendingBuyTileId === null || isMovingPawn) return;
     const newState = GameEngine.declineProperty(gameState, gameState.pendingBuyTileId);
     updateAndBroadcastState(newState);
   };
@@ -431,57 +480,131 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateAndBroadcastState(newState);
   };
 
-  const executeActiveCardAction = () => {
-    if (!gameState) return;
+  const executeActiveCardAction = async () => {
+    if (!gameState || !gameState.activeCard) return;
+    const card = gameState.activeCard;
+    const player = gameState.players[gameState.currentTurnIndex];
+
+    if (!player) return;
+
+    if (card.action.type === 'move_steps' && card.action.steps) {
+      setIsMovingPawn(true);
+      const steps = card.action.steps;
+      let currentState = gameState;
+      const absSteps = Math.abs(steps);
+
+      for (let i = 0; i < absSteps; i++) {
+        await new Promise(resolve => setTimeout(resolve, 180));
+        audioService.playStep();
+        if (steps > 0) {
+          currentState = GameEngine.stepPlayerForward(currentState, player.id);
+        } else {
+          currentState = GameEngine.stepPlayerBackward(currentState, player.id);
+        }
+        setGameState(currentState);
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 220));
+      currentState.activeCard = null;
+      const finalState = GameEngine.finishPlayerLanding(currentState, player.id);
+      setIsMovingPawn(false);
+      await updateAndBroadcastState(finalState);
+      return;
+    }
+
+    if (card.action.type === 'move_to' && card.action.tileId !== undefined) {
+      setIsMovingPawn(true);
+      const target = card.action.tileId;
+      let currentState = gameState;
+      const distance = (target - player.position + 40) % 40;
+
+      for (let i = 0; i < distance; i++) {
+        await new Promise(resolve => setTimeout(resolve, 180));
+        audioService.playStep();
+        currentState = GameEngine.stepPlayerForward(currentState, player.id);
+        setGameState(currentState);
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 220));
+      currentState.activeCard = null;
+      const finalState = GameEngine.finishPlayerLanding(currentState, player.id);
+      setIsMovingPawn(false);
+      await updateAndBroadcastState(finalState);
+      return;
+    }
+
+    if (card.action.type === 'advance_to_nearest_railroad' || card.action.type === 'advance_to_nearest_utility') {
+      setIsMovingPawn(true);
+      const targets = card.action.type === 'advance_to_nearest_railroad' ? [5, 15, 25, 35] : [12, 28];
+      const nextTile = targets.find(t => t > player.position) ?? targets[0];
+      const distance = (nextTile - player.position + 40) % 40;
+      let currentState = gameState;
+
+      for (let i = 0; i < distance; i++) {
+        await new Promise(resolve => setTimeout(resolve, 180));
+        audioService.playStep();
+        currentState = GameEngine.stepPlayerForward(currentState, player.id);
+        setGameState(currentState);
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 220));
+      currentState.activeCard = null;
+      const finalState = GameEngine.finishPlayerLanding(currentState, player.id);
+      setIsMovingPawn(false);
+      await updateAndBroadcastState(finalState);
+      return;
+    }
+
+    // Default immediate card actions
     audioService.playCardDraw();
     const newState = GameEngine.executeActiveCard(gameState);
-    updateAndBroadcastState(newState);
+    await updateAndBroadcastState(newState);
   };
 
   const payJailBail = () => {
-    if (!gameState || !myPlayer) return;
+    if (!gameState || !myPlayer || isMovingPawn) return;
     audioService.playCash();
     const newState = GameEngine.payJailBail(gameState, myPlayer.id);
     updateAndBroadcastState(newState);
   };
 
   const useJailCard = () => {
-    if (!gameState || !myPlayer) return;
+    if (!gameState || !myPlayer || isMovingPawn) return;
     audioService.playCardDraw();
     const newState = GameEngine.useJailCard(gameState, myPlayer.id);
     updateAndBroadcastState(newState);
   };
 
   const buildHouseOnTile = (tileId: number) => {
-    if (!gameState || !myPlayer) return;
+    if (!gameState || !myPlayer || isMovingPawn) return;
     audioService.playBuildHouse();
     const newState = GameEngine.buildHouse(gameState, myPlayer.id, tileId);
     updateAndBroadcastState(newState);
   };
 
   const sellHouseOnTile = (tileId: number) => {
-    if (!gameState || !myPlayer) return;
+    if (!gameState || !myPlayer || isMovingPawn) return;
     audioService.playCash();
     const newState = GameEngine.sellHouse(gameState, myPlayer.id, tileId);
     updateAndBroadcastState(newState);
   };
 
   const mortgageTile = (tileId: number) => {
-    if (!gameState || !myPlayer) return;
+    if (!gameState || !myPlayer || isMovingPawn) return;
     audioService.playCash();
     const newState = GameEngine.mortgageProperty(gameState, myPlayer.id, tileId);
     updateAndBroadcastState(newState);
   };
 
   const unmortgageTile = (tileId: number) => {
-    if (!gameState || !myPlayer) return;
+    if (!gameState || !myPlayer || isMovingPawn) return;
     audioService.playPropertyBuy();
     const newState = GameEngine.unmortgageProperty(gameState, myPlayer.id, tileId);
     updateAndBroadcastState(newState);
   };
 
   const proposeTrade = (offer: TradeOffer) => {
-    if (!gameState) return;
+    if (!gameState || isMovingPawn) return;
     audioService.playClick();
     const newState = GameEngine.proposeTrade(gameState, offer);
     updateAndBroadcastState(newState);
@@ -495,7 +618,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const endCurrentTurn = () => {
-    if (!gameState || !isMyTurn) return;
+    if (!gameState || !isMyTurn || isMovingPawn) return;
     audioService.playClick();
     const newState = GameEngine.endTurn(gameState);
     updateAndBroadcastState(newState);
@@ -515,6 +638,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         gameState,
         isHost,
         isMyTurn,
+        isMovingPawn,
         currentPlayer,
         myPlayer,
         selectedTileDetail,

@@ -77,9 +77,14 @@ export class GameEngine {
   }
 
   /**
-   * Roll the two dice
+   * Prepare a dice roll: evaluates dice, consecutive doubles, jail escape, and returns step distance
    */
-  public static rollDice(state: GameState, customDice?: [number, number]): GameState {
+  public static prepareRoll(state: GameState, customDice?: [number, number]): {
+    state: GameState;
+    stepsToMove: number;
+    wentToJail: boolean;
+    stayedInJail: boolean;
+  } {
     const newState = this.clone(state);
     const player = newState.players[newState.currentTurnIndex];
 
@@ -102,7 +107,8 @@ export class GameEngine {
     // If 3 consecutive doubles -> Go to Jail!
     if (newState.consecutiveDoubles >= 3) {
       this.addLog(newState, 'jail', `🚨 رمى ${player.name} الدبل 3 مرات متتالية! أُرسل مباشرة إلى السجن بتهمة السرعة الزائدة!`, player.id);
-      return this.sendToJail(newState, player.id);
+      const jailState = this.sendToJail(newState, player.id);
+      return { state: jailState, stepsToMove: 0, wentToJail: true, stayedInJail: false };
     }
 
     // If player is currently in Jail
@@ -111,8 +117,9 @@ export class GameEngine {
         player.inJail = false;
         player.jailTurns = 0;
         newState.consecutiveDoubles = 0; // cannot roll again on escape double
+        newState.phase = 'moving';
         this.addLog(newState, 'jail', `🎉 نجح ${player.name} في رمي الدبل وخرج من السجن حراً!`, player.id);
-        return this.movePlayer(newState, player.id, d1 + d2);
+        return { state: newState, stepsToMove: d1 + d2, wentToJail: false, stayedInJail: false };
       } else {
         player.jailTurns += 1;
         if (player.jailTurns >= 3) {
@@ -121,21 +128,79 @@ export class GameEngine {
             player.cash -= 50;
             player.inJail = false;
             player.jailTurns = 0;
+            newState.phase = 'moving';
             this.addLog(newState, 'jail', `🚪 أمضى ${player.name} 3 أدوار في السجن ودفع 50 كفالة إجبارية وخرج.`, player.id);
-            return this.movePlayer(newState, player.id, d1 + d2);
+            return { state: newState, stepsToMove: d1 + d2, wentToJail: false, stayedInJail: false };
           } else {
-            return this.handleBankruptcy(newState, player.id);
+            const bankruptState = this.handleBankruptcy(newState, player.id);
+            return { state: bankruptState, stepsToMove: 0, wentToJail: false, stayedInJail: true };
           }
         } else {
           this.addLog(newState, 'jail', `🔒 فشل ${player.name} في رمي الدبل، ويبقى في السجن (الدور ${player.jailTurns}/3).`, player.id);
           newState.phase = 'idle';
-          return newState;
+          return { state: newState, stepsToMove: 0, wentToJail: false, stayedInJail: true };
         }
       }
     }
 
     // Normal Movement
-    return this.movePlayer(newState, player.id, d1 + d2);
+    newState.phase = 'moving';
+    return { state: newState, stepsToMove: d1 + d2, wentToJail: false, stayedInJail: false };
+  }
+
+  /**
+   * Step player forward by 1 tile (used for animated pawn hopping)
+   */
+  public static stepPlayerForward(state: GameState, playerId: string): GameState {
+    const newState = this.clone(state);
+    const player = newState.players.find(p => p.id === playerId);
+    if (!player) return newState;
+
+    const oldPos = player.position;
+    const newPos = (oldPos + 1) % 40;
+    player.position = newPos;
+
+    // Passed or landed on GO
+    if (newPos === 0) {
+      const goAmount = newState.settings.doubleCashOnGoLanding ? 400 : 200;
+      player.cash += goAmount;
+      this.addLog(newState, 'rent', `🚀 مر ${player.name} على خانة انطلق واستلم ${goAmount} مكافأة!`, player.id);
+    }
+
+    return newState;
+  }
+
+  /**
+   * Step player backward by 1 tile (for Chance card "تراجع 3 خطوات")
+   */
+  public static stepPlayerBackward(state: GameState, playerId: string): GameState {
+    const newState = this.clone(state);
+    const player = newState.players.find(p => p.id === playerId);
+    if (!player) return newState;
+
+    const oldPos = player.position;
+    const newPos = (oldPos - 1 + 40) % 40;
+    player.position = newPos;
+
+    return newState;
+  }
+
+  /**
+   * Complete movement and execute landing action on destination tile
+   */
+  public static finishPlayerLanding(state: GameState, playerId: string): GameState {
+    return this.handleTileLanding(state, playerId);
+  }
+
+  /**
+   * Roll the two dice (synchronous complete fallback)
+   */
+  public static rollDice(state: GameState, customDice?: [number, number]): GameState {
+    const prep = this.prepareRoll(state, customDice);
+    if (prep.wentToJail || prep.stayedInJail || prep.stepsToMove === 0) {
+      return prep.state;
+    }
+    return this.movePlayer(prep.state, prep.state.players[prep.state.currentTurnIndex].id, prep.stepsToMove);
   }
 
   /**
@@ -645,7 +710,7 @@ export class GameEngine {
   }
 
   /**
-   * Sell house on property
+   * Sell house on property with even selling rule
    */
   public static sellHouse(state: GameState, playerId: string, tileId: number): GameState {
     const newState = this.clone(state);
@@ -656,12 +721,31 @@ export class GameEngine {
     const currentHouses = player.houses[tileId] || 0;
     if (currentHouses <= 0) return newState;
 
+    // Check even selling rule: cannot sell from a property if it has fewer houses than other properties in group
+    const groupTiles = COLOR_GROUP_TILES[tile.group] || [];
+    const maxInGroup = Math.max(...groupTiles.map(id => player.houses[id] || 0));
+    if (currentHouses < maxInGroup) return newState;
+
     const refund = Math.floor(tile.houseCost / 2);
     player.cash += refund;
     player.houses[tileId] = currentHouses - 1;
 
-    this.addLog(newState, 'house', `🔨 باع ${player.name} منزلاً من (${tile.name}) واسترجع ${refund}.`, playerId);
+    this.addLog(newState, 'house', `🔨 باع ${player.name} منزلاً من (${tile.name}) واسترجع ${refund} ريال.`, playerId);
     return newState;
+  }
+
+  /**
+   * Build 1 house across all properties in a color group (even building shortcut)
+   */
+  public static buildGroupHouses(state: GameState, playerId: string, group: string): GameState {
+    let currentState = state;
+    const groupTiles = COLOR_GROUP_TILES[group] || [];
+    if (groupTiles.length === 0) return state;
+
+    for (const tileId of groupTiles) {
+      currentState = this.buildHouse(currentState, playerId, tileId);
+    }
+    return currentState;
   }
 
   /**

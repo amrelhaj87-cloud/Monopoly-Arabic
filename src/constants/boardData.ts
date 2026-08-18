@@ -9,7 +9,7 @@ export const BOARD_TILES: TileData[] = [
     type: 'go',
     group: 'special',
     icon: '🚀',
-    description: 'احصل على 200 عند المرور أو الهبوط هنا.'
+    description: 'احصل على 200 ريال عند المرور أو الهبوط هنا.'
   },
   // 1: صنعاء
   {
@@ -23,6 +23,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [2, 10, 30, 90, 160, 250],
     houseCost: 50,
     mortgageValue: 30,
+    flag: '🇾🇪',
     icon: '🏛️'
   },
   // 2: صندوق الحظ
@@ -47,6 +48,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [4, 20, 60, 180, 320, 450],
     houseCost: 50,
     mortgageValue: 30,
+    flag: '🇸🇩',
     icon: '🌴'
   },
   // 4: ضريبة الدخل
@@ -58,9 +60,9 @@ export const BOARD_TILES: TileData[] = [
     group: 'special',
     taxAmount: 200,
     icon: '💰',
-    description: 'ادفع ضريبة الدخل 200 للبنك.'
+    description: 'ادفع ضريبة الدخل 200 ريال للبنك.'
   },
-  // 5: قطار الحرمين السريع
+  // 5: قطار الحرمين
   {
     id: 5,
     name: 'قطار الحرمين',
@@ -71,6 +73,7 @@ export const BOARD_TILES: TileData[] = [
     baseRent: 25,
     rentTiers: [25, 50, 100, 200, 200, 200],
     mortgageValue: 100,
+    flag: '🚄',
     icon: '🚄'
   },
   // 6: بيروت
@@ -85,6 +88,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [6, 30, 90, 270, 400, 550],
     houseCost: 50,
     mortgageValue: 50,
+    flag: '🇱🇧',
     icon: '🌲'
   },
   // 7: فرصة
@@ -97,7 +101,7 @@ export const BOARD_TILES: TileData[] = [
     icon: '❓',
     description: 'اسحب بطاقة فرصة.'
   },
-  // 8: عمان
+  // 8: عمّان
   {
     id: 8,
     name: 'عَمّان',
@@ -109,6 +113,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [6, 30, 90, 270, 400, 550],
     houseCost: 50,
     mortgageValue: 50,
+    flag: '🇯🇴',
     icon: '🏛️'
   },
   // 9: بغداد
@@ -123,9 +128,10 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [8, 40, 100, 300, 450, 600],
     houseCost: 50,
     mortgageValue: 60,
+    flag: '🇮🇶',
     icon: '🕌'
   },
-  // 10: السجن / زيارة عادية
+  // 10: السجن / زيارة
   {
     id: 10,
     name: 'السجن / زيارة',
@@ -147,6 +153,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [10, 50, 150, 450, 625, 750],
     houseCost: 100,
     mortgageValue: 70,
+    flag: '🇪🇬',
     icon: '🌊'
   },
   // 12: شركة الكهرباء
@@ -158,6 +165,7 @@ export const BOARD_TILES: TileData[] = [
     group: 'utility',
     price: 150,
     mortgageValue: 75,
+    flag: '⚡',
     icon: '⚡',
     description: 'الإيجار: 4 أضعاف النرد (أو 10 أضعاف إذا ملكت الشركتين).'
   },
@@ -173,6 +181,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [10, 50, 150, 450, 625, 750],
     houseCost: 100,
     mortgageValue: 70,
+    flag: '🇪🇬',
     icon: '🔺'
   },
   // 14: القاهرة
@@ -187,6 +196,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [12, 60, 180, 500, 700, 900],
     houseCost: 100,
     mortgageValue: 80,
+    flag: '🇪🇬',
     icon: '🏰'
   },
   // 15: قطار المشاعر
@@ -200,6 +210,7 @@ export const BOARD_TILES: TileData[] = [
     baseRent: 25,
     rentTiers: [25, 50, 100, 200, 200, 200],
     mortgageValue: 100,
+    flag: '🚆',
     icon: '🚆'
   },
   // 16: تونس
@@ -214,6 +225,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [14, 70, 200, 550, 750, 950],
     houseCost: 100,
     mortgageValue: 90,
+    flag: '🇹🇳',
     icon: '⛵'
   },
   // 17: صندوق الحظ
@@ -238,6 +250,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [14, 70, 200, 550, 750, 950],
     houseCost: 100,
     mortgageValue: 90,
+    flag: '🇩🇿',
     icon: '🕌'
   },
   // 19: الدار البيضاء
@@ -252,6 +265,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [16, 80, 220, 600, 800, 1000],
     houseCost: 100,
     mortgageValue: 100,
+    flag: '🇲🇦',
     icon: '🏬'
   },
   // 20: الموقف المجاني
@@ -276,6 +290,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [18, 90, 250, 700, 875, 1050],
     houseCost: 150,
     mortgageValue: 110,
+    flag: '🇴🇲',
     icon: '🏰'
   },
   // 22: فرصة
@@ -300,6 +315,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [18, 90, 250, 700, 875, 1050],
     houseCost: 150,
     mortgageValue: 110,
+    flag: '🇧🇭',
     icon: '🏙️'
   },
   // 24: الكويت
@@ -314,6 +330,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [20, 100, 300, 750, 925, 1100],
     houseCost: 150,
     mortgageValue: 120,
+    flag: '🇰🇼',
     icon: '🗼'
   },
   // 25: قطار الخليج
@@ -327,7 +344,8 @@ export const BOARD_TILES: TileData[] = [
     baseRent: 25,
     rentTiers: [25, 50, 100, 200, 200, 200],
     mortgageValue: 100,
-    icon: '🚆'
+    flag: '🚅',
+    icon: '🚅'
   },
   // 26: الدوحة
   {
@@ -341,6 +359,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [22, 110, 330, 800, 975, 1150],
     houseCost: 150,
     mortgageValue: 130,
+    flag: '🇶🇦',
     icon: '🏆'
   },
   // 27: جدة
@@ -355,9 +374,10 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [22, 110, 330, 800, 975, 1150],
     houseCost: 150,
     mortgageValue: 130,
+    flag: '🇸🇦',
     icon: '🌊'
   },
-  // 28: شركة تحلية المياه
+  // 28: تحلية المياه
   {
     id: 28,
     name: 'تحلية المياه',
@@ -366,6 +386,7 @@ export const BOARD_TILES: TileData[] = [
     group: 'utility',
     price: 150,
     mortgageValue: 75,
+    flag: '💧',
     icon: '💧',
     description: 'الإيجار: 4 أضعاف النرد (أو 10 أضعاف إذا ملكت الشركتين).'
   },
@@ -381,6 +402,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [24, 120, 360, 850, 1025, 1200],
     houseCost: 150,
     mortgageValue: 140,
+    flag: '🇸🇦',
     icon: '🌆'
   },
   // 30: اذهب إلى السجن
@@ -396,7 +418,7 @@ export const BOARD_TILES: TileData[] = [
   // 31: القدس الشريف
   {
     id: 31,
-    name: 'القدس الشريف',
+    name: 'القدس',
     englishName: 'Jerusalem',
     type: 'property',
     group: 'green',
@@ -405,12 +427,13 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [26, 130, 390, 900, 1100, 1275],
     houseCost: 200,
     mortgageValue: 150,
+    flag: '🇵🇸',
     icon: '🕌'
   },
   // 32: المدينة المنورة
   {
     id: 32,
-    name: 'المدينة المنورة',
+    name: 'المدينة',
     englishName: 'Madinah',
     type: 'property',
     group: 'green',
@@ -419,6 +442,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [26, 130, 390, 900, 1100, 1275],
     houseCost: 200,
     mortgageValue: 150,
+    flag: '🇸🇦',
     icon: '🌴'
   },
   // 33: صندوق الحظ
@@ -443,9 +467,10 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [28, 150, 450, 1000, 1200, 1400],
     houseCost: 200,
     mortgageValue: 160,
+    flag: '🇸🇦',
     icon: '🕋'
   },
-  // 35: قطار البراق السريع
+  // 35: قطار البراق
   {
     id: 35,
     name: 'قطار البراق',
@@ -456,6 +481,7 @@ export const BOARD_TILES: TileData[] = [
     baseRent: 25,
     rentTiers: [25, 50, 100, 200, 200, 200],
     mortgageValue: 100,
+    flag: '🚅',
     icon: '🚅'
   },
   // 36: فرصة
@@ -480,6 +506,7 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [35, 175, 500, 1100, 1300, 1500],
     houseCost: 200,
     mortgageValue: 175,
+    flag: '🇦🇪',
     icon: '🏙️'
   },
   // 38: ضريبة الرفاهية
@@ -491,7 +518,7 @@ export const BOARD_TILES: TileData[] = [
     group: 'special',
     taxAmount: 100,
     icon: '💎',
-    description: 'ادفع ضريبة الرفاهية 100 للبنك.'
+    description: 'ادفع ضريبة الرفاهية 100 ريال للبنك.'
   },
   // 39: دبي
   {
@@ -505,21 +532,22 @@ export const BOARD_TILES: TileData[] = [
     rentTiers: [50, 200, 600, 1400, 1700, 2000],
     houseCost: 200,
     mortgageValue: 200,
+    flag: '🇦🇪',
     icon: '✨'
   }
 ];
 
 export const GROUP_COLORS: Record<string, { main: string; light: string; border: string; name: string }> = {
-  brown: { main: '#78350f', light: '#92400e', border: '#b45309', name: 'المجموعة البنية' },
+  brown: { main: '#854d0e', light: '#a16207', border: '#ca8a04', name: 'المجموعة البنية' },
   light_blue: { main: '#0284c7', light: '#38bdf8', border: '#7dd3fc', name: 'المجموعة السماوية' },
   pink: { main: '#db2777', light: '#f472b6', border: '#fbcfe8', name: 'المجموعة الوردية' },
   orange: { main: '#ea580c', light: '#fb923c', border: '#fed7aa', name: 'المجموعة البرتقالية' },
   red: { main: '#dc2626', light: '#f87171', border: '#fecaca', name: 'المجموعة الحمراء' },
-  yellow: { main: '#eab308', light: '#fde047', border: '#fef08a', name: 'المجموعة الصفراء' },
+  yellow: { main: '#ca8a04', light: '#facc15', border: '#fef08a', name: 'المجموعة الصفراء' },
   green: { main: '#16a34a', light: '#4ade80', border: '#bbf7d0', name: 'المجموعة الخضراء' },
   dark_blue: { main: '#1d4ed8', light: '#3b82f6', border: '#93c5fd', name: 'المجموعة الزرقاء الملكية' },
-  railroad: { main: '#334155', light: '#64748b', border: '#94a3b8', name: 'محطات القطار' },
-  utility: { main: '#ca8a04', light: '#facc15', border: '#fef08a', name: 'الخدمات العامة' },
+  railroad: { main: '#475569', light: '#64748b', border: '#94a3b8', name: 'محطات القطار' },
+  utility: { main: '#b45309', light: '#f59e0b', border: '#fde047', name: 'الخدمات العامة' },
   special: { main: '#0f172a', light: '#1e293b', border: '#334155', name: 'خانات خاصة' }
 };
 
