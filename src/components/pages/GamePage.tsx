@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BoardView } from '../board/BoardView';
 import { PlayerListHUD } from '../hud/PlayerListHUD';
-import { GameLogDrawer } from '../hud/GameLogDrawer';
+import { MyPropertiesHUD } from '../hud/MyPropertiesHUD';
 import { GameChatDrawer } from '../hud/GameChatDrawer';
 import { PropertyBuyModal } from '../modals/PropertyBuyModal';
 import { AuctionModal } from '../modals/AuctionModal';
@@ -21,10 +21,10 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
 
   return (
     <div className="game-page-layout animate-fadeIn">
-      {/* Sidebar: Players HUD, History, Chat */}
+      {/* Sidebar: Players HUD, Persistent My Properties, Live Chat */}
       <div className="game-sidebar">
         <PlayerListHUD />
-        <GameLogDrawer />
+        <MyPropertiesHUD />
         <GameChatDrawer />
       </div>
 

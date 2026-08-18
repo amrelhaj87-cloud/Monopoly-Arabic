@@ -79,7 +79,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
           </span>
           {tile.id === 0 ? (
             <span className="text-[7.5px] sm:text-[8.5px] text-emerald-300 font-bold font-mono bg-emerald-950/90 px-1.5 py-0.2 rounded-full border border-emerald-500/50 mb-0.5">
-              +200 ر.س
+              +200 د.ع
             </span>
           ) : (
             <div className="h-1.5" />
