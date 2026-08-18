@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "push": "git add . && git commit -m \"Update monopoly-arabic\" && git push",
+    "deploy": "npm run build && git add . && git commit -m \"Update & Deploy to Vercel\" && git push",
+    "deploy:vercel": "npx vercel --prod"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
