@@ -36,12 +36,20 @@ export const TileComponent: React.FC<TileComponentProps> = ({
       onClick={() => onTileClick(tile)}
       style={{
         gridRow,
-        gridColumn: gridCol
+        gridColumn: gridCol,
+        borderColor: owner ? owner.color : undefined,
+        borderWidth: owner ? '2px' : undefined,
+        background: owner 
+          ? `linear-gradient(180deg, ${owner.color}35 0%, rgba(15, 23, 42, 0.95) 80%)` 
+          : undefined,
+        boxShadow: owner 
+          ? `0 0 14px ${owner.color}65, inset 0 0 10px ${owner.color}30` 
+          : undefined
       }}
       className={`board-tile tile-${side} ${isCorner ? 'corner-tile' : ''} ${
         isHighlighted ? 'highlighted' : ''
       } ${owner ? 'has-owner' : ''}`}
-      title={`${tile.name} - اضغط لعرض التفاصيل`}
+      title={`${tile.name} ${owner ? `(مملوك لـ ${owner.name})` : ''} - اضغط للتفاصيل`}
     >
       {/* =========================================================================
           1. CORNER TILE RENDERER
@@ -80,9 +88,9 @@ export const TileComponent: React.FC<TileComponentProps> = ({
             <div
               className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs md:text-sm shadow border"
               style={{
-                backgroundColor: '#0f172a',
-                borderColor: groupStyle.main,
-                boxShadow: owner ? `0 0 0 1.5px ${owner.color}` : 'none'
+                backgroundColor: owner ? `${owner.color}30` : '#0f172a',
+                borderColor: owner ? owner.color : groupStyle.main,
+                boxShadow: owner ? `0 0 8px ${owner.color}` : 'none'
               }}
             >
               <span>{badgeEmoji}</span>
@@ -114,19 +122,33 @@ export const TileComponent: React.FC<TileComponentProps> = ({
             )}
           </div>
 
-          {/* Price / Tax Pill */}
-          <div className="shrink-0 mb-0.5">
-            {tile.price ? (
-              <div className="bg-slate-950/90 border border-amber-500/50 text-amber-300 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full flex items-center gap-0.5 shadow-sm">
+          {/* Price / Owner Pill */}
+          <div className="shrink-0 mb-0.5 w-full px-0.5">
+            {owner ? (
+              <div 
+                className="w-full py-0.5 px-1 rounded flex items-center justify-center gap-1 shadow font-black border border-black/30"
+                style={{ 
+                  backgroundColor: owner.color, 
+                  color: '#080c17'
+                }}
+                title={`عقار مملوك لـ: ${owner.name}`}
+              >
+                <span className="text-[10px] sm:text-[11px] leading-none">{owner.avatar}</span>
+                <span className="text-[7.5px] sm:text-[8px] font-black truncate max-w-[38px] leading-none">
+                  {owner.name.split(' ')[0]}
+                </span>
+              </div>
+            ) : tile.price ? (
+              <div className="bg-slate-950/90 border border-amber-500/50 text-amber-300 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full flex items-center justify-center gap-0.5 shadow-sm">
                 <span>{tile.price}</span>
                 <span className="text-[6.5px] text-amber-200/80">ر.س</span>
               </div>
             ) : tile.taxAmount ? (
-              <div className="bg-rose-950/90 border border-rose-500/50 text-rose-200 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full">
+              <div className="bg-rose-950/90 border border-rose-500/50 text-rose-200 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full flex items-center justify-center">
                 <span>-{tile.taxAmount}</span>
               </div>
             ) : (
-              <div className="text-[9px] text-slate-400 font-medium">
+              <div className="text-[9px] text-slate-400 font-medium text-center">
                 {tile.icon}
               </div>
             )}

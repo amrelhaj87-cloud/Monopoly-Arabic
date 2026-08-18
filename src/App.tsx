@@ -98,7 +98,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Pages Router */}
-      <main className="flex-1 flex flex-col p-2 sm:p-4 w-full max-w-7xl mx-auto">
+      <main className="flex-1 flex flex-col p-1 sm:p-2 md:p-3 w-full max-w-[1680px] mx-auto overflow-x-hidden">
         {/* 1. SETTINGS PAGE */}
         {currentPage === 'settings' && (
           <SettingsPage
