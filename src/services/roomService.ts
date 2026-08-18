@@ -21,6 +21,19 @@ export class RoomService {
         }
       };
     }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (e) => {
+        if (e.key && e.key.startsWith('monopoly_room_') && e.newValue) {
+          try {
+            const room = JSON.parse(e.newValue) as Room;
+            this.localRooms.set(room.id, room);
+            const callback = this.listeners.get(room.id);
+            if (callback) callback(room);
+          } catch (err) {}
+        }
+      });
+    }
   }
 
   /**
