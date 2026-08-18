@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap');
+@import "tailwindcss";
 
 :root {
   --bg-primary: #080c17;
@@ -741,17 +742,22 @@ button:active {
 .board-center-stage {
   grid-column: 2 / 11 !important;
   grid-row: 2 / 11 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
   background: radial-gradient(circle at center, #111a2e 0%, #080c17 100%) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   position: relative !important;
-  padding: 10px !important;
+  padding: 8px !important;
   border: 1.5px solid rgba(245, 158, 11, 0.25) !important;
   border-radius: 14px !important;
   box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8) !important;
-  overflow: hidden;
+  overflow: hidden !important;
+  z-index: 10 !important;
 }
 
 /* Modal Overlays */

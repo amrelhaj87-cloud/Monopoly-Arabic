@@ -38,14 +38,30 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className="w-full h-14 bg-slate-950/90 backdrop-blur-md border-b border-amber-500/20 px-3 sm:px-6 flex items-center justify-between z-50 select-none shadow-md">
+    <header 
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        height: '56px',
+        padding: '0 16px',
+        backgroundColor: 'rgba(4, 7, 15, 0.95)',
+        borderBottom: '1px solid rgba(245, 158, 11, 0.3)',
+        zIndex: 50,
+        boxSizing: 'border-box'
+      }}
+      className="backdrop-blur-md select-none shadow-md"
+    >
       {/* Brand Title / Logo */}
       <div 
         onClick={() => onNavigate('home')} 
-        className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity"
+        style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+        className="hover:opacity-90 transition-opacity"
       >
         <span className="text-2xl filter drop-shadow">🎲</span>
-        <div className="flex flex-col">
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <span className="text-sm sm:text-base font-black font-gold tracking-wide leading-tight">
             مونوبولي العربية
           </span>
@@ -56,7 +72,17 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Center Navigation Pills */}
-      <nav className="flex items-center gap-1 bg-slate-900/95 p-1 rounded-xl border border-slate-800 shadow-inner">
+      <nav 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          padding: '4px 6px',
+          borderRadius: '12px',
+          border: '1px solid rgba(51, 65, 85, 0.8)'
+        }}
+      >
         <button
           onClick={() => onNavigate('home')}
           className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
@@ -97,12 +123,21 @@ export const TopBar: React.FC<TopBarProps> = ({
       </nav>
 
       {/* Action Controls & Room Code */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         {/* Room Code Badge */}
         {room && (
           <button
             onClick={handleCopyRoomCode}
-            className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 px-2.5 py-1 rounded-lg border border-amber-500/30 text-xs font-mono transition-colors"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: '#0f172a',
+              padding: '4px 10px',
+              borderRadius: '8px',
+              border: '1px solid rgba(245, 158, 11, 0.4)'
+            }}
+            className="hover:bg-slate-800 text-xs font-mono transition-colors"
             title="نسخ كود الغرفة"
           >
             <span className="text-[10px] text-amber-400 font-bold">كود:</span>
@@ -115,11 +150,17 @@ export const TopBar: React.FC<TopBarProps> = ({
         {gameState && currentPage === 'game' && (
           <button
             onClick={() => setIs3D(!is3D)}
-            className={`px-2.5 py-1 rounded-lg border text-xs font-bold flex items-center gap-1 transition-all ${
-              is3D 
-                ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-sm' 
-                : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
-            }`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '4px 10px',
+              borderRadius: '8px',
+              border: is3D ? '1px solid #f59e0b' : '1px solid #334155',
+              backgroundColor: is3D ? 'rgba(245, 158, 11, 0.2)' : '#0f172a',
+              color: is3D ? '#fde047' : '#94a3b8'
+            }}
+            className="text-xs font-bold transition-all"
             title="تبديل المنظور ثلاثي الأبعاد"
           >
             <Layers size={14} />
@@ -130,7 +171,16 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Audio Toggle */}
         <button
           onClick={handleToggleSound}
-          className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '6px',
+            borderRadius: '8px',
+            backgroundColor: '#0f172a',
+            border: '1px solid #334155'
+          }}
+          className="hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
           title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
         >
           {isMuted ? <VolumeX size={15} className="text-rose-400" /> : <Volume2 size={15} className="text-emerald-400" />}
@@ -143,7 +193,17 @@ export const TopBar: React.FC<TopBarProps> = ({
               leaveRoom();
               onNavigate('home');
             }}
-            className="flex items-center gap-1 bg-rose-600/20 hover:bg-rose-600 border border-rose-500/40 text-rose-200 hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold transition-colors"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '4px 10px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(225, 29, 72, 0.2)',
+              border: '1px solid rgba(244, 63, 94, 0.5)',
+              color: '#fecdd3'
+            }}
+            className="hover:bg-rose-600 hover:text-white text-xs font-bold transition-colors"
             title="مغادرة المباراة"
           >
             <LogOut size={13} />
