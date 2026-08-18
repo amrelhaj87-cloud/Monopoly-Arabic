@@ -24,7 +24,7 @@ export const PlayerListHUD: React.FC = () => {
         </span>
       </div>
 
-      {/* Players List (Compact Single-Row Richup Style) */}
+      {/* Players List */}
       <div className="space-y-1.5 max-h-[calc(100vh-280px)] overflow-y-auto pr-0.5">
         {gameState.players.map((player) => {
           const isCurrentTurn = currentPlayer?.id === player.id;
@@ -37,34 +37,44 @@ export const PlayerListHUD: React.FC = () => {
               style={{
                 borderRightWidth: '3.5px',
                 borderRightColor: player.color || '#f59e0b',
-                boxShadow: isCurrentTurn ? `0 0 12px ${player.color || '#f59e0b'}35` : 'none'
+                boxShadow: isCurrentTurn ? `0 0 18px ${player.color || '#f59e0b'}55, 0 0 6px ${player.color || '#f59e0b'}30` : 'none'
               }}
               className={`rounded-xl px-2.5 py-1.5 transition-all flex items-center justify-between gap-2 border ${
                 player.isBankrupt
                   ? 'bg-slate-950/40 border-slate-800/60 opacity-40 grayscale line-through'
                   : isCurrentTurn
-                  ? 'bg-slate-900/95 border-amber-500/80 shadow-md ring-1 ring-amber-500/40'
+                  ? 'bg-slate-900/95 border-amber-500/90 shadow-md ring-2 ring-amber-500/50 ring-offset-1 ring-offset-slate-950'
                   : 'bg-slate-900/80 border-slate-800/90 hover:border-slate-700'
               }`}
             >
               {/* Right Side: Avatar + Name + Badges */}
               <div className="flex items-center gap-2 min-w-0">
                 {/* Avatar with Turn Ring */}
-                <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-sm shrink-0 border relative"
-                  style={{
-                    backgroundColor: `${player.color}25`,
-                    borderColor: player.color || '#f59e0b'
-                  }}
-                >
-                  <span>{player.avatar}</span>
-                  {isHost && (
-                    <Crown size={10} className="text-amber-400 absolute -top-1 -right-1 drop-shadow" />
+                <div className="relative shrink-0">
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-sm border relative"
+                    style={{
+                      backgroundColor: `${player.color}25`,
+                      borderColor: player.color || '#f59e0b',
+                      boxShadow: isCurrentTurn ? `0 0 10px ${player.color || '#f59e0b'}80` : 'none'
+                    }}
+                  >
+                    <span>{player.avatar}</span>
+                    {isHost && (
+                      <Crown size={10} className="text-amber-400 absolute -top-1 -right-1 drop-shadow" />
+                    )}
+                  </div>
+                  {/* Pulsing outer ring for active player */}
+                  {isCurrentTurn && (
+                    <span
+                      className="absolute inset-0 rounded-full animate-ping opacity-40 pointer-events-none"
+                      style={{ backgroundColor: player.color || '#f59e0b' }}
+                    />
                   )}
                 </div>
 
                 {/* Name & Mini Badge */}
-                <div className="flex items-center gap-1.5 min-w-0">
+                <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
                   <span className={`font-bold text-xs truncate ${isCurrentTurn ? 'text-amber-300' : 'text-slate-200'}`}>
                     {player.name}
                   </span>
@@ -83,6 +93,13 @@ export const PlayerListHUD: React.FC = () => {
                   {isMe && (
                     <span className="text-[8.5px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shrink-0">
                       أنت
+                    </span>
+                  )}
+
+                  {/* Active turn badge */}
+                  {isCurrentTurn && (
+                    <span className="text-[8px] px-1 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 font-bold shrink-0 animate-pulse">
+                      ▶ دوره
                     </span>
                   )}
                 </div>

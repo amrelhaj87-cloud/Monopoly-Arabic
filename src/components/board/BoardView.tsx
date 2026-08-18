@@ -10,9 +10,10 @@ interface BoardViewProps {
   is3D: boolean;
   onOpenManage: () => void;
   onOpenTrade: () => void;
+  onDeclareBankruptcy?: () => void;
 }
 
-export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpenTrade }) => {
+export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpenTrade, onDeclareBankruptcy }) => {
   const { gameState, setSelectedTileDetail } = useGame();
   const [zoomLevel, setZoomLevel] = useState<number>(1.0);
 
@@ -98,7 +99,7 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
           }}
         >
           {/* Render Center Area */}
-          <BoardCenter onOpenManage={onOpenManage} onOpenTrade={onOpenTrade} />
+          <BoardCenter onOpenManage={onOpenManage} onOpenTrade={onOpenTrade} onDeclareBankruptcy={onDeclareBankruptcy} />
 
           {/* Render 40 Tiles */}
           {BOARD_TILES.map((tile) => {

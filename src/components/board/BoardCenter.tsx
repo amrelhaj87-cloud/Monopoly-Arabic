@@ -1,14 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 import { Dice3D } from '../dice/Dice3D';
 import { useGame } from '../../context/GameContext';
-import { Dices, ArrowRight, Home, Handshake, ScrollText } from 'lucide-react';
+import { Dices, ArrowRight, Home, Handshake, ScrollText, Skull } from 'lucide-react';
 
 interface BoardCenterProps {
   onOpenManage: () => void;
   onOpenTrade: () => void;
+  onDeclareBankruptcy?: () => void;
 }
 
-export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTrade }) => {
+export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTrade, onDeclareBankruptcy }) => {
   const { 
     gameState, 
     currentPlayer, 
@@ -140,7 +141,19 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
 
             {!isMyTurn && !isMovingPawn && !canRoll && !canEndTurn && (
               <div className="text-center py-1 text-[9.5px] text-slate-300 font-medium bg-slate-950/80 rounded-xl border border-slate-800">
-                ⏳ دور {currentPlayer.name}
+                {currentPlayer?.isBot ? (
+                  <span className="flex items-center justify-center gap-1.5 text-violet-300">
+                    <span className="inline-flex gap-0.5">
+                      <span className="w-1 h-1 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1 h-1 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1 h-1 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </span>
+                    <span className="font-bold">{currentPlayer.name} بيفكر...</span>
+                    <span>🤖</span>
+                  </span>
+                ) : (
+                  <span>⏳ دور {currentPlayer?.name}</span>
+                )}
               </div>
             )}
           </div>
@@ -181,7 +194,7 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
         </div>
       </div>
 
-      {/* 3. BOTTOM ROW CONTROLS: Property Management & Trade buttons */}
+      {/* 3. BOTTOM ROW CONTROLS: Property Management, Trade & Bankruptcy */}
       <div className="w-full max-w-[540px] flex items-center justify-center gap-2 px-1">
         {myPlayer && !myPlayer.isBankrupt && !isMovingPawn && (
           <button
@@ -202,6 +215,17 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
           >
             <Handshake size={13} className="text-amber-400" />
             <span className="font-bold">عرض صفقة ومقايضة</span>
+          </button>
+        )}
+
+        {myPlayer && !myPlayer.isBankrupt && !isMovingPawn && onDeclareBankruptcy && (
+          <button
+            onClick={onDeclareBankruptcy}
+            className="btn btn-outline btn-xs sm:btn-sm px-2.5 py-1 text-[10.5px] sm:text-xs bg-slate-900/90 hover:bg-rose-950 flex items-center gap-1 border border-rose-800/60 hover:border-rose-500 text-rose-400 shadow-md transition-colors"
+            title="إعلان الإفلاس (لا رجعة فيه)"
+          >
+            <Skull size={13} />
+            <span className="font-bold">إفلاس</span>
           </button>
         )}
       </div>
