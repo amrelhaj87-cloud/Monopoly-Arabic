@@ -256,11 +256,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // 5. Active Card Draw
+    // 5. Active Card Draw (Handled with countdown & manual close in ChanceCardModal)
     if (gameState.phase === 'tile_action' && gameState.activeCard) {
-      audioService.playCardDraw();
-      const s = GameEngine.executeActiveCard(gameState);
-      await updateAndBroadcastState(s);
       return;
     }
 
