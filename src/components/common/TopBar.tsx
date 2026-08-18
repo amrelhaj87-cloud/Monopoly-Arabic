@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Home, Settings, Layers, LogOut, Copy, Check, Gamepad2, Users } from 'lucide-react';
+import { Volume2, VolumeX, Home, Settings, Layers, LogOut, Copy, Check, Gamepad2, Users, Sparkles } from 'lucide-react';
 import { audioService } from '../../services/audioService';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
@@ -38,101 +38,115 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className="w-full flex items-center justify-between px-3 sm:px-6 py-3 glass-panel border-b border-slate-700/80 shadow-lg" style={{ borderRadius: 0 }}>
-      {/* Brand Title (Click to Go Home) */}
+    <header className="w-full h-14 bg-slate-950/90 backdrop-blur-md border-b border-amber-500/20 px-3 sm:px-6 flex items-center justify-between z-50 select-none shadow-md">
+      {/* Brand Title / Logo */}
       <div 
         onClick={() => onNavigate('home')} 
-        className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity select-none"
+        className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity"
       >
-        <span className="text-3xl">🎲</span>
-        <div>
-          <h1 className="text-base sm:text-xl font-black font-gold tracking-wide leading-tight">
+        <span className="text-2xl filter drop-shadow">🎲</span>
+        <div className="flex flex-col">
+          <span className="text-sm sm:text-base font-black font-gold tracking-wide leading-tight">
             مونوبولي العربية
-          </h1>
-          <span className="text-[10px] sm:text-xs text-slate-400 font-bold block">
-            Monopoly Arabic
+          </span>
+          <span className="text-[9px] text-amber-300/60 font-mono leading-none">
+            Richup Arabic
           </span>
         </div>
       </div>
 
-      {/* Main Navigation Tabs */}
-      <div className="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shadow-md">
+      {/* Center Navigation Pills */}
+      <nav className="flex items-center gap-1 bg-slate-900/95 p-1 rounded-xl border border-slate-800 shadow-inner">
         <button
           onClick={() => onNavigate('home')}
-          className={`nav-pill ${currentPage === 'home' ? 'nav-pill-active' : ''}`}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+            currentPage === 'home'
+              ? 'bg-amber-500 text-slate-950 shadow-md'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
-          <Home size={17} />
+          <Home size={14} />
           <span>الرئيسية</span>
         </button>
 
         {gameState && (
           <button
             onClick={() => onNavigate('game')}
-            className={`nav-pill ${currentPage === 'game' ? 'nav-pill-active' : ''}`}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+              currentPage === 'game'
+                ? 'bg-amber-500 text-slate-950 shadow-md'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
           >
-            <Gamepad2 size={17} />
-            <span>اللعبة</span>
+            <Gamepad2 size={14} />
+            <span>المباراة</span>
           </button>
         )}
 
         <button
           onClick={() => onNavigate('settings')}
-          className={`nav-pill ${currentPage === 'settings' ? 'nav-pill-active' : ''}`}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+            currentPage === 'settings'
+              ? 'bg-amber-500 text-slate-950 shadow-md'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
-          <Settings size={17} />
-          <span>الإعدادات والملف</span>
+          <Settings size={14} />
+          <span>الإعدادات</span>
         </button>
-      </div>
+      </nav>
 
-      {/* Action Controls */}
-      <div className="flex items-center gap-2">
-        {/* Room Code Badge (if in active room) */}
+      {/* Action Controls & Room Code */}
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* Room Code Badge */}
         {room && (
-          <div className="hidden md:flex items-center gap-2 bg-slate-900 px-3 py-1 rounded-xl border border-amber-500/40">
-            <span className="text-[10px] text-amber-300 font-bold">كود:</span>
-            <span className="text-xs font-mono font-black text-white tracking-widest">{room.id}</span>
-            <button 
-              onClick={handleCopyRoomCode} 
-              className="p-1 hover:text-amber-400 text-slate-300 transition-colors"
-              title="نسخ كود الغرفة"
-            >
-              {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-            </button>
-          </div>
+          <button
+            onClick={handleCopyRoomCode}
+            className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 px-2.5 py-1 rounded-lg border border-amber-500/30 text-xs font-mono transition-colors"
+            title="نسخ كود الغرفة"
+          >
+            <span className="text-[10px] text-amber-400 font-bold">كود:</span>
+            <span className="text-white font-bold tracking-wider">{room.id}</span>
+            {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} className="text-slate-400" />}
+          </button>
         )}
 
-        {/* 3D Perspective Toggle (In game only) */}
+        {/* 3D / 2D Perspective Button */}
         {gameState && currentPage === 'game' && (
           <button
             onClick={() => setIs3D(!is3D)}
-            className={`btn btn-sm ${is3D ? 'btn-gold' : 'btn-outline'}`}
+            className={`px-2.5 py-1 rounded-lg border text-xs font-bold flex items-center gap-1 transition-all ${
+              is3D 
+                ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-sm' 
+                : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
+            }`}
             title="تبديل المنظور ثلاثي الأبعاد"
           >
-            <Layers size={15} />
-            <span className="hidden lg:inline">{is3D ? '3D' : '2D'}</span>
+            <Layers size={14} />
+            <span>{is3D ? '3D' : '2D'}</span>
           </button>
         )}
 
         {/* Audio Toggle */}
         <button
           onClick={handleToggleSound}
-          className="btn btn-outline btn-sm px-2.5"
+          className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors"
           title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
         >
-          {isMuted ? <VolumeX size={16} className="text-rose-400" /> : <Volume2 size={16} className="text-emerald-400" />}
+          {isMuted ? <VolumeX size={15} className="text-rose-400" /> : <Volume2 size={15} className="text-emerald-400" />}
         </button>
 
-        {/* Leave Game / Room Button */}
+        {/* Leave Game Button */}
         {room && (
           <button
             onClick={() => {
               leaveRoom();
               onNavigate('home');
             }}
-            className="btn btn-ruby btn-sm px-3"
+            className="flex items-center gap-1 bg-rose-600/20 hover:bg-rose-600 border border-rose-500/40 text-rose-200 hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold transition-colors"
             title="مغادرة المباراة"
           >
-            <LogOut size={15} />
+            <LogOut size={13} />
             <span className="hidden sm:inline">خروج</span>
           </button>
         )}
