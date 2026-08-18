@@ -105,7 +105,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({ isOpen, onClos
                       : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
                   }`}
                 >
-                  {cash} ريال
+                  {cash} د.ع
                 </button>
               ))}
             </div>

@@ -51,14 +51,14 @@ export const AuctionModal: React.FC = () => {
           </div>
           <div className="text-right">
             <span className="text-[10px] text-slate-400 block">السعر الأصلي:</span>
-            <span className="text-xs font-mono text-slate-200">{tile.price} ريال</span>
+            <span className="text-xs font-mono text-slate-200">{tile.price} د.ع</span>
           </div>
         </div>
 
         {/* Current Bid Display */}
         <div className="bg-slate-900/90 border border-amber-500/30 p-4 rounded-2xl text-center mb-4 shadow-lg">
           <span className="text-xs text-slate-400 font-bold block mb-1">أعلى مزايدة حالية</span>
-          <div className="text-3xl font-black font-mono font-gold">{currentBid} ريال</div>
+          <div className="text-3xl font-black font-mono font-gold">{currentBid} د.ع</div>
 
           {highestBidder ? (
             <div className="mt-2 inline-flex items-center gap-2 bg-slate-800/80 px-3 py-1 rounded-full border border-slate-700">
@@ -104,21 +104,21 @@ export const AuctionModal: React.FC = () => {
                 disabled={myPlayer.cash < currentBid + 10}
                 className="btn btn-gold btn-sm py-2"
               >
-                <ArrowUp size={14} /> +10 ر.س
+                <ArrowUp size={14} /> +10 د.ع
               </button>
               <button
                 onClick={() => placeBid(currentBid + 50)}
                 disabled={myPlayer.cash < currentBid + 50}
                 className="btn btn-gold btn-sm py-2"
               >
-                <ArrowUp size={14} /> +50 ر.س
+                <ArrowUp size={14} /> +50 د.ع
               </button>
               <button
                 onClick={() => placeBid(currentBid + 100)}
                 disabled={myPlayer.cash < currentBid + 100}
                 className="btn btn-gold btn-sm py-2"
               >
-                <ArrowUp size={14} /> +100 ر.س
+                <ArrowUp size={14} /> +100 د.ع
               </button>
             </div>
 

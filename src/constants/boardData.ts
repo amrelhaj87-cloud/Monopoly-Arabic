@@ -9,7 +9,7 @@ export const BOARD_TILES: TileData[] = [
     type: 'go',
     group: 'special',
     icon: '🚀',
-    description: 'احصل على 200 ريال عند المرور أو الهبوط هنا.'
+    description: 'احصل على 200 د.ع عند المرور أو الهبوط هنا.'
   },
   // 1: صنعاء
   {
@@ -60,7 +60,7 @@ export const BOARD_TILES: TileData[] = [
     group: 'special',
     taxAmount: 200,
     icon: '💰',
-    description: 'ادفع ضريبة الدخل 200 ريال للبنك.'
+    description: 'ادفع ضريبة الدخل 200 د.ع للبنك.'
   },
   // 5: قطار الحرمين
   {
@@ -377,10 +377,10 @@ export const BOARD_TILES: TileData[] = [
     flag: '🇸🇦',
     icon: '🌊'
   },
-  // 28: تحلية المياه
+  // 28: محطة المياه
   {
     id: 28,
-    name: 'تحلية المياه',
+    name: 'محطة المياه',
     englishName: 'Water Works',
     type: 'utility',
     group: 'utility',
@@ -468,7 +468,7 @@ export const BOARD_TILES: TileData[] = [
     type: 'go_to_jail',
     group: 'special',
     icon: '👮‍♂️',
-    description: 'توجه مباشرة إلى السجن! لا تمر على انطلق ولا تأخذ 200.'
+    description: 'توجه مباشرة إلى السجن! لا تمر على انطلق ولا تأخذ 200 د.ع.'
   },
   // 35: قطار البراق
   {
@@ -518,7 +518,7 @@ export const BOARD_TILES: TileData[] = [
     group: 'special',
     taxAmount: 100,
     icon: '💎',
-    description: 'ادفع ضريبة الرفاهية 100 ريال للبنك.'
+    description: 'ادفع ضريبة الرفاهية 100 د.ع للبنك.'
   },
   // 39: دبي
   {

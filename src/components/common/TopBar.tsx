@@ -65,8 +65,8 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span className="text-sm sm:text-base font-black font-gold tracking-wide leading-tight">
             مونوبولي العربية
           </span>
-          <span className="text-[9px] text-amber-300/60 font-mono leading-none">
-            Richup Arabic
+          <span className="text-[9px] text-amber-300/80 font-medium leading-none">
+            لعبة التجارة والاستثمار
           </span>
         </div>
       </div>

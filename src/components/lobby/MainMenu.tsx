@@ -274,7 +274,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                     onClick={() => setStartingCash(cash)}
                     className={`selector-btn ${startingCash === cash ? 'selector-btn-active-gold' : ''}`}
                   >
-                    <span>{cash} ريال</span>
+                    <span>{cash} د.ع</span>
                   </button>
                 ))}
               </div>

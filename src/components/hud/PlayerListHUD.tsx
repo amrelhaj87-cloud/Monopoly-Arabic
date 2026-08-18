@@ -99,7 +99,7 @@ export const PlayerListHUD: React.FC = () => {
                 <div className="flex items-center gap-1.5">
                   <Coins size={14} className="text-emerald-400 shrink-0" />
                   <span className="font-mono font-black text-emerald-300 text-xs sm:text-sm">
-                    {player.cash} <span className="text-[10px] text-emerald-400/80 font-normal">ر.س</span>
+                    {player.cash} <span className="text-[10px] text-emerald-400/80 font-normal">د.ع</span>
                   </span>
                 </div>
 

@@ -1,42 +1,122 @@
 import { Player, GameState, TileData, TradeOffer } from '../types/game';
 import { BOARD_TILES, COLOR_GROUP_TILES } from '../constants/boardData';
 
+export type BotPersonalityType = 
+  | 'aggressive_tycoon'   // أبو فهد (الهامور)
+  | 'dealmaker_trader'    // شهاب التاجر
+  | 'strategic_investor'  // ليلى المستثمرة
+  | 'conservative_cautious' // طارق الحذر
+  | 'diplomat_collaborator'; // سارة الدبلوماسية
+
 export class AIService {
+  /**
+   * Resolve specific bot personality from player name or difficulty
+   */
+  public static getBotPersonality(bot: Player): BotPersonalityType {
+    const name = bot.name.toLowerCase();
+    if (name.includes('فهد') || name.includes('هامور')) return 'aggressive_tycoon';
+    if (name.includes('شهاب') || name.includes('تاجر')) return 'dealmaker_trader';
+    if (name.includes('ليلى') || name.includes('مستثمر')) return 'strategic_investor';
+    if (name.includes('طارق') || name.includes('حذر')) return 'conservative_cautious';
+    if (name.includes('سارة') || name.includes('دبلوماس')) return 'diplomat_collaborator';
+
+    // Fallback based on difficulty
+    if (bot.botDifficulty === 'hard') return 'aggressive_tycoon';
+    if (bot.botDifficulty === 'easy') return 'conservative_cautious';
+    return 'dealmaker_trader';
+  }
+
   /**
    * Decide whether the bot wants to buy the unowned property it landed on
    */
   public static shouldBuyProperty(bot: Player, tile: TileData, state: GameState): boolean {
     if (!tile.price || bot.cash < tile.price) return false;
 
+    const personality = this.getBotPersonality(bot);
     const remainingCash = bot.cash - tile.price;
     const isMonopolyPiece = this.isCompletingMonopoly(bot, tile);
 
-    // If it completes a color group, almost always buy!
-    if (isMonopolyPiece) return true;
+    // If it completes a color set monopoly, almost everyone buys
+    if (isMonopolyPiece) {
+      if (personality === 'conservative_cautious') {
+        return remainingCash >= 30; // Conservative still buys if not totally broke
+      }
+      return true; // All other personalities buy monopoly piece 100%
+    }
 
-    // Based on difficulty & personality
-    const minReserve = bot.botDifficulty === 'easy' ? 50 : bot.botDifficulty === 'medium' ? 120 : 180;
-    
-    // Always buy cheap properties if reserve is safe
-    if (tile.price <= 140 && remainingCash >= 50) return true;
+    switch (personality) {
+      case 'aggressive_tycoon': // أبو فهد (الهامور)
+        // Aggressive: Buys almost everything, keeps minimum buffer of 20
+        return remainingCash >= 20;
 
-    // For expensive properties, ensure reserve cash
-    if (remainingCash >= minReserve) return true;
+      case 'dealmaker_trader': // شهاب التاجر
+        // Loves railroads, utilities, and high-traffic sets (orange, red, yellow)
+        if (tile.type === 'railroad' || tile.type === 'utility') return remainingCash >= 40;
+        if (['orange', 'red', 'yellow'].includes(tile.group)) return remainingCash >= 50;
+        return remainingCash >= 80;
 
-    return remainingCash > 50 && Math.random() > 0.3;
+      case 'strategic_investor': // ليلى المستثمرة
+        // Strategic: High ROI sets (light blue, orange, red, yellow), maintains 120 buffer
+        if (['light_blue', 'orange', 'red'].includes(tile.group)) return remainingCash >= 70;
+        return remainingCash >= 130;
+
+      case 'conservative_cautious': // طارق الحذر
+        // Cautious: Only buys if wealthy and keeps 220+ cash reserve
+        if (tile.price <= 100 && remainingCash >= 120) return true;
+        return remainingCash >= 220;
+
+      case 'diplomat_collaborator': // سارة الدبلوماسية
+        // Balanced: Standard moderate buffer
+        return remainingCash >= 75;
+
+      default:
+        return remainingCash >= 100;
+    }
   }
 
   /**
    * Decide action when in Jail (pay bail, use card, roll doubles)
    */
-  public static decideJailAction(bot: Player): 'use_card' | 'pay' | 'roll' {
+  public static decideJailAction(bot: Player, state?: GameState): 'use_card' | 'pay' | 'roll' {
     if (bot.getOutOfJailCards > 0) return 'use_card';
     
-    // If rich or late turns in jail, pay 50
-    if (bot.jailTurns >= 2 && bot.cash >= 50) return 'pay';
-    if (bot.cash >= 600) return 'pay';
+    const personality = this.getBotPersonality(bot);
 
-    return 'roll';
+    // Check board development: are there lots of enemy hotels/houses?
+    let enemyHousesCount = 0;
+    let unownedPropertiesCount = 0;
+    if (state) {
+      for (const p of state.players) {
+        if (p.id !== bot.id && !p.isBankrupt) {
+          enemyHousesCount += Object.values(p.houses).reduce((sum, h) => sum + h, 0);
+        }
+      }
+      unownedPropertiesCount = BOARD_TILES.filter(t => t.price && !state.players.some(p => p.properties.includes(t.id))).length;
+    }
+
+    switch (personality) {
+      case 'aggressive_tycoon': // أبو فهد: يريد الخروج فوراً للشراء ومواصلة الهجوم
+        if (bot.cash >= 50) return 'pay';
+        return 'roll';
+
+      case 'conservative_cautious': // طارق: إذا كانت اللوحة مليئة بمباني الخصوم يفضل البقاء في السجن لتفادي الإيجار!
+        if (enemyHousesCount >= 6 && unownedPropertiesCount === 0) {
+          return 'roll'; // Stay safe in jail!
+        }
+        if (bot.jailTurns >= 2 && bot.cash >= 50) return 'pay';
+        return 'roll';
+
+      case 'strategic_investor': // ليلى: تحسب هل توجد عقارات حرة متبقية
+        if (unownedPropertiesCount > 4 && bot.cash >= 150) return 'pay';
+        if (enemyHousesCount >= 8) return 'roll'; // Safe inside jail
+        if (bot.jailTurns >= 2 && bot.cash >= 50) return 'pay';
+        return 'roll';
+
+      default:
+        if (bot.jailTurns >= 2 && bot.cash >= 50) return 'pay';
+        if (bot.cash >= 500) return 'pay';
+        return 'roll';
+    }
   }
 
   /**
@@ -46,15 +126,47 @@ export class AIService {
     const tile = BOARD_TILES.find(t => t.id === tileId);
     if (!tile || !tile.price) return null;
 
+    const personality = this.getBotPersonality(bot);
     const completesMonopoly = this.isCompletingMonopoly(bot, tile);
-    const maxValuation = completesMonopoly ? tile.price * 1.5 : tile.price * 1.1;
-    const maxAffordable = Math.min(bot.cash - 50, maxValuation);
+
+    let maxMultiplier = 1.0;
+    let minCashBuffer = 60;
+
+    switch (personality) {
+      case 'aggressive_tycoon': // يزايد بشراسة
+        maxMultiplier = completesMonopoly ? 1.8 : 1.35;
+        minCashBuffer = 30;
+        break;
+
+      case 'dealmaker_trader': // يزايد باعتدال
+        maxMultiplier = completesMonopoly ? 1.5 : 1.15;
+        minCashBuffer = 60;
+        break;
+
+      case 'strategic_investor': // حسابات دقيقة
+        maxMultiplier = completesMonopoly ? 1.4 : 1.05;
+        minCashBuffer = 100;
+        break;
+
+      case 'conservative_cautious': // لا يزايد إلا بخصم كبير
+        maxMultiplier = completesMonopoly ? 1.1 : 0.85;
+        minCashBuffer = 180;
+        break;
+
+      case 'diplomat_collaborator':
+        maxMultiplier = completesMonopoly ? 1.3 : 1.0;
+        minCashBuffer = 70;
+        break;
+    }
+
+    const maxValuation = Math.floor(tile.price * maxMultiplier);
+    const maxAffordable = Math.min(bot.cash - minCashBuffer, maxValuation);
 
     const minNextBid = currentBid + 10;
     if (minNextBid <= maxAffordable && minNextBid < bot.cash) {
       return minNextBid;
     }
-    return null; // Pass / fold
+    return null; // Fold / pass
   }
 
   /**
@@ -62,7 +174,36 @@ export class AIService {
    */
   public static getHousesToBuild(bot: Player): { tileId: number; count: number }[] {
     const builds: { tileId: number; count: number }[] = [];
-    let availableCash = bot.cash - 200; // Keep reserve
+    const personality = this.getBotPersonality(bot);
+
+    // Reserve buffer based on personality
+    let reserveBuffer = 150;
+    let maxTargetHouses = 5; // Hotel
+
+    switch (personality) {
+      case 'aggressive_tycoon': // يبني حتى الفندق بسرعة وباحتياطي منخفض
+        reserveBuffer = 40;
+        maxTargetHouses = 5;
+        break;
+
+      case 'strategic_investor': // ليلى: تركز على 3 منازل (أعلى نقطة عائد استثماري)
+        reserveBuffer = 150;
+        maxTargetHouses = 3;
+        break;
+
+      case 'conservative_cautious': // حذر جداً: لا يبني إلا إذا توفرت سيولة ضخمة
+        reserveBuffer = 300;
+        maxTargetHouses = 3;
+        break;
+
+      case 'dealmaker_trader':
+      case 'diplomat_collaborator':
+        reserveBuffer = 120;
+        maxTargetHouses = 4;
+        break;
+    }
+
+    let availableCash = bot.cash - reserveBuffer;
 
     for (const [groupName, tileIds] of Object.entries(COLOR_GROUP_TILES)) {
       if (groupName === 'railroad' || groupName === 'utility') continue;
@@ -79,18 +220,18 @@ export class AIService {
       // Build houses evenly
       let canBuildMore = true;
       while (canBuildMore && availableCash >= cost) {
-        let minHouses = 5;
+        let minHouses = maxTargetHouses;
         let targetTileId = -1;
 
         for (const id of tileIds) {
           const count = bot.houses[id] || 0;
-          if (count < 5 && count < minHouses) {
+          if (count < maxTargetHouses && count < minHouses) {
             minHouses = count;
             targetTileId = id;
           }
         }
 
-        if (targetTileId !== -1 && minHouses < 5 && availableCash >= cost) {
+        if (targetTileId !== -1 && minHouses < maxTargetHouses && availableCash >= cost) {
           builds.push({ tileId: targetTileId, count: 1 });
           availableCash -= cost;
         } else {
@@ -139,7 +280,10 @@ export class AIService {
    */
   public static getPropertiesToUnmortgage(bot: Player): number[] {
     const toUnmortgage: number[] = [];
-    let availableCash = bot.cash - 250; // Keep safe reserve
+    const personality = this.getBotPersonality(bot);
+    const reserve = personality === 'aggressive_tycoon' ? 80 : personality === 'conservative_cautious' ? 300 : 180;
+
+    let availableCash = bot.cash - reserve;
     const mortgaged = bot.properties.filter(id => bot.mortgaged[id]);
 
     for (const id of mortgaged) {
@@ -158,6 +302,7 @@ export class AIService {
    * Evaluate a trade offer sent to the bot
    */
   public static evaluateTradeOffer(bot: Player, offer: TradeOffer, state: GameState): boolean {
+    const personality = this.getBotPersonality(bot);
     let offeredValue = offer.offeredCash;
     let requestedValue = offer.requestedCash;
 
@@ -165,7 +310,7 @@ export class AIService {
       const tile = BOARD_TILES.find(t => t.id === tileId);
       if (tile && tile.price) {
         let val = tile.price;
-        if (this.isCompletingMonopolyWithTile(bot, tileId)) val *= 3; // Huge bonus
+        if (this.isCompletingMonopolyWithTile(bot, tileId)) val *= 3.2; // Huge bonus for completing set
         offeredValue += val;
       }
     }
@@ -174,12 +319,32 @@ export class AIService {
       const tile = BOARD_TILES.find(t => t.id === tileId);
       if (tile && tile.price) {
         let val = tile.price;
-        if (this.isBreakingMonopoly(bot, tileId)) val *= 3.5; // Do not break monopoly easily!
+        if (this.isBreakingMonopoly(bot, tileId)) val *= 3.8; // Never break monopoly easily
         requestedValue += val;
       }
     }
 
-    return offeredValue >= requestedValue * 1.1; // Accept if profitable
+    // Acceptance ratio based on personality
+    let requiredRatio = 1.1; // Default
+    switch (personality) {
+      case 'diplomat_collaborator': // سارة: تقبل الصفقات العادلة (0.95 متكافئة)
+        requiredRatio = 0.95;
+        break;
+      case 'dealmaker_trader': // شهاب: يقبل التبادل المتوازن
+        requiredRatio = 1.05;
+        break;
+      case 'strategic_investor': // ليلى: تشترط ربحاً واضحاً
+        requiredRatio = 1.2;
+        break;
+      case 'aggressive_tycoon': // أبو فهد: يرفض إلا إذا كانت لصالحه بشدة
+        requiredRatio = 1.25;
+        break;
+      case 'conservative_cautious': // طارق: يشكك في الصفقات
+        requiredRatio = 1.35;
+        break;
+    }
+
+    return offeredValue >= requestedValue * requiredRatio;
   }
 
   private static isCompletingMonopoly(player: Player, tile: TileData): boolean {

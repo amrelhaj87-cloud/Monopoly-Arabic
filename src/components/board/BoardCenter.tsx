@@ -64,7 +64,7 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
         {gameState.settings.freeParkingJackpot ? (
           <div className="bg-amber-950/90 border border-amber-500/50 px-2 py-0.5 rounded-full text-right shadow-sm">
             <span className="text-[8px] text-amber-300 ml-1">الموقف:</span>
-            <span className="text-[10px] font-mono font-bold text-amber-400">{gameState.freeParkingPool} ر.س</span>
+            <span className="text-[10px] font-mono font-bold text-amber-400">{gameState.freeParkingPool} د.ع</span>
           </div>
         ) : (
           <div className="w-16" />

@@ -731,7 +731,7 @@ export class GameEngine {
     player.cash += refund;
     player.houses[tileId] = currentHouses - 1;
 
-    this.addLog(newState, 'house', `🔨 باع ${player.name} منزلاً من (${tile.name}) واسترجع ${refund} ريال.`, playerId);
+    this.addLog(newState, 'house', `🔨 باع ${player.name} منزلاً من (${tile.name}) واسترجع ${refund} د.ع.`, playerId);
     return newState;
   }
 

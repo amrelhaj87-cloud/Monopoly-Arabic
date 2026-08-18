@@ -204,7 +204,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // 1. In Jail
     if (currentPlayer.inJail && gameState.phase === 'jail_decision') {
-      const decision = AIService.decideJailAction(currentPlayer);
+      const decision = AIService.decideJailAction(currentPlayer, gameState);
       if (decision === 'use_card' && currentPlayer.getOutOfJailCards > 0) {
         audioService.playCardDraw();
         const s = GameEngine.useJailCard(gameState, currentPlayer.id);

@@ -83,7 +83,7 @@ export const WinnerModal: React.FC = () => {
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="bg-slate-950/90 border border-slate-800 p-2.5 rounded-xl">
               <Coins className="mx-auto text-emerald-400 mb-1" size={18} />
-              <span className="font-bold text-white font-mono text-sm">{totalWealth} <span className="text-[10px] text-emerald-400 font-normal">ر.س</span></span>
+              <span className="font-bold text-white font-mono text-sm">{totalWealth} <span className="text-[10px] text-emerald-400 font-normal">د.ع</span></span>
               <span className="text-[10px] text-slate-400 block mt-0.5">صافي الثروة الإجمالية</span>
             </div>
 
@@ -109,7 +109,7 @@ export const WinnerModal: React.FC = () => {
                 <div>
                   <span className="font-black text-emerald-300 block leading-tight">حوت الإيجارات</span>
                   <span className="text-[9.5px] text-slate-400">
-                    {rentKing.name} (+{rentKing.stats.totalRentCollected} ر.س)
+                    {rentKing.name} (+{rentKing.stats.totalRentCollected} د.ع)
                   </span>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export const WinnerModal: React.FC = () => {
                 <div>
                   <span className="font-black text-purple-300 block leading-tight">الزبون الدائم</span>
                   <span className="text-[9.5px] text-slate-400">
-                    {generousPayer.name} (دفع {generousPayer.stats.totalRentPaid} ر.س)
+                    {generousPayer.name} (دفع {generousPayer.stats.totalRentPaid} د.ع)
                   </span>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export const WinnerModal: React.FC = () => {
                     {player.isBankrupt && <span className="text-[9px] text-rose-400">(أفلس)</span>}
                   </div>
                   <span className="font-mono font-bold">
-                    {player.isBankrupt ? '0' : net} ر.س
+                    {player.isBankrupt ? '0' : net} د.ع
                   </span>
                 </div>
               );

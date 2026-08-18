@@ -109,7 +109,7 @@ export const TileTooltip: React.FC<TileTooltipProps> = ({ tile, owner, allPlayer
             <span className="flex items-center gap-1 font-bold">
               <Sparkles size={11} /> غير مملوك
             </span>
-            <span className="font-mono font-black">{tile.price} ر.س</span>
+            <span className="font-mono font-black">{tile.price} د.ع</span>
           </div>
         ) : (
           <div className="text-[9px] text-slate-400 italic">
@@ -125,7 +125,7 @@ export const TileTooltip: React.FC<TileTooltipProps> = ({ tile, owner, allPlayer
               الإيجار الحالي:
             </span>
             <span className="font-mono font-black text-emerald-300 text-[11px]">
-              {currentRent} ر.س
+              {currentRent} د.ع
             </span>
           </div>
         )}
