@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TileData, Player } from '../../types/game';
 import { GROUP_COLORS } from '../../constants/boardData';
+import { TileTooltip } from './TileTooltip';
 
 export type TileSide = 'bottom' | 'top' | 'left' | 'right' | 'corner';
 
@@ -10,6 +11,7 @@ interface TileComponentProps {
   gridCol: number;
   side: TileSide;
   owner?: Player;
+  allPlayers?: Player[];
   playersOnTile: Player[];
   onTileClick: (tile: TileData) => void;
   isHighlighted?: boolean;
@@ -21,10 +23,12 @@ export const TileComponent: React.FC<TileComponentProps> = ({
   gridCol,
   side,
   owner,
+  allPlayers = [],
   playersOnTile,
   onTileClick,
   isHighlighted
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const isCorner = side === 'corner';
   const groupStyle = GROUP_COLORS[tile.group] || GROUP_COLORS['special'];
   const houseCount = owner?.houses[tile.id] || 0;
@@ -34,6 +38,8 @@ export const TileComponent: React.FC<TileComponentProps> = ({
   return (
     <div
       onClick={() => onTileClick(tile)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
         gridRow,
         gridColumn: gridCol,
@@ -51,6 +57,15 @@ export const TileComponent: React.FC<TileComponentProps> = ({
       } ${owner ? 'has-owner' : ''}`}
       title={`${tile.name} ${owner ? `(مملوك لـ ${owner.name})` : ''} - اضغط للتفاصيل`}
     >
+      {/* Quick-Peek Hover Tooltip */}
+      {isHovered && (
+        <TileTooltip
+          tile={tile}
+          owner={owner}
+          allPlayers={allPlayers}
+          side={side}
+        />
+      )}
       {/* =========================================================================
           1. CORNER TILE RENDERER
          ========================================================================= */}

@@ -13,6 +13,7 @@ export const RoomLobby: React.FC = () => {
     addBotToRoom, 
     removeMemberFromRoom, 
     updateCustomization, 
+    updateRoomSettings,
     sendChatMessage, 
     startRoomGame 
   } = useGame();
@@ -177,6 +178,101 @@ export const RoomLobby: React.FC = () => {
                 <span className="text-[10px] text-slate-600 mt-1">في انتظار انضمام لاعب أو روبوت</span>
               </div>
             ))}
+          </div>
+
+          {/* House Rules Settings Panel */}
+          <div className="glass-panel p-4 rounded-2xl border border-slate-700/80 bg-slate-900/60">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">⚙️</span>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-white">قواعد وخيارات المباراة (House Rules)</h4>
+                  <span className="text-[10px] text-slate-400">
+                    {isHost ? 'بإمكانك كمضيف تخصيص شروط وقواعد اللعبة' : 'قواعد اللعبة المعتمدة من قِبل المضيف'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              {/* 1. Starting Cash */}
+              <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-1.5">
+                <span className="text-slate-400 font-bold text-[11px]">💰 رصيد البداية:</span>
+                {isHost ? (
+                  <select
+                    value={room.settings.startingCash}
+                    onChange={(e) => updateRoomSettings({ startingCash: Number(e.target.value) })}
+                    className="bg-slate-900 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-lg px-2 py-1 focus:outline-none"
+                  >
+                    <option value={1000}>1,000 ر.س (تحدي)</option>
+                    <option value={1500}>1,500 ر.س (قياسي)</option>
+                    <option value={2000}>2,000 ر.س (ثراء)</option>
+                    <option value={2500}>2,500 ر.س (هامور)</option>
+                  </select>
+                ) : (
+                  <span className="font-mono font-bold text-amber-300 text-sm">{room.settings.startingCash} ر.س</span>
+                )}
+              </div>
+
+              {/* 2. Turn Timer */}
+              <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-1.5">
+                <span className="text-slate-400 font-bold text-[11px]">⏱️ مؤقت الدور:</span>
+                {isHost ? (
+                  <select
+                    value={room.settings.turnTimeSeconds}
+                    onChange={(e) => updateRoomSettings({ turnTimeSeconds: Number(e.target.value) })}
+                    className="bg-slate-900 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-lg px-2 py-1 focus:outline-none"
+                  >
+                    <option value={30}>30 ثانية (سريع ⚡)</option>
+                    <option value={45}>45 ثانية (متوازن ⚖️)</option>
+                    <option value={60}>60 ثانية (هادئ ☕)</option>
+                    <option value={0}>بدون مؤقت (مفتوح ♾️)</option>
+                  </select>
+                ) : (
+                  <span className="font-mono font-bold text-amber-300 text-sm">
+                    {room.settings.turnTimeSeconds > 0 ? `${room.settings.turnTimeSeconds} ثانية` : 'مفتوح ♾️'}
+                  </span>
+                )}
+              </div>
+
+              {/* 3. Double Cash on GO */}
+              <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-1.5">
+                <span className="text-slate-400 font-bold text-[11px]">🚀 مضاعفة انطلق (400):</span>
+                {isHost ? (
+                  <button
+                    onClick={() => updateRoomSettings({ doubleCashOnGoLanding: !room.settings.doubleCashOnGoLanding })}
+                    className={`btn btn-xs py-1 font-bold ${
+                      room.settings.doubleCashOnGoLanding ? 'btn-gold' : 'btn-outline opacity-60'
+                    }`}
+                  >
+                    {room.settings.doubleCashOnGoLanding ? 'مفعلة (400 ر.س)' : 'معطلة (200 ر.س)'}
+                  </button>
+                ) : (
+                  <span className="font-bold text-amber-300 text-xs">
+                    {room.settings.doubleCashOnGoLanding ? 'مفعلة (400 ر.س)' : 'معطلة (200 ر.س)'}
+                  </span>
+                )}
+              </div>
+
+              {/* 4. Free Parking Jackpot */}
+              <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-1.5">
+                <span className="text-slate-400 font-bold text-[11px]">🅿️ حوض الموقف (Jackpot):</span>
+                {isHost ? (
+                  <button
+                    onClick={() => updateRoomSettings({ freeParkingJackpot: !room.settings.freeParkingJackpot })}
+                    className={`btn btn-xs py-1 font-bold ${
+                      room.settings.freeParkingJackpot ? 'btn-emerald' : 'btn-outline opacity-60'
+                    }`}
+                  >
+                    {room.settings.freeParkingJackpot ? 'تجميع الغرامات 💰' : 'استراحة عادية 🅿️'}
+                  </button>
+                ) : (
+                  <span className="font-bold text-emerald-300 text-xs">
+                    {room.settings.freeParkingJackpot ? 'تجميع الغرامات 💰' : 'استراحة عادية 🅿️'}
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Add Bot & Customization Controls */}

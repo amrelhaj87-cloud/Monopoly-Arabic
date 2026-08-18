@@ -258,6 +258,18 @@ export class RoomService {
   }
 
   /**
+   * Update Room Game Settings (Host only)
+   */
+  public static async updateRoomSettings(roomId: string, newSettings: Partial<GameSettings>): Promise<Room | null> {
+    const room = await this.getRoom(roomId);
+    if (!room) return null;
+
+    room.settings = { ...room.settings, ...newSettings };
+    await this.saveRoom(room);
+    return room;
+  }
+
+  /**
    * Sync Game State into Room
    */
   public static async syncGameState(roomId: string, gameState: GameState): Promise<void> {

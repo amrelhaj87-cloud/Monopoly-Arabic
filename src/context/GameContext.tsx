@@ -26,6 +26,7 @@ interface GameContextType {
   addBotToRoom: (difficulty: 'easy' | 'medium' | 'hard') => Promise<void>;
   removeMemberFromRoom: (memberId: string) => Promise<void>;
   updateCustomization: (token: PlayerTokenId, color: string) => Promise<void>;
+  updateRoomSettings: (newSettings: Partial<GameSettings>) => Promise<void>;
   sendChatMessage: (text: string) => Promise<void>;
   startRoomGame: () => Promise<void>;
   startSinglePlayerGame: (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings) => void;
@@ -375,6 +376,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateRoomSettings = async (newSettings: Partial<GameSettings>) => {
+    if (room && isHost) {
+      const updated = await RoomService.updateRoomSettings(room.id, newSettings);
+      if (updated) setRoom(updated);
+    }
+  };
+
   const sendChatMessage = async (text: string) => {
     if (room && user && text.trim()) {
       await RoomService.sendMessage(room.id, user.uid, user.displayName, text.trim());
@@ -653,6 +661,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addBotToRoom,
         removeMemberFromRoom,
         updateCustomization,
+        updateRoomSettings,
         sendChatMessage,
         startRoomGame,
         startSinglePlayerGame,
