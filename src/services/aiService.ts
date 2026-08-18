@@ -135,6 +135,26 @@ export class AIService {
   }
 
   /**
+   * Check if bot has surplus cash to unmortgage properties and collect rent again
+   */
+  public static getPropertiesToUnmortgage(bot: Player): number[] {
+    const toUnmortgage: number[] = [];
+    let availableCash = bot.cash - 250; // Keep safe reserve
+    const mortgaged = bot.properties.filter(id => bot.mortgaged[id]);
+
+    for (const id of mortgaged) {
+      const tile = BOARD_TILES.find(t => t.id === id);
+      if (!tile || !tile.mortgageValue) continue;
+      const cost = Math.floor(tile.mortgageValue * 1.1);
+      if (availableCash >= cost) {
+        toUnmortgage.push(id);
+        availableCash -= cost;
+      }
+    }
+    return toUnmortgage;
+  }
+
+  /**
    * Evaluate a trade offer sent to the bot
    */
   public static evaluateTradeOffer(bot: Player, offer: TradeOffer, state: GameState): boolean {

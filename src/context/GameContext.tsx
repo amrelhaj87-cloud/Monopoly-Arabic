@@ -264,21 +264,27 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // 6. Idle Phase: Build houses if possible & End turn
+    // 6. Idle Phase: Build houses, unmortgage properties if surplus cash & End turn
     if (gameState.phase === 'idle') {
+      let currState = gameState;
+
+      // Unmortgage if surplus cash
+      const unmortgages = AIService.getPropertiesToUnmortgage(currentPlayer);
+      unmortgages.forEach(tileId => {
+        currState = GameEngine.unmortgageProperty(currState, currentPlayer.id, tileId);
+      });
+
+      // Build houses if possible
       const builds = AIService.getHousesToBuild(currentPlayer);
       if (builds.length > 0) {
         audioService.playBuildHouse();
-        let currState = gameState;
         builds.forEach(b => {
           currState = GameEngine.buildHouse(currState, currentPlayer.id, b.tileId);
         });
-        const endedState = GameEngine.endTurn(currState);
-        await updateAndBroadcastState(endedState);
-      } else {
-        const s = GameEngine.endTurn(gameState);
-        await updateAndBroadcastState(s);
       }
+
+      const endedState = GameEngine.endTurn(currState);
+      await updateAndBroadcastState(endedState);
     }
   };
 
