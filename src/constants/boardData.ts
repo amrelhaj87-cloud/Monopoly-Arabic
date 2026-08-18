@@ -1,7 +1,7 @@
 import { TileData } from '../types/game';
 
 export const BOARD_TILES: TileData[] = [
-  // 0: انطلق
+  // 0: انطلق (Corner)
   {
     id: 0,
     name: 'انطلق',
@@ -131,19 +131,9 @@ export const BOARD_TILES: TileData[] = [
     flag: '🇮🇶',
     icon: '🕌'
   },
-  // 10: السجن / زيارة
+  // 10: الإسكندرية
   {
     id: 10,
-    name: 'السجن / زيارة',
-    englishName: 'Jail / Visiting',
-    type: 'jail',
-    group: 'special',
-    icon: '🔒',
-    description: 'إذا كنت في زيارة فلا بأس، وإلا فالزم السجن!'
-  },
-  // 11: الإسكندرية
-  {
-    id: 11,
     name: 'الإسكندرية',
     englishName: 'Alexandria',
     type: 'property',
@@ -156,9 +146,9 @@ export const BOARD_TILES: TileData[] = [
     flag: '🇪🇬',
     icon: '🌊'
   },
-  // 12: شركة الكهرباء
+  // 11: شركة الكهرباء
   {
-    id: 12,
+    id: 11,
     name: 'شركة الكهرباء',
     englishName: 'Electric Company',
     type: 'utility',
@@ -169,9 +159,9 @@ export const BOARD_TILES: TileData[] = [
     icon: '⚡',
     description: 'الإيجار: 4 أضعاف النرد (أو 10 أضعاف إذا ملكت الشركتين).'
   },
-  // 13: الجيزة
+  // 12: الجيزة
   {
-    id: 13,
+    id: 12,
     name: 'الجيزة',
     englishName: 'Giza',
     type: 'property',
@@ -184,9 +174,9 @@ export const BOARD_TILES: TileData[] = [
     flag: '🇪🇬',
     icon: '🔺'
   },
-  // 14: القاهرة
+  // 13: القاهرة
   {
-    id: 14,
+    id: 13,
     name: 'القاهرة',
     englishName: 'Cairo',
     type: 'property',
@@ -198,6 +188,16 @@ export const BOARD_TILES: TileData[] = [
     mortgageValue: 80,
     flag: '🇪🇬',
     icon: '🏰'
+  },
+  // 14: السجن / زيارة (Corner)
+  {
+    id: 14,
+    name: 'السجن / زيارة',
+    englishName: 'Jail / Visiting',
+    type: 'jail',
+    group: 'special',
+    icon: '🔒',
+    description: 'إذا كنت في زيارة فلا بأس، وإلا فالزم السجن!'
   },
   // 15: قطار المشاعر
   {
@@ -266,9 +266,9 @@ export const BOARD_TILES: TileData[] = [
     houseCost: 100,
     mortgageValue: 100,
     flag: '🇲🇦',
-    icon: '🏬'
+    icon: '🏙️'
   },
-  // 20: الموقف المجاني
+  // 20: موقف مجاني (Corner)
   {
     id: 20,
     name: 'الموقف المجاني',
@@ -276,7 +276,7 @@ export const BOARD_TILES: TileData[] = [
     type: 'free_parking',
     group: 'special',
     icon: '🅿️',
-    description: 'استرح هنا مجاناً (أو اجمع حوض الضرائب المتراكم).'
+    description: 'استرح هنا مجاناً واجمع حوض الغرامات إن وجد!'
   },
   // 21: مسقط
   {
@@ -291,7 +291,7 @@ export const BOARD_TILES: TileData[] = [
     houseCost: 150,
     mortgageValue: 110,
     flag: '🇴🇲',
-    icon: '🏰'
+    icon: '⛵'
   },
   // 22: فرصة
   {
@@ -316,13 +316,13 @@ export const BOARD_TILES: TileData[] = [
     houseCost: 150,
     mortgageValue: 110,
     flag: '🇧🇭',
-    icon: '🏙️'
+    icon: '🏰'
   },
   // 24: الكويت
   {
     id: 24,
     name: 'الكويت',
-    englishName: 'Kuwait',
+    englishName: 'Kuwait City',
     type: 'property',
     group: 'red',
     price: 240,
@@ -360,7 +360,7 @@ export const BOARD_TILES: TileData[] = [
     houseCost: 150,
     mortgageValue: 130,
     flag: '🇶🇦',
-    icon: '🏆'
+    icon: '🏟️'
   },
   // 27: جدة
   {
@@ -403,21 +403,11 @@ export const BOARD_TILES: TileData[] = [
     houseCost: 150,
     mortgageValue: 140,
     flag: '🇸🇦',
-    icon: '🌆'
+    icon: '🌴'
   },
-  // 30: اذهب إلى السجن
+  // 30: القدس
   {
     id: 30,
-    name: 'اذهب للسجن!',
-    englishName: 'Go to Jail',
-    type: 'go_to_jail',
-    group: 'special',
-    icon: '👮‍♂️',
-    description: 'اذهب مباشرة إلى السجن، ولا تمر على خانة انطلق ولا تجمع 200.'
-  },
-  // 31: القدس الشريف
-  {
-    id: 31,
     name: 'القدس',
     englishName: 'Jerusalem',
     type: 'property',
@@ -430,11 +420,21 @@ export const BOARD_TILES: TileData[] = [
     flag: '🇵🇸',
     icon: '🕌'
   },
+  // 31: صندوق الحظ
+  {
+    id: 31,
+    name: 'صندوق الحظ',
+    englishName: 'Community Chest',
+    type: 'community',
+    group: 'special',
+    icon: '🎁',
+    description: 'اسحب بطاقة من صندوق الحظ.'
+  },
   // 32: المدينة المنورة
   {
     id: 32,
-    name: 'المدينة',
-    englishName: 'Madinah',
+    name: 'المدينة المنورة',
+    englishName: 'Medina',
     type: 'property',
     group: 'green',
     price: 300,
@@ -443,23 +443,13 @@ export const BOARD_TILES: TileData[] = [
     houseCost: 200,
     mortgageValue: 150,
     flag: '🇸🇦',
-    icon: '🌴'
+    icon: '🕌'
   },
-  // 33: صندوق الحظ
+  // 33: مكة المكرمة
   {
     id: 33,
-    name: 'صندوق الحظ',
-    englishName: 'Community Chest',
-    type: 'community',
-    group: 'special',
-    icon: '🎁',
-    description: 'اسحب بطاقة من صندوق الحظ.'
-  },
-  // 34: مكة المكرمة
-  {
-    id: 34,
     name: 'مكة المكرمة',
-    englishName: 'Makkah',
+    englishName: 'Mecca',
     type: 'property',
     group: 'green',
     price: 320,
@@ -470,11 +460,21 @@ export const BOARD_TILES: TileData[] = [
     flag: '🇸🇦',
     icon: '🕋'
   },
+  // 34: اذهب إلى السجن (Corner)
+  {
+    id: 34,
+    name: 'اذهب إلى السجن',
+    englishName: 'Go to Jail',
+    type: 'go_to_jail',
+    group: 'special',
+    icon: '👮‍♂️',
+    description: 'توجه مباشرة إلى السجن! لا تمر على انطلق ولا تأخذ 200.'
+  },
   // 35: قطار البراق
   {
     id: 35,
     name: 'قطار البراق',
-    englishName: 'Al Boraq Train',
+    englishName: 'Buraq Train',
     type: 'railroad',
     group: 'railroad',
     price: 200,
@@ -554,12 +554,12 @@ export const GROUP_COLORS: Record<string, { main: string; light: string; border:
 export const COLOR_GROUP_TILES: Record<string, number[]> = {
   brown: [1, 3],
   light_blue: [6, 8, 9],
-  pink: [11, 13, 14],
+  pink: [10, 12, 13],
   orange: [16, 18, 19],
   red: [21, 23, 24],
   yellow: [26, 27, 29],
-  green: [31, 32, 34],
+  green: [30, 32, 33],
   dark_blue: [37, 39],
   railroad: [5, 15, 25, 35],
-  utility: [12, 28]
+  utility: [11, 28]
 };

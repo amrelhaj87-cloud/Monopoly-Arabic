@@ -638,7 +638,8 @@ export class GameEngine {
     const player = newState.players.find(p => p.id === playerId);
     if (!player) return newState;
 
-    player.position = 10; // Jail tile
+    const jailTile = BOARD_TILES.find(t => t.type === 'jail');
+    player.position = jailTile ? jailTile.id : 14;
     player.inJail = true;
     player.jailTurns = 0;
     newState.consecutiveDoubles = 0;

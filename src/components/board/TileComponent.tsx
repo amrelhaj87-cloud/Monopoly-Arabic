@@ -66,11 +66,11 @@ export const TileComponent: React.FC<TileComponentProps> = ({
         /* =========================================================================
            2. REGULAR BOARD TILE (TOP, BOTTOM, LEFT, RIGHT)
            ========================================================================= */
-        <div className="w-full h-full flex flex-col items-center justify-between p-0.5 select-none relative overflow-hidden">
+        <div className="w-full h-full flex flex-col items-center justify-between p-0.5 sm:p-1 select-none relative overflow-hidden">
           {/* Top Edge Color Stripe / Indicator */}
           {tile.price && (
             <div 
-              className="w-full h-1.5 rounded-t-sm shrink-0"
+              className="w-full h-1.5 sm:h-2 rounded-t-sm shrink-0"
               style={{ backgroundColor: groupStyle.main }}
             />
           )}
@@ -78,7 +78,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
           {/* Icon / Flag Badge & Houses */}
           <div className="relative flex items-center justify-center shrink-0 my-0.5">
             <div
-              className="w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs shadow border"
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs md:text-sm shadow border"
               style={{
                 backgroundColor: '#0f172a',
                 borderColor: groupStyle.main,
@@ -92,9 +92,9 @@ export const TileComponent: React.FC<TileComponentProps> = ({
             {houseCount > 0 && (
               <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 flex items-center gap-0.5 z-10">
                 {houseCount === 5 ? (
-                  <span className="text-[9px] filter drop-shadow">🏨</span>
+                  <span className="text-[10px] filter drop-shadow">🏨</span>
                 ) : (
-                  <span className="text-[8px] bg-emerald-600 text-white font-bold px-1 rounded-full shadow">
+                  <span className="text-[8.5px] bg-emerald-600 text-white font-bold px-1 rounded-full shadow">
                     🏠{houseCount}
                   </span>
                 )}
@@ -104,11 +104,11 @@ export const TileComponent: React.FC<TileComponentProps> = ({
 
           {/* City / Property Name */}
           <div className="flex-1 flex flex-col items-center justify-center px-0.5 text-center min-h-0">
-            <span className="text-[8px] sm:text-[9.5px] font-black text-slate-100 leading-tight line-clamp-2">
+            <span className="text-[8.5px] sm:text-[9.5px] md:text-[10.5px] font-black text-slate-100 leading-tight line-clamp-2">
               {tile.name}
             </span>
             {isMortgaged && (
-              <span className="text-[6.5px] bg-rose-950 text-rose-300 font-bold px-1 rounded border border-rose-600/60 mt-0.5">
+              <span className="text-[7px] bg-rose-950 text-rose-300 font-bold px-1 rounded border border-rose-600/60 mt-0.5">
                 مرهون
               </span>
             )}
@@ -117,16 +117,16 @@ export const TileComponent: React.FC<TileComponentProps> = ({
           {/* Price / Tax Pill */}
           <div className="shrink-0 mb-0.5">
             {tile.price ? (
-              <div className="bg-slate-950/90 border border-amber-500/40 text-amber-300 font-bold font-mono text-[7px] sm:text-[8px] px-1 py-0.2 rounded-full flex items-center gap-0.5 shadow-sm">
+              <div className="bg-slate-950/90 border border-amber-500/50 text-amber-300 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full flex items-center gap-0.5 shadow-sm">
                 <span>{tile.price}</span>
-                <span className="text-[6px] text-amber-200/80">ر.س</span>
+                <span className="text-[6.5px] text-amber-200/80">ر.س</span>
               </div>
             ) : tile.taxAmount ? (
-              <div className="bg-rose-950/90 border border-rose-500/40 text-rose-200 font-bold font-mono text-[7px] sm:text-[8px] px-1 py-0.2 rounded-full">
+              <div className="bg-rose-950/90 border border-rose-500/50 text-rose-200 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full">
                 <span>-{tile.taxAmount}</span>
               </div>
             ) : (
-              <div className="text-[8px] text-slate-400 font-medium">
+              <div className="text-[9px] text-slate-400 font-medium">
                 {tile.icon}
               </div>
             )}

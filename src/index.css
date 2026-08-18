@@ -499,16 +499,16 @@ button:active {
   padding: 10px;
 }
 
-/* 11x11 Grid Layout for Monopoly Board */
+/* 15x7 Widescreen Rectangular Grid Layout for Monopoly Board */
 .monopoly-board-grid {
   display: grid !important;
-  grid-template-columns: 1.4fr repeat(9, 1fr) 1.4fr !important;
-  grid-template-rows: 1.4fr repeat(9, 1fr) 1.4fr !important;
-  width: min(96vw, calc(92vh - 80px), 760px) !important;
-  height: min(96vw, calc(92vh - 80px), 760px) !important;
-  max-width: 760px !important;
-  max-height: 760px !important;
-  aspect-ratio: 1 / 1 !important;
+  grid-template-columns: 1.35fr repeat(13, 1fr) 1.35fr !important;
+  grid-template-rows: 1.35fr repeat(5, 1fr) 1.35fr !important;
+  width: 100% !important;
+  max-width: min(98vw, calc(100vw - 320px), 1180px) !important;
+  height: min(85vh, calc(100vh - 100px), 620px) !important;
+  max-height: 620px !important;
+  aspect-ratio: 15 / 7.2 !important;
   background: #080c17 !important;
   border: 3px solid #f59e0b !important;
   border-radius: 18px !important;
@@ -742,8 +742,8 @@ button:active {
 
 /* Center Stage Area */
 .board-center-stage {
-  grid-column: 2 / 11 !important;
-  grid-row: 2 / 11 !important;
+  grid-column: 2 / 15 !important;
+  grid-row: 2 / 7 !important;
   width: 100% !important;
   height: 100% !important;
   max-width: 100% !important;
@@ -754,7 +754,7 @@ button:active {
   align-items: center !important;
   justify-content: center !important;
   position: relative !important;
-  padding: 8px !important;
+  padding: 8px 16px !important;
   border: 1.5px solid rgba(245, 158, 11, 0.25) !important;
   border-radius: 14px !important;
   box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8) !important;
