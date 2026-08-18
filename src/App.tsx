@@ -62,14 +62,20 @@ export const App: React.FC = () => {
     }
   }, [room?.id]);
 
-  // Automatically switch to 'game' page when a game match starts
+  const hasAutoSwitchedToGame = useRef<boolean>(false);
+
+  // Automatically switch to 'game' page when a game match starts for the first time
   useEffect(() => {
-    if (gameState) {
+    if (gameState && !hasAutoSwitchedToGame.current) {
+      hasAutoSwitchedToGame.current = true;
       setCurrentPage('game');
-    } else if (!room && currentPage === 'game') {
-      setCurrentPage('home');
+    } else if (!gameState) {
+      hasAutoSwitchedToGame.current = false;
+      if (currentPage === 'game') {
+        setCurrentPage('home');
+      }
     }
-  }, [gameState, room, currentPage]);
+  }, [gameState]);
 
   if (isLoading) {
     return (

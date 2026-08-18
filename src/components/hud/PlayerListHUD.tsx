@@ -14,21 +14,21 @@ export const PlayerListHUD: React.FC = () => {
   const activePlayers = gameState.players.filter(p => !p.isBankrupt);
 
   return (
-    <div className="w-full lg:w-72 flex flex-col gap-2 select-none">
+    <div className="w-full flex flex-col gap-2 select-none">
       {/* HUD Header */}
-      <div className="flex items-center justify-between px-2 py-1 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-        <span className="font-bold text-slate-300 flex items-center gap-1.5">
-          <Users size={13} className="text-amber-400" />
+      <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900/90 rounded-xl border border-slate-800 text-xs">
+        <span className="font-bold text-slate-200 flex items-center gap-1.5">
+          <Users size={14} className="text-amber-400" />
           المتنافسون ({activePlayers.length})
         </span>
-        <span className="text-[10px] text-amber-300 font-medium flex items-center gap-1">
-          <TrendingUp size={11} />
+        <span className="text-[10.5px] text-amber-300 font-bold flex items-center gap-1">
+          <TrendingUp size={12} />
           الترتيب بالثروة
         </span>
       </div>
 
       {/* Players List */}
-      <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
+      <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-0.5">
         {gameState.players.map((player) => {
           const isCurrentTurn = currentPlayer?.id === player.id;
           const isMe = user?.uid === player.id;
@@ -37,30 +37,28 @@ export const PlayerListHUD: React.FC = () => {
           return (
             <div
               key={player.id}
-              className={`relative rounded-2xl p-2.5 transition-all overflow-hidden border ${
+              style={{
+                borderLeftWidth: '4px',
+                borderLeftColor: player.color || '#f59e0b',
+                boxShadow: isCurrentTurn ? `0 0 16px ${player.color || '#f59e0b'}30` : 'none'
+              }}
+              className={`rounded-2xl p-3 transition-all border ${
                 player.isBankrupt
                   ? 'bg-slate-950/40 border-slate-800/60 opacity-40 grayscale'
                   : isCurrentTurn
-                  ? 'bg-gradient-to-r from-slate-900/95 to-slate-950/95 border-amber-500/80 shadow-lg scale-[1.01]'
-                  : 'bg-slate-900/80 border-slate-800/90 hover:border-slate-700'
+                  ? 'bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-950 border-amber-500/80'
+                  : 'bg-slate-900/85 border-slate-800/90 hover:border-slate-700'
               }`}
             >
-              {/* Left Color Accent Bar */}
-              <div 
-                className="absolute top-0 bottom-0 left-0 w-1.5"
-                style={{ backgroundColor: player.color }}
-              />
-
-              {/* Player Info Row */}
-              <div className="flex items-center justify-between gap-2 mb-2 pl-2">
-                <div className="flex items-center gap-2 min-w-0">
+              {/* Top Row: Avatar, Name & Active Turn */}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2.5 min-w-0">
                   {/* Avatar Circle */}
                   <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-lg shrink-0 border-2 shadow-inner"
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-xl shrink-0 border-2 shadow-sm"
                     style={{ 
                       backgroundColor: `${player.color}25`, 
-                      borderColor: player.color,
-                      boxShadow: isCurrentTurn ? `0 0 10px ${player.color}60` : 'none'
+                      borderColor: player.color || '#f59e0b'
                     }}
                   >
                     <span>{player.avatar}</span>
@@ -69,7 +67,7 @@ export const PlayerListHUD: React.FC = () => {
                   {/* Name & Type */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-xs text-white truncate">
+                      <span className="font-bold text-xs sm:text-sm text-white truncate">
                         {player.name}
                       </span>
                       {isMe && (
@@ -78,7 +76,7 @@ export const PlayerListHUD: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-400 block leading-tight">
+                    <span className="text-[10px] text-slate-400 block leading-tight mt-0.5">
                       {player.isBot ? '🤖 روبوت ذكي' : '👤 لاعب حقيقي'}
                     </span>
                   </div>
@@ -87,7 +85,7 @@ export const PlayerListHUD: React.FC = () => {
                 {/* Active Turn Pill */}
                 {isCurrentTurn && !player.isBankrupt && (
                   <span
-                    className="text-[9px] font-black px-2 py-0.5 rounded-full text-slate-950 shadow animate-pulse shrink-0"
+                    className="text-[10px] font-black px-2.5 py-1 rounded-full text-slate-950 shadow-md animate-pulse shrink-0"
                     style={{ backgroundColor: player.color || '#f59e0b' }}
                   >
                     الدور الآن
@@ -96,36 +94,43 @@ export const PlayerListHUD: React.FC = () => {
               </div>
 
               {/* Cash & Assets Pill */}
-              <div className="grid grid-cols-2 gap-1.5 py-1 px-2.5 bg-slate-950/80 rounded-xl mb-1.5 text-xs border border-slate-800/80">
+              <div className="flex items-center justify-between px-3 py-1.5 bg-slate-950/90 rounded-xl mb-1.5 text-xs border border-slate-800/80">
+                {/* Cash */}
                 <div className="flex items-center gap-1.5">
-                  <Coins size={13} className="text-emerald-400 shrink-0" />
-                  <span className="font-mono font-bold text-emerald-300">{player.cash} ر.س</span>
+                  <Coins size={14} className="text-emerald-400 shrink-0" />
+                  <span className="font-mono font-black text-emerald-300 text-xs sm:text-sm">
+                    {player.cash} <span className="text-[10px] text-emerald-400/80 font-normal">ر.س</span>
+                  </span>
                 </div>
-                <div className="flex items-center gap-1.5 justify-end">
-                  <Home size={13} className="text-amber-400 shrink-0" />
-                  <span className="text-slate-300 font-bold">{player.properties.length} عقار</span>
+
+                {/* Properties Count */}
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <Home size={14} className="text-amber-400 shrink-0" />
+                  <span className="text-slate-200 font-bold text-xs whitespace-nowrap">
+                    {player.properties.length} {player.properties.length === 1 ? 'عقار' : player.properties.length === 2 ? 'عقاران' : 'عقارات'}
+                  </span>
                 </div>
               </div>
 
               {/* Status Warnings */}
               {player.inJail && !player.isBankrupt && (
-                <div className="text-[10px] bg-rose-950/80 border border-rose-600/50 text-rose-300 px-2 py-0.5 rounded-lg flex items-center justify-between mb-1">
-                  <span className="flex items-center gap-1 font-bold">
-                    <Lock size={10} /> في السجن
+                <div className="text-[10px] bg-rose-950/90 border border-rose-600/60 text-rose-200 px-2.5 py-1 rounded-xl flex items-center justify-between mb-1.5 font-bold">
+                  <span className="flex items-center gap-1.5">
+                    <Lock size={12} className="text-rose-400" /> في السجن
                   </span>
-                  <span>(الدور {player.jailTurns + 1}/3)</span>
+                  <span className="font-mono text-rose-300">(الدور {player.jailTurns + 1}/3)</span>
                 </div>
               )}
 
               {player.isBankrupt && (
-                <div className="text-[10px] bg-rose-950/90 text-rose-300 px-2 py-0.5 rounded-lg text-center font-bold">
+                <div className="text-[10px] bg-rose-950/90 text-rose-300 px-2.5 py-1 rounded-xl text-center font-bold">
                   💥 مفلس (خرج من اللعبة)
                 </div>
               )}
 
               {/* Owned Properties Badges */}
               {player.properties.length > 0 && !player.isBankrupt && (
-                <div className="flex flex-wrap gap-1 mt-1 pt-1 border-t border-slate-800/60">
+                <div className="flex flex-wrap gap-1 mt-1 pt-1.5 border-t border-slate-800/60">
                   {player.properties.map((tileId) => {
                     const tile = BOARD_TILES.find((t) => t.id === tileId);
                     if (!tile) return null;
@@ -137,7 +142,7 @@ export const PlayerListHUD: React.FC = () => {
                       <button
                         key={tile.id}
                         onClick={() => setSelectedTileDetail(tile)}
-                        className={`text-[9px] px-1.5 py-0.5 rounded font-bold text-white shadow-sm flex items-center gap-0.5 hover:scale-105 transition-transform ${
+                        className={`text-[9.5px] px-2 py-0.5 rounded-lg font-bold text-white shadow-sm flex items-center gap-1 hover:scale-105 transition-transform ${
                           isMortgaged ? 'opacity-50 line-through' : ''
                         }`}
                         style={{ backgroundColor: groupStyle.main }}
@@ -145,7 +150,7 @@ export const PlayerListHUD: React.FC = () => {
                       >
                         <span>{tile.name}</span>
                         {houses > 0 && (
-                          <span className="text-[8px]">{houses === 5 ? '🏨' : `🏠${houses}`}</span>
+                          <span className="text-[8.5px]">{houses === 5 ? '🏨' : `🏠${houses}`}</span>
                         )}
                       </button>
                     );
