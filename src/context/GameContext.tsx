@@ -145,22 +145,88 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [gameState?.phase, gameState?.winnerId]);
 
-  // Automated Turn Timer Countdown
+  // 1. Live Auction Countdown Timer & Auto-Resolution
   useEffect(() => {
-    if (!gameState || gameState.phase === 'game_over' || gameState.isPaused || isMovingPawn) return;
-    if (gameState.settings.turnTimeSeconds === 0) return;
+    if (!gameState || gameState.phase !== 'auction' || !gameState.activeAuction || gameState.isPaused) return;
+
+    // In multiplayer rooms, only host runs the authoritative clock
+    if (room && !isHost) return;
 
     const interval = setInterval(() => {
       setGameState(prev => {
-        if (!prev || prev.phase === 'game_over' || prev.remainingTurnTime <= 0) return prev;
+        if (!prev || prev.phase !== 'auction' || !prev.activeAuction || prev.isPaused) return prev;
+        const updated = GameEngine.tickAuctionTimer(prev);
+        if (room) {
+          RoomService.syncGameState(room.id, updated);
+        }
+        return updated;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameState?.phase, gameState?.activeAuction?.tileId, isHost, room?.id]);
+
+  // 2. Dedicated Multi-Bot Auction Bidding Loop
+  useEffect(() => {
+    if (!gameState || gameState.phase !== 'auction' || !gameState.activeAuction || gameState.isPaused) return;
+
+    // In multiplayer, host orchestrates bot actions
+    if (room && !isHost) return;
+
+    const auction = gameState.activeAuction;
+    // Find active bot participants who are not currently the highest bidder
+    const eligibleBots = gameState.players.filter(
+      p => p.isBot && !p.isBankrupt && auction.activePlayerIds.includes(p.id) && auction.highestBidderId !== p.id
+    );
+
+    if (eligibleBots.length === 0) return;
+
+    // Pick one bot to evaluate and act after a brief realistic pause (1200ms - 1700ms)
+    const actingBot = eligibleBots[Math.floor(Math.random() * eligibleBots.length)];
+
+    const botTimer = setTimeout(async () => {
+      // Re-check game and auction state
+      if (!gameState || gameState.phase !== 'auction' || !gameState.activeAuction) return;
+
+      const bid = AIService.decideAuctionBid(actingBot, auction.tileId, auction.currentBid);
+      if (bid !== null && bid > auction.currentBid && actingBot.cash >= bid) {
+        audioService.playBid();
+        const s = GameEngine.placeAuctionBid(gameState, actingBot.id, bid);
+        await updateAndBroadcastState(s);
+      } else {
+        const s = GameEngine.passAuction(gameState, actingBot.id);
+        await updateAndBroadcastState(s);
+      }
+    }, 1400);
+
+    return () => clearTimeout(botTimer);
+  }, [
+    gameState?.phase,
+    gameState?.activeAuction?.currentBid,
+    gameState?.activeAuction?.highestBidderId,
+    gameState?.activeAuction?.activePlayerIds?.length,
+    isHost,
+    room?.id
+  ]);
+
+  // 3. Regular Turn Timer Countdown
+  useEffect(() => {
+    if (!gameState || gameState.phase === 'game_over' || gameState.phase === 'auction' || gameState.isPaused || isMovingPawn) return;
+    if (!gameState.settings?.turnTimeSeconds || gameState.settings.turnTimeSeconds === 0) return;
+
+    // In multiplayer, only host runs the timer
+    if (room && !isHost) return;
+
+    const interval = setInterval(() => {
+      setGameState(prev => {
+        if (!prev || prev.phase === 'game_over' || prev.phase === 'auction' || prev.isPaused || prev.remainingTurnTime <= 0) return prev;
+        
+        // Pause timer if manual dialog/card is active
+        if (prev.activeCard) return prev;
+
         const newTime = prev.remainingTurnTime - 1;
         if (newTime <= 0) {
-          // Time expired, auto end turn or pass
-          if (prev.phase === 'auction') {
-            const passedState = GameEngine.passAuction(prev, prev.players[prev.currentTurnIndex].id);
-            if (room) RoomService.syncGameState(room.id, passedState);
-            return passedState;
-          } else if (prev.phase === 'tile_action' && prev.pendingBuyTileId) {
+          if (prev.phase === 'tile_action' && prev.pendingBuyTileId !== null) {
             const declined = GameEngine.declineProperty(prev, prev.pendingBuyTileId);
             if (room) RoomService.syncGameState(room.id, declined);
             return declined;
@@ -175,11 +241,19 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [gameState?.currentTurnIndex, gameState?.phase, room, isMovingPawn]);
+  }, [
+    gameState?.currentTurnIndex, 
+    gameState?.phase, 
+    gameState?.pendingBuyTileId, 
+    gameState?.activeCard, 
+    room?.id, 
+    isHost, 
+    isMovingPawn
+  ]);
 
-  // Automated AI Bot Loop
+  // Automated AI Bot Loop for Regular Turns
   useEffect(() => {
-    if (!gameState || gameState.phase === 'game_over' || !currentPlayer?.isBot || isMovingPawn) return;
+    if (!gameState || gameState.phase === 'game_over' || gameState.phase === 'auction' || !currentPlayer?.isBot || isMovingPawn) return;
 
     if (botActionTimeoutRef.current) clearTimeout(botActionTimeoutRef.current);
 
@@ -195,12 +269,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     gameState?.currentTurnIndex, 
     gameState?.hasRolled, 
     gameState?.pendingBuyTileId, 
-    gameState?.activeAuction,
     isMovingPawn
   ]);
 
   const handleBotTurnStep = async () => {
-    if (!gameState || !currentPlayer || !currentPlayer.isBot || isMovingPawn) return;
+    if (!gameState || !currentPlayer || !currentPlayer.isBot || isMovingPawn || gameState.phase === 'auction') return;
 
     // 1. In Jail
     if (currentPlayer.inJail && gameState.phase === 'jail_decision') {
@@ -243,21 +316,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // 4. In Auction
-    if (gameState.phase === 'auction' && gameState.activeAuction) {
-      const bid = AIService.decideAuctionBid(currentPlayer, gameState.activeAuction.tileId, gameState.activeAuction.currentBid);
-      if (bid !== null) {
-        audioService.playBid();
-        const s = GameEngine.placeAuctionBid(gameState, currentPlayer.id, bid);
-        await updateAndBroadcastState(s);
-      } else {
-        const s = GameEngine.passAuction(gameState, currentPlayer.id);
-        await updateAndBroadcastState(s);
-      }
-      return;
-    }
-
-    // 5. Active Card Draw (Handled with countdown & manual close in ChanceCardModal)
+    // 4. Active Card Draw (Handled in ChanceCardModal)
     if (gameState.phase === 'tile_action' && gameState.activeCard) {
       return;
     }

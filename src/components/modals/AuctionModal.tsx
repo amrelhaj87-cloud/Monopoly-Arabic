@@ -34,8 +34,14 @@ export const AuctionModal: React.FC = () => {
             <h3 className="text-lg font-bold text-white">مزاد علني مباشر</h3>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-800 px-3 py-1 rounded-full border border-slate-700 text-xs font-mono font-bold text-amber-300">
-            <Clock size={14} />
+          <div
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-mono font-bold transition-all ${
+              auction.timeLeftSeconds <= 5
+                ? 'bg-rose-950/90 border-rose-500 text-rose-300 animate-pulse scale-105 shadow-md shadow-rose-950/50'
+                : 'bg-slate-800 border-slate-700 text-amber-300'
+            }`}
+          >
+            <Clock size={14} className={auction.timeLeftSeconds <= 5 ? 'text-rose-400 animate-spin' : ''} />
             <span>{auction.timeLeftSeconds}ث</span>
           </div>
         </div>

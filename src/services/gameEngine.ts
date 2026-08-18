@@ -418,7 +418,7 @@ export class GameEngine {
     };
 
     newState.phase = 'auction';
-    this.addLog(newState, 'system', `📢 بدأ مزاد علني على (${tile.name}) بسعر افتتاحي 10!`);
+    this.addLog(newState, 'system', `📢 بدأ مزاد علني على (${tile.name}) بسعر افتتاحي 10 د.ع!`);
     return newState;
   }
 
@@ -437,7 +437,7 @@ export class GameEngine {
     auction.highestBidderId = playerId;
     auction.timeLeftSeconds = 15;
 
-    this.addLog(newState, 'buy', `🔨 رفع ${player.name} المزايدة إلى ${amount}!`, playerId);
+    this.addLog(newState, 'buy', `🔨 رفع ${player.name} المزايدة إلى ${amount} د.ع!`, playerId);
     return newState;
   }
 
@@ -464,6 +464,39 @@ export class GameEngine {
   }
 
   /**
+   * Tick auction timer down by 1 second
+   */
+  public static tickAuctionTimer(state: GameState): GameState {
+    const newState = this.clone(state);
+    if (!newState.activeAuction || newState.phase !== 'auction') return newState;
+
+    if (newState.activeAuction.timeLeftSeconds > 1) {
+      newState.activeAuction.timeLeftSeconds -= 1;
+      return newState;
+    } else {
+      // Time expired: resolve and conclude auction
+      return this.resolveAuction(newState);
+    }
+  }
+
+  /**
+   * Tick regular turn timer down by 1 second
+   */
+  public static tickTurnTimer(state: GameState): GameState {
+    const newState = this.clone(state);
+    if (newState.phase === 'game_over' || newState.phase === 'auction') return newState;
+    if (newState.settings.turnTimeSeconds <= 0) return newState;
+
+    if (newState.remainingTurnTime > 1) {
+      newState.remainingTurnTime -= 1;
+      return newState;
+    } else {
+      newState.remainingTurnTime = 0;
+      return this.endTurn(newState);
+    }
+  }
+
+  /**
    * Resolve and finish auction
    */
   public static resolveAuction(state: GameState): GameState {
@@ -478,7 +511,7 @@ export class GameEngine {
       winner.cash -= auction.currentBid;
       winner.properties.push(auction.tileId);
       winner.stats.propertiesBought += 1;
-      this.addLog(newState, 'buy', `🏆 فاز ${winner.name} بالمزاد واشترى (${tile.name}) بمبلغ ${auction.currentBid}!`, winner.id);
+      this.addLog(newState, 'buy', `🏆 فاز ${winner.name} بالمزاد واشترى (${tile.name}) بمبلغ ${auction.currentBid} د.ع!`, winner.id);
     } else if (tile) {
       this.addLog(newState, 'system', `❌ انتهى المزاد على (${tile.name}) دون مشتري.`);
     }
