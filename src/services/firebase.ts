@@ -109,9 +109,21 @@ class FirebaseService {
     if (!this.hasValidCloudConfig() || !this.auth) {
       throw new Error('لم يتم ضبط مفاتيح Firebase السحابية بعد. يمكنك اللعب كزائر أو تسجيل الدخول التجريبي.');
     }
-    const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(this.auth, provider);
-    return result.user;
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const result = await signInWithPopup(this.auth, provider);
+      return result.user;
+    } catch (error: any) {
+      if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('تم إغلاق نافذة تسجيل الدخول من قبل المستخدم.');
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        throw new Error('تم إلغاء طلب تسجيل الدخول.');
+      } else if (error.code === 'auth/unauthorized-domain') {
+        throw new Error('النطاق الحالي غير مصرح به في Firebase Console. يرجى إضافة النطاق إلى Authorized Domains.');
+      }
+      throw error;
+    }
   }
 
   public async loginWithEmail(email: string, pass: string): Promise<User | null> {

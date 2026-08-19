@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { User, Mail, Sparkles, Dices, ShieldAlert, Check, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { GAME_TOKENS, AVATARS_LIST } from '../../constants/tokens';
+import { PLAYER_DEFAULT_COLORS } from '../../constants/tokens';
+import { PlayerBlob } from '../common/PlayerBlob';
 import { PlayerTokenId } from '../../types/game';
 
 interface AuthModalProps {
@@ -33,8 +34,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   const [tab, setTab] = useState<'guest' | 'email' | 'register'>('guest');
   const [guestName, setGuestName] = useState('التاجر الصغير');
-  const [selectedAvatar, setSelectedAvatar] = useState(AVATARS_LIST[0].emoji);
-  const [selectedToken, setSelectedToken] = useState<PlayerTokenId>('falcon');
+  const [selectedColor, setSelectedColor] = useState(PLAYER_DEFAULT_COLORS[0]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,7 +56,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       return;
     }
     setErrorMsg('');
-    await loginAsGuest(guestName, selectedAvatar, selectedToken);
+    await loginAsGuest(guestName, selectedColor, selectedColor as PlayerTokenId);
     if (onClose) onClose();
   };
 
@@ -120,6 +120,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </p>
         </div>
 
+        {/* --- Quick Google / Gmail 1-Click Sign-In --- */}
+        <div className="mb-6">
+          <button
+            type="button"
+            onClick={handleGoogleSubmit}
+            disabled={isLoading}
+            className="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all border border-slate-200 cursor-pointer active:scale-[0.98]"
+          >
+            {/* Google Colorful 'G' Logo */}
+            <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+              <path
+                fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+              />
+            </svg>
+            <span>{isLoading ? 'جاري الاتصال بـ Google...' : 'تسجيل الدخول السريع عبر Google / Gmail'}</span>
+          </button>
+        </div>
+
+        {/* Separator / Divider */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-px bg-slate-800 flex-1" />
+          <span className="text-xs text-slate-400 font-bold">أو اختر طريقة أخرى</span>
+          <div className="h-px bg-slate-800 flex-1" />
+        </div>
+
         {/* Ergonomic Mode Tabs */}
         <div className="flex bg-slate-950/70 p-1.5 rounded-2xl mb-6 border border-slate-800 gap-1">
           <button
@@ -145,7 +183,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             }`}
           >
             <span>✉️</span>
-            <span>بريد إلكتروني / جوجل</span>
+            <span>البريد وكلمة المرور</span>
           </button>
         </div>
 
@@ -185,47 +223,40 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Avatar Selector */}
-            <div>
-              <label className="block text-xs font-bold text-slate-200 mb-2">اختر شخصيتك (الأفاتار):</label>
-              <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                {AVATARS_LIST.map((av) => (
-                  <button
-                    key={av.id}
-                    type="button"
-                    onClick={() => setSelectedAvatar(av.emoji)}
-                    className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 transition-all cursor-pointer ${
-                      selectedAvatar === av.emoji
-                        ? 'bg-amber-500/25 border-amber-400 shadow-lg scale-110'
-                        : 'bg-slate-900/60 border-slate-800 hover:border-slate-600 hover:bg-slate-800'
-                    }`}
-                  >
-                    <span className="text-2xl sm:text-3xl">{av.emoji}</span>
-                    <span className="text-[9px] font-bold text-slate-300 mt-1 line-clamp-1">{av.name}</span>
-                  </button>
-                ))}
+            {/* Color Selector & Live Preview */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-bold text-slate-200 mb-2">اختر لونك المفضل:</label>
+                <div className="flex flex-wrap gap-2">
+                  {PLAYER_DEFAULT_COLORS.map((c) => {
+                    const isSelected = selectedColor === c;
+                    return (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setSelectedColor(c)}
+                        className={`w-9 h-9 rounded-full border-2 transition-all flex items-center justify-center ${
+                          isSelected
+                            ? 'border-white ring-4 ring-amber-400/80 scale-110 shadow-lg'
+                            : 'border-slate-800 hover:scale-105 opacity-80 hover:opacity-100'
+                        }`}
+                        style={{ backgroundColor: c }}
+                        title={c}
+                      >
+                        {isSelected && <Check size={14} className="text-white drop-shadow" />}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            {/* Token Selector */}
-            <div>
-              <label className="block text-xs font-bold text-slate-200 mb-2">اختر قطعتك على الرقعة (Token):</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {GAME_TOKENS.map((tk) => (
-                  <button
-                    key={tk.id}
-                    type="button"
-                    onClick={() => setSelectedToken(tk.id)}
-                    className={`flex items-center gap-2 p-2.5 rounded-xl border-2 transition-all cursor-pointer ${
-                      selectedToken === tk.id
-                        ? 'bg-amber-500/25 border-amber-400 shadow-md scale-[1.03]'
-                        : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
-                    }`}
-                  >
-                    <span className="text-2xl">{tk.emoji}</span>
-                    <span className="text-xs font-bold text-slate-200">{tk.name}</span>
-                  </button>
-                ))}
+              {/* Mini Preview Box */}
+              <div className="glass-panel p-3 border border-amber-500/40 flex flex-col items-center justify-center text-center gap-1.5 bg-slate-950/60 rounded-2xl">
+                <span className="text-[10px] text-amber-400 font-bold">شخصيتك</span>
+                <PlayerBlob color={selectedColor} size="lg" />
+                <span className="text-xs font-bold text-white truncate max-w-[100px]">
+                  {guestName || 'اللاعب'}
+                </span>
               </div>
             </div>
 
@@ -238,7 +269,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </form>
         )}
 
-        {/* --- 2. Email / Google Mode --- */}
+        {/* --- 2. Email Mode --- */}
         {(tab === 'email' || tab === 'register') && (
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             {tab === 'register' && (
@@ -282,19 +313,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button type="submit" disabled={isLoading} className="btn btn-gold btn-lg w-full mt-2">
               {isLoading ? 'جاري المعالجة...' : tab === 'register' ? 'إنشاء حساب جديد' : 'تسجيل الدخول'}
             </button>
-
-            {/* Google Sign-in Alternative */}
-            {isFirebaseCloudConfigured && (
-              <button
-                type="button"
-                onClick={handleGoogleSubmit}
-                disabled={isLoading}
-                className="btn btn-outline w-full flex items-center justify-center gap-2.5 py-3"
-              >
-                <span className="text-xl">🌐</span>
-                <span className="text-sm font-bold">المتابعة بحساب Google / Gmail</span>
-              </button>
-            )}
 
             <div className="text-center pt-2">
               <button
