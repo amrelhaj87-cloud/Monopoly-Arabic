@@ -3,6 +3,7 @@ import { Volume2, VolumeX, Home, Settings, Layers, LogOut, Copy, Check, Gamepad2
 import { audioService } from '../../services/audioService';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
+import { PlayerBlob } from './PlayerBlob';
 
 export type AppPage = 'home' | 'settings' | 'game';
 
@@ -149,6 +150,29 @@ export const TopBar: React.FC<TopBarProps> = ({
         )}
 
 
+
+        {/* User Profile Mini Badge */}
+        {user && (
+          <button
+            onClick={() => onNavigate('settings')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: '#0f172a',
+              padding: '3px 8px',
+              borderRadius: '8px',
+              border: '1px solid #334155'
+            }}
+            className="hover:border-amber-500/60 transition-all cursor-pointer"
+            title="الملف الشخصي والإعدادات"
+          >
+            <PlayerBlob color={user.color || '#f59e0b'} size="sm" />
+            <span className="text-xs font-bold text-slate-200 hidden sm:inline truncate max-w-[90px]">
+              {user.displayName}
+            </span>
+          </button>
+        )}
 
         {/* Audio Toggle */}
         <button

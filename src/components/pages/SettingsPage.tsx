@@ -137,14 +137,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
         </button>
 
         <button
-          onClick={() => setActiveTab('cloud')}
-          className={`tab-pill text-right flex-1 min-w-[140px] justify-center ${activeTab === 'cloud' ? 'tab-pill-active' : ''}`}
-        >
-          <Database size={18} />
-          <span>السحابة و Firebase</span>
-        </button>
-
-        <button
           onClick={() => setActiveTab('rules')}
           className={`tab-pill text-right flex-1 min-w-[140px] justify-center ${activeTab === 'rules' ? 'tab-pill-active' : ''}`}
         >
