@@ -70,11 +70,11 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden" dir="ltr">
+    <div className="relative w-full flex flex-col items-center justify-start overflow-visible" dir="ltr">
       <div 
         ref={wrapperRef}
         dir="rtl" 
-        className="board-perspective-wrapper flex items-center justify-center w-full h-full overflow-hidden"
+        className="board-perspective-wrapper flex items-center justify-center w-full overflow-visible"
       >
         <div 
           className={`monopoly-board-grid ${is3D ? 'board-3d-active' : ''}`}
