@@ -83,7 +83,7 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden">
+    <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden" dir="ltr">
       <TransformWrapper
         initialScale={1}
         minScale={0.4}
@@ -92,9 +92,11 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
         wheel={{ step: 0.1 }}
         pinch={{ step: 5 }}
       >
-        <ZoomControls />
+        <div dir="rtl">
+          <ZoomControls />
+        </div>
         <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
-          <div className="board-perspective-wrapper flex items-center justify-center p-2 min-w-max min-h-max">
+          <div dir="rtl" className="board-perspective-wrapper flex items-center justify-center p-2 w-full h-full">
             <div 
               className={`monopoly-board-grid ${is3D ? 'board-3d-active' : ''}`}
             >
