@@ -75,6 +75,10 @@ export const PLAYER_DEFAULT_COLORS = [
   '#f59e0b', // Amber
   '#8b5cf6', // Purple
   '#ec4899', // Pink
+  '#06b6d4', // Cyan
+  '#84cc16', // Lime
+  '#f97316', // Orange
+  '#64748b', // Slate
 ];
 
 export const AVATARS_LIST = [

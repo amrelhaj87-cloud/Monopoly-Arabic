@@ -539,11 +539,13 @@ button:active {
   border-radius: 18px !important;
   position: relative !important;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(245, 158, 11, 0.25) !important;
+  transform-origin: center center !important;
+  transform: scale(var(--board-scale, 1)) !important;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .board-3d-active {
-  transform: rotateX(22deg) scale(0.96) !important;
+  transform: rotateX(22deg) scale(calc(var(--board-scale, 1) * 0.96)) !important;
 }
 
 /* Individual Board Tile Base */

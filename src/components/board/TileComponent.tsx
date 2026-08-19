@@ -1,7 +1,8 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { TileData, Player } from '../../types/game';
 import { GROUP_COLORS } from '../../constants/boardData';
 import { TileTooltip } from './TileTooltip';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 export type TileSide = 'bottom' | 'top' | 'left' | 'right' | 'corner';
 
@@ -148,7 +149,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
                 }}
                 title={`عقار مملوك لـ: ${owner.name}`}
               >
-                <span className="text-[10px] sm:text-[11px] leading-none">{owner.avatar}</span>
+                <PlayerBlob color={owner.color} size="sm" />
                 <span className="text-[7.5px] sm:text-[8px] font-black truncate max-w-[38px] leading-none">
                   {owner.name.split(' ')[0]}
                 </span>
@@ -187,7 +188,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
               }}
               title={p.name}
             >
-              <span>{p.avatar}</span>
+              <PlayerBlob color={p.color} size="pawn" />
             </div>
           ))}
         </div>

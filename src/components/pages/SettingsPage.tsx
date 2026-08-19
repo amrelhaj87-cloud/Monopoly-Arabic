@@ -99,9 +99,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
     : 0;
 
   return (
-    <div className="flex-1 flex flex-col max-w-5xl mx-auto w-full p-2 sm:p-4 animate-fadeIn">
+    <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full p-2 sm:p-4 animate-fadeIn">
+      <div className="w-full flex flex-col gap-4">
       {/* Page Header Banner */}
-      <div className="glass-panel p-5 sm:p-6 mb-6 flex flex-wrap items-center justify-between gap-4 border-2 border-amber-500/30">
+      <div className="glass-panel p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 border-2 border-amber-500/30">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black font-gold mb-1 flex items-center gap-2.5">
             <span>⚙️</span> صفحة الإعدادات والملف الشخصي
@@ -117,47 +118,45 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
         </button>
       </div>
 
-      {/* Main Grid: Sidebar Navigation Tabs + Content Area */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-        {/* Navigation Tabs (Sidebar) */}
-        <div className="md:col-span-1 flex flex-row md:flex-col gap-2.5 overflow-x-auto pb-1 md:pb-0">
-          <button
-            onClick={() => setActiveTab('profile')}
-            className={`tab-pill text-right justify-start ${activeTab === 'profile' ? 'tab-pill-active' : ''}`}
-          >
-            <User size={18} />
-            <span>الملف والإحصائيات</span>
-          </button>
+      {/* Navigation Tabs (Horizontal) */}
+      <div className="flex flex-row justify-center flex-wrap gap-2.5 overflow-x-auto glass-panel p-2 sm:p-3 border-2 border-slate-700/50">
+        <button
+          onClick={() => setActiveTab('profile')}
+          className={`tab-pill text-right flex-1 min-w-[140px] justify-center ${activeTab === 'profile' ? 'tab-pill-active' : ''}`}
+        >
+          <User size={18} />
+          <span>الملف والإحصائيات</span>
+        </button>
 
-          <button
-            onClick={() => setActiveTab('audio_display')}
-            className={`tab-pill text-right justify-start ${activeTab === 'audio_display' ? 'tab-pill-active' : ''}`}
-          >
-            <Volume2 size={18} />
-            <span>الصوتيات والعرض</span>
-          </button>
+        <button
+          onClick={() => setActiveTab('audio_display')}
+          className={`tab-pill text-right flex-1 min-w-[140px] justify-center ${activeTab === 'audio_display' ? 'tab-pill-active' : ''}`}
+        >
+          <Volume2 size={18} />
+          <span>الصوتيات والعرض</span>
+        </button>
 
-          <button
-            onClick={() => setActiveTab('cloud')}
-            className={`tab-pill text-right justify-start ${activeTab === 'cloud' ? 'tab-pill-active' : ''}`}
-          >
-            <Database size={18} />
-            <span>السحابة و Firebase</span>
-          </button>
+        <button
+          onClick={() => setActiveTab('cloud')}
+          className={`tab-pill text-right flex-1 min-w-[140px] justify-center ${activeTab === 'cloud' ? 'tab-pill-active' : ''}`}
+        >
+          <Database size={18} />
+          <span>السحابة و Firebase</span>
+        </button>
 
-          <button
-            onClick={() => setActiveTab('rules')}
-            className={`tab-pill text-right justify-start ${activeTab === 'rules' ? 'tab-pill-active' : ''}`}
-          >
-            <BookOpen size={18} />
-            <span>دليل القواعد</span>
-          </button>
-        </div>
+        <button
+          onClick={() => setActiveTab('rules')}
+          className={`tab-pill text-right flex-1 min-w-[140px] justify-center ${activeTab === 'rules' ? 'tab-pill-active' : ''}`}
+        >
+          <BookOpen size={18} />
+          <span>دليل القواعد</span>
+        </button>
+      </div>
 
-        {/* Content Panel (3 cols) */}
-        <div className="md:col-span-3 glass-panel p-6 sm:p-8 border-2 border-slate-700/80 min-h-[480px]">
-          {/* TAB 1: Profile & Stats */}
-          {activeTab === 'profile' && user && (
+      {/* Content Panel */}
+      <div className="glass-panel p-6 sm:p-8 border-2 border-slate-700/80 min-h-[480px]">
+        {/* TAB 1: Profile & Stats */}
+        {activeTab === 'profile' && user && (
             <div className="space-y-6 animate-fadeIn">
               <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                 <h3 className="text-lg font-black text-white flex items-center gap-2">
@@ -213,59 +212,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
                     </div>
                   </div>
 
-                  {/* Avatar Selection */}
-                  <div className="pt-2">
-                    <label className="block text-sm font-black text-amber-400 mb-3">الشخصية (الأفاتار):</label>
-                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-                      {AVATARS_LIST.map((av) => (
-                        <button
-                          key={av.id}
-                          type="button"
-                          onClick={() => setAvatar(av.emoji)}
-                          className={`relative p-3 rounded-2xl border-2 flex flex-col items-center justify-center transition-all overflow-hidden ${
-                            avatar === av.emoji
-                              ? 'bg-slate-800 border-amber-400 scale-105 shadow-[0_0_20px_rgba(245,158,11,0.4)] ring-2 ring-amber-400/50 z-10'
-                              : 'bg-slate-900/60 border-slate-700 hover:border-slate-500'
-                          }`}
-                        >
-                          {avatar === av.emoji && (
-                            <div className="absolute top-1 right-1 text-amber-400 bg-slate-900 rounded-full">
-                              <CheckCircle2 size={16} fill="currentColor" className="text-slate-900" />
-                            </div>
-                          )}
-                          <span className="text-3xl sm:text-4xl drop-shadow-lg">{av.emoji}</span>
-                          <span className="text-[10px] font-bold text-slate-200 mt-2 text-center leading-tight">{av.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Token Selection */}
-                  <div className="pt-2">
-                    <label className="block text-sm font-black text-amber-400 mb-3">الرمز المفضل (يدل عليك في اللوحة):</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {GAME_TOKENS.map((tk) => (
-                        <button
-                          key={tk.id}
-                          type="button"
-                          onClick={() => setToken(tk.id)}
-                          className={`relative p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
-                            token === tk.id
-                              ? 'bg-slate-800 border-amber-400 scale-[1.02] shadow-[0_0_20px_rgba(245,158,11,0.4)] ring-2 ring-amber-400/50 z-10'
-                              : 'bg-slate-900/60 border-slate-700 hover:border-slate-500'
-                          }`}
-                        >
-                          {token === tk.id && (
-                            <div className="absolute top-2 right-2 text-amber-400 bg-slate-900 rounded-full">
-                              <CheckCircle2 size={16} fill="currentColor" className="text-slate-900" />
-                            </div>
-                          )}
-                          <span className="text-3xl drop-shadow-md">{tk.emoji}</span>
-                          <span className="text-sm font-bold text-slate-100">{tk.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Removed Avatar and Token selections since we use unified PlayerBlob now. Colors are selected in the Game Lobby. */}
 
                   {profileSaved && (
                     <div className="p-3 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded-xl text-center text-xs font-bold mt-4">

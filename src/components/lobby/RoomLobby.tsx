@@ -1,9 +1,9 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Users, Bot, Crown, CheckCircle2, Circle, Trash2, Send, Copy, Check, Play, UserPlus, Link2 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { useAuth } from '../../context/AuthContext';
-import { GAME_TOKENS, PLAYER_DEFAULT_COLORS } from '../../constants/tokens';
-import { PlayerTokenId } from '../../types/game';
+import { PLAYER_DEFAULT_COLORS, GAME_TOKENS } from '../../constants/tokens';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 export const RoomLobby: React.FC = () => {
   const { 
@@ -127,20 +127,9 @@ export const RoomLobby: React.FC = () => {
                     </button>
                   )}
 
-                  {/* Avatar & Token Icon */}
+                  {/* Avatar Blob */}
                   <div className="relative my-2">
-                    <div 
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-lg border-2"
-                      style={{ backgroundColor: `${member.color}20`, borderColor: member.color }}
-                    >
-                      {member.avatar}
-                    </div>
-                    <span 
-                      className="absolute -bottom-2 -left-2 w-7 h-7 rounded-full flex items-center justify-center text-base border-2 bg-slate-900 shadow"
-                      style={{ borderColor: member.color }}
-                    >
-                      {tokenInfo?.emoji || '🏎️'}
-                    </span>
+                    <PlayerBlob color={member.color} size="lg" />
                   </div>
 
                   {/* Name */}
@@ -148,7 +137,7 @@ export const RoomLobby: React.FC = () => {
                     {member.name} {isMe && '(أنت)'}
                   </h4>
                   <span className="text-[11px] text-slate-400">
-                    {member.isBot ? `روبوت (${member.botDifficulty || 'متوسط'})` : tokenInfo?.name}
+                    {member.isBot ? `روبوت (${member.botDifficulty || 'متوسط'})` : 'لاعب حقيقي'}
                   </span>
 
                   {/* Ready Status */}
@@ -303,23 +292,8 @@ export const RoomLobby: React.FC = () => {
             {myMember && (
               <div className="flex items-center gap-3">
                 <span className="text-xs font-bold text-slate-300">تخصيص قطعتك:</span>
-                {/* Tokens */}
-                <div className="flex gap-1">
-                  {GAME_TOKENS.slice(0, 5).map((tk) => (
-                    <button
-                      key={tk.id}
-                      onClick={() => updateCustomization(tk.id, myMember.color)}
-                      className={`text-lg p-1 rounded border transition-all ${
-                        myMember.token === tk.id ? 'bg-amber-500/30 border-amber-400 scale-110' : 'border-transparent'
-                      }`}
-                      title={tk.name}
-                    >
-                      {tk.emoji}
-                    </button>
-                  ))}
-                </div>
                 {/* Colors */}
-                <div className="flex gap-1">
+                <div className="flex gap-2 bg-slate-900/50 p-2 rounded-xl border border-slate-700/50">
                   {PLAYER_DEFAULT_COLORS.map((col) => (
                     <button
                       key={col}
