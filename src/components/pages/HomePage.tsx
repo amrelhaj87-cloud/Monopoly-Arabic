@@ -35,6 +35,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToSettings }) => {
       <CreateRoomModal isOpen={showCreateRoom} onClose={() => setShowCreateRoom(false)} />
       <JoinRoomModal isOpen={showJoinRoom} onClose={() => setShowJoinRoom(false)} />
       <RulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
+
+      {/* Copyright Footer */}
+      <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
+        <p className="text-[10px] text-slate-500/60 font-medium">جميع الحقوق محفوظة zerocold 2026 ©</p>
+      </div>
     </div>
   );
 };

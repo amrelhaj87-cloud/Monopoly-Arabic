@@ -195,81 +195,95 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
                 </div>
               </div>
 
-              {/* Edit Profile Form */}
-              <form onSubmit={handleSaveProfile} className="space-y-4 pt-2">
-                <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-2">اسم اللاعب:</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="input-lux"
-                    maxLength={20}
-                    required
-                  />
-                </div>
-
-                {/* Avatar Selection */}
-                <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-2">الشخصية (الأفاتار):</label>
-                  <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                    {AVATARS_LIST.map((av) => (
-                      <button
-                        key={av.id}
-                        type="button"
-                        onClick={() => setAvatar(av.emoji)}
-                        className={`p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center transition-all ${
-                          avatar === av.emoji
-                            ? 'bg-amber-500/25 border-amber-400 scale-110 shadow-lg'
-                            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
-                        }`}
-                      >
-                        <span className="text-2xl sm:text-3xl">{av.emoji}</span>
-                        <span className="text-[9px] font-bold text-slate-300 mt-1">{av.name}</span>
-                      </button>
-                    ))}
+                {/* Edit Profile Form */}
+                <form onSubmit={handleSaveProfile} className="space-y-5 pt-2">
+                  <div>
+                    <label className="block text-sm font-black text-amber-400 mb-2">اسم اللاعب:</label>
+                    <div className="relative max-w-sm">
+                      <User className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="input-lux pl-4 pr-10"
+                        maxLength={20}
+                        placeholder="أدخل اسمك هنا..."
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Token Selection */}
-                <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-2">الرمز المفضل (Token):</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {GAME_TOKENS.map((tk) => (
-                      <button
-                        key={tk.id}
-                        type="button"
-                        onClick={() => setToken(tk.id)}
-                        className={`p-2.5 rounded-xl border-2 flex items-center gap-2 transition-all ${
-                          token === tk.id
-                            ? 'bg-amber-500/25 border-amber-400 scale-[1.03] shadow-md'
-                            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
-                        }`}
-                      >
-                        <span className="text-2xl">{tk.emoji}</span>
-                        <span className="text-xs font-bold text-slate-200">{tk.name}</span>
-                      </button>
-                    ))}
+                  {/* Avatar Selection */}
+                  <div className="pt-2">
+                    <label className="block text-sm font-black text-amber-400 mb-3">الشخصية (الأفاتار):</label>
+                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                      {AVATARS_LIST.map((av) => (
+                        <button
+                          key={av.id}
+                          type="button"
+                          onClick={() => setAvatar(av.emoji)}
+                          className={`relative p-3 rounded-2xl border-2 flex flex-col items-center justify-center transition-all overflow-hidden ${
+                            avatar === av.emoji
+                              ? 'bg-slate-800 border-amber-400 scale-105 shadow-[0_0_20px_rgba(245,158,11,0.4)] ring-2 ring-amber-400/50 z-10'
+                              : 'bg-slate-900/60 border-slate-700 hover:border-slate-500'
+                          }`}
+                        >
+                          {avatar === av.emoji && (
+                            <div className="absolute top-1 right-1 text-amber-400 bg-slate-900 rounded-full">
+                              <CheckCircle2 size={16} fill="currentColor" className="text-slate-900" />
+                            </div>
+                          )}
+                          <span className="text-3xl sm:text-4xl drop-shadow-lg">{av.emoji}</span>
+                          <span className="text-[10px] font-bold text-slate-200 mt-2 text-center leading-tight">{av.name}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {profileSaved && (
-                  <div className="p-3 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded-xl text-center text-xs font-bold">
-                    ✅ تم حفظ وتحديث الملف الشخصي بنجاح!
+                  {/* Token Selection */}
+                  <div className="pt-2">
+                    <label className="block text-sm font-black text-amber-400 mb-3">الرمز المفضل (يدل عليك في اللوحة):</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {GAME_TOKENS.map((tk) => (
+                        <button
+                          key={tk.id}
+                          type="button"
+                          onClick={() => setToken(tk.id)}
+                          className={`relative p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                            token === tk.id
+                              ? 'bg-slate-800 border-amber-400 scale-[1.02] shadow-[0_0_20px_rgba(245,158,11,0.4)] ring-2 ring-amber-400/50 z-10'
+                              : 'bg-slate-900/60 border-slate-700 hover:border-slate-500'
+                          }`}
+                        >
+                          {token === tk.id && (
+                            <div className="absolute top-2 right-2 text-amber-400 bg-slate-900 rounded-full">
+                              <CheckCircle2 size={16} fill="currentColor" className="text-slate-900" />
+                            </div>
+                          )}
+                          <span className="text-3xl drop-shadow-md">{tk.emoji}</span>
+                          <span className="text-sm font-bold text-slate-100">{tk.name}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                )}
 
-                <div className="flex gap-3 pt-3">
-                  <button type="submit" className="btn btn-gold btn-lg flex-1 shadow-lg">
-                    <Save size={18} />
-                    حفظ التغييرات
-                  </button>
-                  <button type="button" onClick={logout} className="btn btn-ruby btn-lg">
-                    <LogOut size={18} />
-                    تسجيل الخروج
-                  </button>
-                </div>
-              </form>
+                  {profileSaved && (
+                    <div className="p-3 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded-xl text-center text-xs font-bold mt-4">
+                      ✅ تم حفظ وتحديث الملف الشخصي بنجاح!
+                    </div>
+                  )}
+
+                  <div className="flex gap-4 pt-6 mt-6 border-t border-slate-800/60">
+                    <button type="submit" className="btn btn-gold flex-1 shadow-lg">
+                      <Save size={18} />
+                      حفظ التغييرات
+                    </button>
+                    <button type="button" onClick={logout} className="btn btn-ruby px-6">
+                      <LogOut size={18} />
+                      تسجيل الخروج
+                    </button>
+                  </div>
+                </form>
             </div>
           )}
 

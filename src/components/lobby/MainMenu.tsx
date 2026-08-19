@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Bot, PlusCircle, LogIn, BookOpen, Crown, ChevronLeft, ArrowRight, Dices } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
@@ -73,14 +73,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       )}
 
       {/* Hero Title */}
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <h1 className="font-gold" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, marginBottom: '8px', lineHeight: 1.15 }}>
-          مونوبولي العربية
-        </h1>
-        <p style={{ color: '#94a3b8', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto', fontWeight: 600 }}>
-          اشترِ العواصم والمدن العربية، ابنِ الفنادق، وتاجر بذكاء لتصبح ملك العقار الأوحد!
-        </p>
-      </div>
+      {!showSoloConfig && (
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <h1 className="font-gold" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, marginBottom: '8px', lineHeight: 1.15 }}>
+            مونوبولي العربية
+          </h1>
+          <p style={{ color: '#94a3b8', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto', fontWeight: 600 }}>
+            اشترِ العواصم والمدن العربية، ابنِ الفنادق، وتاجر بذكاء لتصبح ملك العقار الأوحد!
+          </p>
+        </div>
+      )}
 
       {!showSoloConfig ? (
         <>
@@ -180,16 +182,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             </div>
           </div>
 
-          {/* Interactive 3D Dice Showcase on Home Page */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-            <span style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 800 }}>🎲 نرد اللعبة التفاعلي (انقر للتجربة):</span>
-            <Dice3D
-              dice={previewDice}
-              isRolling={isRollingPreview}
-              onRollClick={handleRollPreview}
-              canRoll={true}
-            />
-          </div>
+
         </>
       ) : (
         /* Solo Game Configuration View */
@@ -208,10 +201,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Number of Bots */}
             <div>
-              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '10px', fontSize: '0.95rem' }}>
+              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '6px', fontSize: '0.95rem' }}>
                 عدد الروبوتات المنافسة ({botCount} روبوتات - إجمالي {botCount + 1} لاعبين):
               </label>
               <div className="selector-grid selector-grid-5">
@@ -230,7 +223,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
             {/* Difficulty */}
             <div>
-              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '10px', fontSize: '0.95rem' }}>
+              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '6px', fontSize: '0.95rem' }}>
                 مستوى ذكاء وخبرة الروبوتات:
               </label>
               <div className="selector-grid selector-grid-3">
@@ -263,7 +256,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
             {/* Starting Cash */}
             <div>
-              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '10px', fontSize: '0.95rem' }}>
+              <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '6px', fontSize: '0.95rem' }}>
                 الرصيد المالي في البداية:
               </label>
               <div className="selector-grid selector-grid-3">
@@ -312,13 +305,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         </div>
       )}
 
-      {/* Footer Info Quick Links */}
-      <div style={{ marginTop: '32px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-        <button onClick={onOpenRules} className="rules-footer-btn">
-          <BookOpen size={20} style={{ color: '#f59e0b' }} />
-          <span>شرح قواعد مونوبولي كاملة</span>
-        </button>
-      </div>
+
     </div>
   );
 };
