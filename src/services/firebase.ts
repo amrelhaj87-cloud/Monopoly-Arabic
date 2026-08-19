@@ -61,8 +61,8 @@ class FirebaseService {
 
   public init(customConfig?: FirebaseConfigOptions) {
     try {
-      const savedConfig = localStorage.getItem('monopoly_arabic_firebase_config');
-      const config = customConfig || (savedConfig ? JSON.parse(savedConfig) : DEFAULT_FIREBASE_CONFIG);
+      // Force use of the embedded config since it's hardcoded and real
+      const config = customConfig || DEFAULT_FIREBASE_CONFIG;
       
       if (config.apiKey && config.projectId) {
         if (!getApps().length) {
