@@ -197,7 +197,7 @@ class FirebaseService {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          _subject: `[مونوبولي العربية] رسالة جديدة: ${payload.subjectType} من ${payload.name}`,
+          _subject: `[أملاك وعقارات] رسالة جديدة: ${payload.subjectType} من ${payload.name}`,
           _captcha: 'false',
           _template: 'table',
           'اسم المرسل': payload.name,

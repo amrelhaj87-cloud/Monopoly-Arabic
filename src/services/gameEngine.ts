@@ -1,4 +1,4 @@
-﻿import { GameState, Player, TileData, Card, TradeOffer, AuctionState, GameLog, GameSettings } from '../types/game';
+import { GameState, Player, TileData, Card, TradeOffer, AuctionState, GameLog, GameSettings } from '../types/game';
 import { RoomMember } from '../types/room';
 import { BOARD_TILES, COLOR_GROUP_TILES } from '../constants/boardData';
 import { CHANCE_CARDS, COMMUNITY_CARDS } from '../constants/cardsData';
@@ -67,7 +67,7 @@ export class GameEngine {
           id: `log_${Date.now()}_0`,
           timestamp: Date.now(),
           type: 'system',
-          message: `بدأت لعبة مونوبولي العربية! الدور الآن عند ${players[0].name}.`
+          message: `بدأت لعبة أملاك وعقارات! الدور الآن عند ${players[0].name}.`
         }
       ],
       settings,
@@ -1022,7 +1022,7 @@ export class GameEngine {
     if (activePlayers.length === 1) {
       newState.winnerId = activePlayers[0].id;
       newState.phase = 'game_over';
-      this.addLog(newState, 'system', `👑 فاز ${activePlayers[0].name} ببطولة مونوبولي العربية وأصبح ملك العقار! 🏆🎉`, activePlayers[0].id);
+      this.addLog(newState, 'system', `👑 فاز ${activePlayers[0].name} ببطولة أملاك وعقارات وأصبح ملك العقار! 🏆🎉`, activePlayers[0].id);
     }
 
     return newState;

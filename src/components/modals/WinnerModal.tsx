@@ -67,7 +67,7 @@ export const WinnerModal: React.FC = () => {
         <div className="text-6xl mb-2 animate-bounce">🏆</div>
 
         <span className="text-xs uppercase tracking-widest font-black text-amber-400 block mb-0.5">
-          تتويج بطل مونوبولي العربية
+          تتويج بطل أملاك وعقارات
         </span>
         <h2 className="text-2xl sm:text-3xl font-black text-white mb-3">
           تهانينا للفائز: <span className="font-gold">{winner.name}</span>!

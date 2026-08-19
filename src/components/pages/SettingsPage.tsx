@@ -241,7 +241,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
                       <PlayerBlob color={color} size="xl" />
                     </div>
                     <div className="space-y-0.5">
-                      <h4 className="text-base font-black text-white">{name || 'لاعب مونوبولي'}</h4>
+                      <h4 className="text-base font-black text-white">{name || 'تاجر أملاك'}</h4>
                       <p className="text-xs text-slate-400">قطعة اللعب الموحدة</p>
                     </div>
                   </div>
@@ -440,7 +440,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
             <div className="space-y-4 animate-fadeIn text-xs text-slate-300 leading-relaxed">
               <div className="pb-3 border-b border-slate-800">
                 <h3 className="text-lg font-black text-white flex items-center gap-2">
-                  <BookOpen className="text-amber-400" size={20} /> دليل وقواعد مونوبولي العربية
+                  <BookOpen className="text-amber-400" size={20} /> دليل وقواعد أملاك وعقارات
                 </h3>
               </div>
 

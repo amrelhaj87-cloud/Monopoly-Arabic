@@ -55,7 +55,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span className="text-xl sm:text-2xl filter drop-shadow">🎲</span>
           <div className="flex flex-col">
             <span className="text-sm sm:text-base font-black font-gold tracking-wide leading-tight">
-              مونوبولي العربية
+              أملاك <span className="text-amber-300 font-semibold text-xs sm:text-sm">وعقارات</span>
             </span>
             <span className="text-[8px] sm:text-[9px] text-amber-300/80 font-medium leading-none">
               لعبة التجارة والاستثمار

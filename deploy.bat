@@ -1,6 +1,6 @@
 @echo off
 echo ===================================================
-echo   Monopoly Arabic - Git Push & Vercel Auto Deploy
+echo   Amlak & Aqaarat - Git Push & Vercel Auto Deploy
 echo ===================================================
 echo.
 

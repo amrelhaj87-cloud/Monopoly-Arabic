@@ -1,14 +1,14 @@
-# 🎲 مونوبولي العربية | Monopoly Arabic
+# 🎲 أملاك وعقارات | Amlak & Real Estate
 
 <div align="center">
 
-![Monopoly Arabic](https://img.shields.io/badge/Monopoly-Arabic%20Edition-f59e0b?style=for-the-badge&logo=gamepad&logoColor=black)
+![Amlak & Aqaarat](https://img.shields.io/badge/Amlak-Real%20Estate%20Edition-f59e0b?style=for-the-badge&logo=gamepad&logoColor=black)
 ![React](https://img.shields.io/badge/React-19.0-61dafb?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-6.0-646cff?style=for-the-badge&logo=vite&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-Ready-ffca28?style=for-the-badge&logo=firebase&logoColor=black)
 
-**لعبة مونوبولي الكلاسيكية بنكهة وثقافة عربية فاخرة أونلاين — تدعم من 1 إلى 6 لاعبين مع الذكاء الاصطناعي والغرف الخاصة للملتي بلاير.**
+**لعبة الصفقات والعقارات الكلاسيكية بنكهة وثقافة عربية فاخرة أونلاين — تدعم من 1 إلى 6 لاعبين مع الذكاء الاصطناعي والغرف الخاصة للملتي بلاير.**
 
 [🎮 تجربة اللعبة](#-طريقة-التشغيل-والتثبيت) • [✨ المميزات](#-أبرز-المميزات) • [🗺️ خريطة الرقعة](#-هيكلية-الرقعة-40-خانة) • [🛠️ التقنيات](#️-التقنيات-المستخدمة)
 
@@ -18,7 +18,7 @@
 
 ## 🌟 نبذة عن المشروع
 
-**مونوبولي العربية (Monopoly Arabic)** هي نسخة ويب متكاملة وعصرية من لعبة الصفقات العقارية الشهيرة عالمياً، تم تعريبها وتصميمها بهوية عربية فاخرة وبأحدث تقنيات الويب التفاعلية.
+**أملاك وعقارات (Amlak & Real Estate)** هي نسخة ويب متكاملة وعصرية من لعبة الصفقات والتجارة العقارية، تم تعريبها وتصميمها بهوية عربية فاخرة وبأحدث تقنيات الويب التفاعلية.
 
 تتيح اللعبة التنافس بين **1 إلى 6 لاعبين** سواء في نمط اللعب الفردي ضد روبوتات ذكاء اصطناعي ذكية بأسماء وشخصيات عربية، أو اللعب الجماعي أونلاين عبر إنشاء غرف خاصة ومشاركة كود الغرفة المباشر مع الأصدقاء.
 

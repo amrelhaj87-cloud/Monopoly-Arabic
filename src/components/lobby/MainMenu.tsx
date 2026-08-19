@@ -75,8 +75,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       {/* Hero Title */}
       {!showSoloConfig && (
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <h1 className="font-gold" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, marginBottom: '8px', lineHeight: 1.15 }}>
-            مونوبولي العربية
+          <h1 className="font-gold" style={{ fontSize: 'clamp(2.4rem, 5.5vw, 3.8rem)', fontWeight: 900, marginBottom: '6px', lineHeight: 1.15 }}>
+            أملاك <span style={{ color: '#fcd34d', fontSize: '0.72em', fontWeight: 700 }}>وعقارات</span>
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto', fontWeight: 600 }}>
             اشترِ العواصم والمدن العربية، ابنِ الفنادق، وتاجر بذكاء لتصبح ملك العقار الأوحد!

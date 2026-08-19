@@ -16,7 +16,9 @@ export const RulesModal: React.FC<RulesModalProps> = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between pb-3 border-b border-slate-700 mb-4">
           <div className="flex items-center gap-2">
             <span className="text-2xl">📜</span>
-            <h2 className="text-xl font-bold font-gold">دليل وقواعد مونوبولي العربية</h2>
+            <h2 className="text-xl font-bold font-gold">
+              دليل وقواعد أملاك <span className="text-amber-300 font-semibold text-lg">وعقارات</span>
+            </h2>
           </div>
           <button onClick={onClose} className="p-1 text-slate-400 hover:text-white transition-colors">
             <X size={20} />

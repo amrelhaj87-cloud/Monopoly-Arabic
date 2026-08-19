@@ -85,8 +85,10 @@ export const App: React.FC = () => {
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center bg-slate-950 text-white">
         <div className="text-6xl animate-bounce mb-3">🎲</div>
-        <h2 className="text-2xl font-black font-gold">مونوبولي العربية</h2>
-        <span className="text-xs text-slate-400 mt-1">جاري تجهيز لوحة اللعب...</span>
+        <h2 className="text-3xl font-black font-gold tracking-tight">
+          أملاك <span className="text-amber-300/90 font-semibold text-xl">وعقارات</span>
+        </h2>
+        <span className="text-xs text-slate-400 mt-2">جاري تجهيز لوحة اللعب...</span>
       </div>
     );
   }

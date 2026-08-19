@@ -113,7 +113,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             🎲
           </div>
           <h1 className="text-3xl sm:text-4xl font-black font-gold tracking-tight mb-1">
-            مونوبولي العربية
+            أملاك <span className="text-amber-300 font-semibold text-2xl sm:text-3xl">وعقارات</span>
           </h1>
           <p className="text-slate-300 text-xs sm:text-sm max-w-sm mx-auto font-medium">
             لعبة التجارة والاستثمار العقاري الأولى

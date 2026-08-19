@@ -46,7 +46,9 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
         {/* Brand */}
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="text-sm sm:text-base">🎲</span>
-          <span className="font-gold font-black text-xs sm:text-sm">مونوبولي العربية</span>
+          <span className="font-gold font-black text-xs sm:text-sm">
+            أملاك <span className="text-amber-300 font-semibold text-[10px] sm:text-xs">وعقارات</span>
+          </span>
         </div>
 
         {/* Current Turn Badge */}
