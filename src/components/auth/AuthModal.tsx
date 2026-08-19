@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Sparkles, Dices, ShieldAlert, Check, ArrowRight, ArrowLeft, LogIn, UserPlus } from 'lucide-react';
+import { Mail, Sparkles, Dices, ShieldAlert, Check, ArrowRight, ArrowLeft, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { PLAYER_DEFAULT_COLORS } from '../../constants/tokens';
 import { PlayerBlob } from '../common/PlayerBlob';
@@ -102,14 +102,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto p-2 sm:p-4 animate-fadeIn">
-      <div className="glass-panel p-6 sm:p-8 border-2 border-amber-500/30 shadow-2xl relative overflow-hidden">
+    <div className="w-full max-w-lg mx-auto p-3 sm:p-4 animate-fadeIn">
+      <div className="glass-panel p-6 sm:p-8 border-2 border-amber-500/40 shadow-2xl relative overflow-hidden bg-slate-950/95">
         {/* Glow Header Accent */}
         <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-amber-400 via-emerald-400 to-amber-500" />
 
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-4xl mb-3 shadow-inner">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-500/20 border-2 border-amber-500/50 text-4xl mb-3 shadow-inner">
             🎲
           </div>
           <h1 className="text-3xl sm:text-4xl font-black font-gold tracking-tight mb-1">
@@ -122,29 +122,33 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
         {/* Error Notification */}
         {errorMsg && (
-          <div className="p-3.5 bg-rose-950/70 border border-rose-500/50 text-rose-200 rounded-xl text-xs mb-5 flex items-center gap-2.5">
+          <div className="p-3.5 bg-rose-950/80 border border-rose-500 text-rose-200 rounded-xl text-xs mb-5 flex items-center gap-2.5 shadow-lg">
             <ShieldAlert size={18} className="text-rose-400 shrink-0" />
-            <span>{errorMsg}</span>
+            <span className="font-bold">{errorMsg}</span>
           </div>
         )}
 
         {/* =========================================================================
-            SCREEN 1: THE 3 MAIN CHOICES (Google / Guest / Email)
+            SCREEN 1: THE 3 MAIN CHOICES
+            1. Google / Gmail
+            2. Email & Password
+            3. Guest Mode (Last)
            ========================================================================= */}
         {mode === 'select' && (
           <div className="space-y-3.5 animate-fadeIn">
-            <p className="text-center text-xs font-bold text-amber-300/90 mb-4">
-              اختر طريقة الدخول لبدء اللعبة:
-            </p>
+            <div className="text-center mb-4">
+              <span className="text-xs font-black text-amber-400 uppercase tracking-wider bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
+                اختر طريقة الدخول للبدء
+              </span>
+            </div>
 
             {/* BUTTON 1: GOOGLE / GMAIL */}
             <button
               type="button"
               onClick={handleGoogleSubmit}
               disabled={isLoading}
-              className="w-full p-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-sm sm:text-base flex items-center justify-center gap-3.5 shadow-xl hover:shadow-2xl transition-all border border-slate-200 cursor-pointer active:scale-[0.98]"
+              className="w-full py-3.5 px-5 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-sm sm:text-base flex items-center justify-center gap-3.5 shadow-xl hover:shadow-2xl transition-all border-2 border-white cursor-pointer active:scale-[0.98]"
             >
-              {/* Google G SVG */}
               <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -154,57 +158,59 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               <span>{isLoading ? 'جاري الاتصال بـ Google...' : 'تسجيل الدخول عبر Google / Gmail'}</span>
             </button>
 
-            {/* BUTTON 2: GUEST MODE (Customizer) */}
-            <button
-              type="button"
-              onClick={() => { setMode('guest_customizer'); setErrorMsg(''); }}
-              className="w-full p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm sm:text-base flex items-center justify-between px-5 shadow-lg transition-all cursor-pointer active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🏃‍♂️</span>
-                <div className="text-right">
-                  <div className="leading-tight">دخول سريع كزائر</div>
-                  <div className="text-[10px] text-slate-950/70 font-bold">تخصيص الاسم واللون فوراً والبدء</div>
-                </div>
-              </div>
-              <ArrowLeft size={20} />
-            </button>
-
-            {/* BUTTON 3: EMAIL / PASSWORD */}
+            {/* BUTTON 2: EMAIL / PASSWORD */}
             <button
               type="button"
               onClick={() => { setMode('email_login'); setErrorMsg(''); }}
-              className="w-full p-3.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-bold text-sm flex items-center justify-between px-5 border border-slate-700 transition-all cursor-pointer"
+              className="w-full py-3.5 px-5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm sm:text-base flex items-center justify-between border-2 border-slate-700 hover:border-amber-500/60 shadow-lg transition-all cursor-pointer active:scale-[0.98]"
             >
               <div className="flex items-center gap-3">
-                <Mail size={20} className="text-amber-400" />
+                <div className="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400">
+                  <Mail size={18} />
+                </div>
                 <span>تسجيل الدخول بالبريد وكلمة المرور</span>
               </div>
-              <ArrowLeft size={16} className="text-slate-400" />
+              <ArrowLeft size={18} className="text-slate-400" />
+            </button>
+
+            {/* BUTTON 3: GUEST MODE (LAST) */}
+            <button
+              type="button"
+              onClick={() => { setMode('guest_customizer'); setErrorMsg(''); }}
+              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm sm:text-base flex items-center justify-between shadow-xl transition-all cursor-pointer active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-slate-950/20 flex items-center justify-center text-xl">
+                  🏃‍♂️
+                </div>
+                <span>الدخول السريع كزائر</span>
+              </div>
+              <ArrowLeft size={20} className="text-slate-950" />
             </button>
           </div>
         )}
 
         {/* =========================================================================
-            SCREEN 2: GUEST CUSTOMIZER (Name, Color & Live Blob Preview)
+            SCREEN 2: GUEST CUSTOMIZER (Spacious & Clean)
            ========================================================================= */}
         {mode === 'guest_customizer' && (
           <form onSubmit={handleGuestSubmit} className="space-y-5 animate-fadeIn">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <span className="text-sm font-black text-amber-400 flex items-center gap-2">
-                <span>🏃‍♂️</span> تخصيص شخصية الزائر
+            {/* Sub-Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <span className="text-base font-black text-amber-400 flex items-center gap-2">
+                <span className="text-xl">🏃‍♂️</span> إعداد شخصية الزائر
               </span>
               <button
                 type="button"
                 onClick={() => setMode('select')}
-                className="text-xs text-slate-400 hover:text-white font-bold flex items-center gap-1 cursor-pointer"
+                className="btn btn-outline btn-sm px-3 py-1 text-xs text-slate-300 hover:text-white flex items-center gap-1.5 cursor-pointer"
               >
-                <span>رجوع للخيارات</span>
+                <span>رجوع</span>
                 <ArrowLeft size={14} />
               </button>
             </div>
 
-            {/* Player Name with Quick Randomize */}
+            {/* Player Name Input */}
             <div>
               <label className="block text-xs font-bold text-slate-200 mb-2">اسمك في اللعبة:</label>
               <div className="flex gap-2">
@@ -213,27 +219,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="اكتب اسمك..."
-                  className="input-lux flex-1"
+                  className="input-lux flex-1 text-base font-bold"
                   maxLength={20}
                   required
                 />
                 <button
                   type="button"
                   onClick={handleRandomizeName}
-                  className="btn btn-outline btn-sm px-3.5 shrink-0 flex items-center gap-1.5"
+                  className="btn btn-outline btn-sm px-3 shrink-0 flex items-center gap-1.5 bg-slate-900 border-amber-500/40 text-amber-300 hover:bg-slate-800"
                   title="توليد اسم عشوائي"
                 >
                   <Dices size={16} className="text-amber-400" />
-                  <span>اسم عشوائي</span>
+                  <span className="text-xs font-bold">اسم عشوائي</span>
                 </button>
               </div>
             </div>
 
-            {/* Color Selector & Live Preview Box */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-200 mb-2">اختر لونك المفضل:</label>
-                <div className="flex flex-wrap gap-2">
+            {/* Color Selector & Preview */}
+            <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-center gap-5 justify-between">
+              {/* Palette */}
+              <div className="w-full sm:w-auto">
+                <label className="block text-xs font-bold text-slate-300 mb-2 text-center sm:text-right">
+                  اختر لون شخصيتك:
+                </label>
+                <div className="flex flex-wrap gap-2.5 justify-center sm:justify-start">
                   {PLAYER_DEFAULT_COLORS.map((c) => {
                     const isSelected = selectedColor === c;
                     return (
@@ -244,7 +253,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                         className={`w-9 h-9 rounded-full border-2 transition-all flex items-center justify-center cursor-pointer ${
                           isSelected
                             ? 'border-white ring-4 ring-amber-400/80 scale-110 shadow-lg'
-                            : 'border-slate-800 hover:scale-105 opacity-80 hover:opacity-100'
+                            : 'border-slate-800 hover:scale-105 opacity-75 hover:opacity-100'
                         }`}
                         style={{ backgroundColor: c }}
                         title={c}
@@ -256,18 +265,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Mini Preview Box */}
-              <div className="glass-panel p-3 border border-amber-500/40 flex flex-col items-center justify-center text-center gap-1.5 bg-slate-950/70 rounded-2xl">
+              {/* Preview Avatar Box */}
+              <div className="glass-panel p-3.5 border-2 border-amber-500/40 flex flex-col items-center justify-center text-center gap-1.5 bg-slate-950 rounded-2xl min-w-[110px] shrink-0 shadow-inner">
                 <span className="text-[10px] text-amber-400 font-bold">معاينة شخصيتك</span>
                 <PlayerBlob color={selectedColor} size="lg" />
-                <span className="text-xs font-bold text-white truncate max-w-[100px]">
+                <span className="text-xs font-black text-white truncate max-w-[100px] mt-0.5">
                   {guestName || 'اللاعب'}
                 </span>
               </div>
             </div>
 
-            {/* Submit & Start */}
-            <button type="submit" className="btn btn-gold btn-lg w-full mt-3 shadow-xl">
+            {/* Start Game Button */}
+            <button type="submit" className="btn btn-gold btn-lg w-full mt-2 shadow-2xl py-3.5 text-base font-black">
               <Sparkles size={20} />
               <span>ابدأ اللعب الآن كزائر</span>
               <ArrowRight size={18} />
@@ -276,21 +285,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         )}
 
         {/* =========================================================================
-            SCREEN 3: EMAIL / PASSWORD LOGIN & REGISTER
+            SCREEN 3: EMAIL & PASSWORD LOGIN / REGISTER
            ========================================================================= */}
         {(mode === 'email_login' || mode === 'email_register') && (
           <form onSubmit={handleEmailSubmit} className="space-y-4 animate-fadeIn">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <span className="text-sm font-black text-amber-400 flex items-center gap-2">
-                <Mail size={16} />
-                <span>{mode === 'email_register' ? 'إنشاء حساب جديد' : 'تسجيل الدخول بالبريد'}</span>
+            {/* Sub-Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <span className="text-base font-black text-amber-400 flex items-center gap-2">
+                <Mail size={18} />
+                <span>{mode === 'email_register' ? 'إنشاء حساب جديد بالبريد' : 'تسجيل الدخول بالبريد'}</span>
               </span>
               <button
                 type="button"
                 onClick={() => setMode('select')}
-                className="text-xs text-slate-400 hover:text-white font-bold flex items-center gap-1 cursor-pointer"
+                className="btn btn-outline btn-sm px-3 py-1 text-xs text-slate-300 hover:text-white flex items-center gap-1.5 cursor-pointer"
               >
-                <span>رجوع للخيارات</span>
+                <span>رجوع</span>
                 <ArrowLeft size={14} />
               </button>
             </div>
@@ -302,8 +312,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="اسم اللاعب"
-                  className="input-lux"
+                  placeholder="اسمك في اللعبة..."
+                  className="input-lux font-bold"
                   required
                 />
               </div>
@@ -316,7 +326,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@gmail.com"
-                className="input-lux"
+                className="input-lux font-bold"
                 required
               />
             </div>
@@ -328,13 +338,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="input-lux"
+                className="input-lux font-bold"
                 required
               />
             </div>
 
-            <button type="submit" disabled={isLoading} className="btn btn-gold btn-lg w-full mt-2 shadow-lg">
-              {isLoading ? 'جاري المعالجة...' : mode === 'email_register' ? 'إنشاء الحساب' : 'تسجيل الدخول'}
+            <button type="submit" disabled={isLoading} className="btn btn-gold btn-lg w-full mt-2 shadow-xl font-black">
+              {isLoading ? 'جاري المعالجة...' : mode === 'email_register' ? 'إنشاء الحساب والبدء' : 'تسجيل الدخول والبدء'}
             </button>
 
             <div className="text-center pt-2">
