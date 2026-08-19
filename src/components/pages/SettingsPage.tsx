@@ -24,7 +24,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
 import { audioService } from '../../services/audioService';
 import { firebaseService } from '../../services/firebase';
-import { GAME_TOKENS, AVATARS_LIST } from '../../constants/tokens';
+import { PLAYER_DEFAULT_COLORS } from '../../constants/tokens';
 import { PlayerBlob } from '../common/PlayerBlob';
 import { PlayerTokenId } from '../../types/game';
 import { FirebaseConfigOptions } from '../../types/auth';
@@ -43,8 +43,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
 
   // Profile Form States
   const [name, setName] = useState(user?.displayName || '');
-  const [avatar, setAvatar] = useState(user?.photoURL || AVATARS_LIST[0].emoji);
-  const [token, setToken] = useState<PlayerTokenId>(user?.selectedToken || 'falcon');
+  const [color, setColor] = useState(PLAYER_DEFAULT_COLORS[0]);
   const [profileSaved, setProfileSaved] = useState(false);
 
   // Audio / Sound States
@@ -63,7 +62,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    await updateProfileCustomization(name.trim(), avatar, token);
+    await updateProfileCustomization(name.trim(), color, color as PlayerTokenId);
     setProfileSaved(true);
     setTimeout(() => setProfileSaved(false), 2000);
   };
@@ -216,50 +215,26 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
                       </div>
                     </div>
 
-                    {/* Token Selection */}
+                    {/* Color Palette Selection */}
                     <div>
-                      <label className="block text-sm font-black text-amber-400 mb-2">رمز اللاعب (Token):</label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {GAME_TOKENS.map((t) => {
-                          const isSelected = token === t.id;
+                      <label className="block text-sm font-black text-amber-400 mb-2">لون اللاعب المفضل:</label>
+                      <div className="flex flex-wrap gap-2.5">
+                        {PLAYER_DEFAULT_COLORS.map((c) => {
+                          const isSelected = color === c;
                           return (
                             <button
-                              key={t.id}
+                              key={c}
                               type="button"
-                              onClick={() => setToken(t.id)}
-                              className={`p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-center ${
+                              onClick={() => setColor(c)}
+                              className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${
                                 isSelected
-                                  ? 'border-amber-500 bg-amber-500/20 shadow-md ring-1 ring-amber-500'
-                                  : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
+                                  ? 'border-white ring-4 ring-amber-400/80 scale-110 shadow-lg'
+                                  : 'border-slate-800 hover:scale-105 opacity-80 hover:opacity-100'
                               }`}
+                              style={{ backgroundColor: c }}
+                              title={c}
                             >
-                              <span className="text-2xl">{t.emoji}</span>
-                              <span className="text-xs font-bold text-slate-200">{t.name}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Avatar Selection */}
-                    <div>
-                      <label className="block text-sm font-black text-amber-400 mb-2">الشخصية الرمزية (Avatar):</label>
-                      <div className="flex flex-wrap gap-2">
-                        {AVATARS_LIST.map((av) => {
-                          const isSelected = avatar === av.emoji;
-                          return (
-                            <button
-                              key={av.id}
-                              type="button"
-                              onClick={() => setAvatar(av.emoji)}
-                              className={`w-11 h-11 rounded-xl border flex items-center justify-center text-xl transition-all ${
-                                isSelected
-                                  ? 'border-amber-500 bg-amber-500/20 ring-1 ring-amber-500 scale-105'
-                                  : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
-                              }`}
-                              title={av.name}
-                            >
-                              {av.emoji}
+                              {isSelected && <Check size={16} className="text-white drop-shadow" />}
                             </button>
                           );
                         })}
@@ -269,15 +244,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
 
                   {/* Right Preview Card */}
                   <div className="glass-panel p-5 border-2 border-amber-500/40 flex flex-col items-center text-center gap-3 bg-gradient-to-b from-amber-500/10 to-transparent">
-                    <span className="text-xs text-amber-400 font-bold">معاينة الرمز في اللعبة</span>
+                    <span className="text-xs text-amber-400 font-bold">معاينة اللاعب في اللعبة</span>
                     <div className="p-4 bg-slate-950/80 rounded-2xl border border-slate-800 flex items-center justify-center">
-                      <PlayerBlob color="#f59e0b" token={token} emoji={avatar} size="lg" />
+                      <PlayerBlob color={color} size="xl" />
                     </div>
                     <div className="space-y-0.5">
                       <h4 className="text-base font-black text-white">{name || 'لاعب مونوبولي'}</h4>
-                      <p className="text-xs text-slate-400">
-                        {GAME_TOKENS.find(t => t.id === token)?.name || 'رمز اللعب'}
-                      </p>
+                      <p className="text-xs text-slate-400">قطعة اللعب الموحدة</p>
                     </div>
                   </div>
                 </div>

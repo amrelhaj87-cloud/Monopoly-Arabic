@@ -183,7 +183,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
               }}
               title={p.name}
             >
-              <PlayerBlob color={p.color} token={p.token} emoji={p.avatar} size="pawn" />
+              <PlayerBlob color={p.color} size="pawn" />
             </div>
           ))}
         </div>

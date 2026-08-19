@@ -1,67 +1,124 @@
 import React from 'react';
-import { PlayerTokenId } from '../../types/game';
-import { GAME_TOKENS } from '../../constants/tokens';
 
 interface PlayerBlobProps {
   color: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'pawn';
-  token?: PlayerTokenId | string;
-  emoji?: string;
   className?: string;
 }
 
 export const PlayerBlob: React.FC<PlayerBlobProps> = ({ 
   color = '#f59e0b', 
   size = 'md', 
-  token, 
-  emoji,
   className = ''
 }) => {
-  // Resolve display emoji from token or explicit emoji
-  const matchedToken = token ? GAME_TOKENS.find(t => t.id === token) : null;
-  const displayEmoji = emoji || matchedToken?.emoji || (token && !matchedToken ? token : '👑');
+  // Proportional eye dimensions and positioning for each size
+  const sizeMap = {
+    pawn: { size: 24, eyeW: 4.5, eyeH: 5.5, pupil: 2.8, catch1: 1.2, catch2: 0.6, gap: 1.5, top: 7 },
+    sm:   { size: 26, eyeW: 5.0, eyeH: 6.0, pupil: 3.0, catch1: 1.3, catch2: 0.7, gap: 1.8, top: 8 },
+    md:   { size: 40, eyeW: 7.5, eyeH: 9.0, pupil: 4.5, catch1: 1.8, catch2: 0.9, gap: 2.5, top: 12 },
+    lg:   { size: 60, eyeW: 11.0, eyeH: 13.0, pupil: 6.5, catch1: 2.6, catch2: 1.3, gap: 4.0, top: 18 },
+    xl:   { size: 84, eyeW: 15.0, eyeH: 18.0, pupil: 9.0, catch1: 3.6, catch2: 1.8, gap: 5.5, top: 25 },
+  };
 
-  if (size === 'pawn') {
-    return (
-      <div
-        className={`relative rounded-full flex items-center justify-center select-none shrink-0 transition-transform ${className}`}
-        style={{
-          width: '24px',
-          height: '24px',
-          backgroundColor: color,
-          border: '2px solid rgba(255, 255, 255, 0.95)',
-          boxShadow: `0 3px 8px rgba(0,0,0,0.6), 0 0 10px ${color}80, inset 0 2px 4px rgba(255,255,255,0.4)`
-        }}
-      >
-        <span className="text-[12px] leading-none filter drop-shadow-sm pointer-events-none">
-          {displayEmoji}
-        </span>
-      </div>
-    );
-  }
-
-  const dimensions = {
-    sm: { box: 'w-6 h-6', text: 'text-xs', border: 'border-[1.5px]' },
-    md: { box: 'w-10 h-10', text: 'text-lg', border: 'border-2' },
-    lg: { box: 'w-16 h-16', text: 'text-2xl', border: 'border-[2.5px]' },
-    xl: { box: 'w-20 h-20', text: 'text-3xl', border: 'border-3' },
-  }[size] || { box: 'w-10 h-10', text: 'text-lg', border: 'border-2' };
+  const config = sizeMap[size] || sizeMap.md;
+  const s = config.size;
 
   return (
     <div
-      className={`relative ${dimensions.box} rounded-full flex items-center justify-center select-none shrink-0 transition-all ${dimensions.border} border-white/80 shadow-md ${className}`}
+      className={`relative rounded-full flex items-center justify-center select-none shrink-0 transition-transform ${className}`}
       style={{
+        width: `${s}px`,
+        height: `${s}px`,
         backgroundColor: color,
-        boxShadow: `0 4px 14px rgba(0,0,0,0.4), 0 0 14px ${color}60, inset 0 2px 6px rgba(255,255,255,0.45)`
+        boxShadow: `0 4px 12px rgba(0,0,0,0.45), 0 0 14px ${color}60, inset 0 2px 5px rgba(255,255,255,0.45)`,
+        border: size === 'pawn' ? '1.5px solid rgba(255,255,255,0.95)' : '2px solid rgba(255,255,255,0.9)'
       }}
     >
-      {/* 3D Gloss Highlight Overlay */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/35 via-transparent to-black/25 pointer-events-none" />
+      {/* 3D Gloss Highlight */}
+      <div 
+        className="absolute inset-0 rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at 35% 25%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.1) 40%, transparent 70%)'
+        }}
+      />
 
-      {/* Token Emoji / Icon */}
-      <span className={`${dimensions.text} relative z-10 filter drop-shadow leading-none`}>
-        {displayEmoji}
-      </span>
+      {/* Expressive Shiny Cartoon Eyes */}
+      <svg
+        width={s}
+        height={s}
+        viewBox={`0 0 ${s} ${s}`}
+        className="absolute inset-0 pointer-events-none"
+      >
+        {/* Left Eye */}
+        <g transform={`translate(${s / 2 - config.gap - config.eyeW}, ${config.top})`}>
+          {/* White Sclera with subtle depth border */}
+          <ellipse
+            cx={config.eyeW / 2}
+            cy={config.eyeH / 2}
+            rx={config.eyeW / 2}
+            ry={config.eyeH / 2}
+            fill="#ffffff"
+            stroke="rgba(0,0,0,0.25)"
+            strokeWidth="0.6"
+          />
+          {/* Pupil */}
+          <circle
+            cx={config.eyeW / 2 + 0.2}
+            cy={config.eyeH / 2 + 0.3}
+            r={config.pupil / 2}
+            fill="#0f172a"
+          />
+          {/* Primary Shine / Catchlight (Sparkle) */}
+          <circle
+            cx={config.eyeW / 2 - 0.4}
+            cy={config.eyeH / 2 - 0.7}
+            r={config.catch1 / 2}
+            fill="#ffffff"
+          />
+          {/* Secondary Tiny Catchlight */}
+          <circle
+            cx={config.eyeW / 2 + 0.7}
+            cy={config.eyeH / 2 + 0.7}
+            r={config.catch2 / 2}
+            fill="#ffffff"
+          />
+        </g>
+
+        {/* Right Eye */}
+        <g transform={`translate(${s / 2 + config.gap}, ${config.top})`}>
+          {/* White Sclera with subtle depth border */}
+          <ellipse
+            cx={config.eyeW / 2}
+            cy={config.eyeH / 2}
+            rx={config.eyeW / 2}
+            ry={config.eyeH / 2}
+            fill="#ffffff"
+            stroke="rgba(0,0,0,0.25)"
+            strokeWidth="0.6"
+          />
+          {/* Pupil */}
+          <circle
+            cx={config.eyeW / 2 + 0.2}
+            cy={config.eyeH / 2 + 0.3}
+            r={config.pupil / 2}
+            fill="#0f172a"
+          />
+          {/* Primary Shine / Catchlight (Sparkle) */}
+          <circle
+            cx={config.eyeW / 2 - 0.4}
+            cy={config.eyeH / 2 - 0.7}
+            r={config.catch1 / 2}
+            fill="#ffffff"
+          />
+          {/* Secondary Tiny Catchlight */}
+          <circle
+            cx={config.eyeW / 2 + 0.7}
+            cy={config.eyeH / 2 + 0.7}
+            r={config.catch2 / 2}
+            fill="#ffffff"
+          />
+        </g>
+      </svg>
     </div>
   );
 };

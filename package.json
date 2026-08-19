@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "publish:web": "npm run build && git add . && git commit -m \"Auto-deploy update\" && git push && npx vercel --prod",
+    "publish:web": "npm run build && git add . && git commit -m \"Auto-deploy update\" && git push",
     "build:android": "npm run build && npx cap sync android",
     "preview": "vite preview"
   },
