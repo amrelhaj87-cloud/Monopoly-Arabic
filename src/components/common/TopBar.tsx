@@ -4,6 +4,7 @@ import { audioService } from '../../services/audioService';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
 import { PlayerBlob } from './PlayerBlob';
+import { KofiButton } from './KofiButton';
 
 export type AppPage = 'home' | 'settings' | 'game';
 
@@ -230,6 +231,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           <MessageSquarePlus size={14} className="text-sky-400" />
           <span className="hidden md:inline">تواصل مع المطور</span>
         </button>
+
+        {/* Ko-fi Support Button */}
+        <KofiButton username="amrelhaj" />
 
         {/* Leave Game Button */}
         {room && (
