@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useGame } from '../../context/GameContext';
 import { useAuth } from '../../context/AuthContext';
 import { BOARD_TILES, GROUP_COLORS, COLOR_GROUP_TILES } from '../../constants/boardData';
@@ -36,7 +36,7 @@ export const MyPropertiesHUD: React.FC = () => {
           <span>عقاراتي ({myProperties.length})</span>
         </div>
         <span className="text-[10px] font-mono text-emerald-400 font-bold">
-          قيمة: {totalValue} د.ع
+          قيمة: {totalValue} $
         </span>
       </div>
 
@@ -100,7 +100,7 @@ export const MyPropertiesHUD: React.FC = () => {
                           </span>
                         ) : (
                           <span className="text-slate-400 font-mono">
-                            {tile.baseRent || 10} د.ع
+                            {tile.baseRent || 10} $
                           </span>
                         )}
                         <ChevronRight size={12} className="text-slate-500 group-hover:text-slate-300" />

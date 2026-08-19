@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { TileData, Player } from '../../types/game';
 import { GROUP_COLORS } from '../../constants/boardData';
 import { TileTooltip } from './TileTooltip';
@@ -79,7 +79,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
           </span>
           {tile.id === 0 ? (
             <span className="text-[7.5px] sm:text-[8.5px] text-emerald-300 font-bold font-mono bg-emerald-950/90 px-1.5 py-0.2 rounded-full border border-emerald-500/50 mb-0.5">
-              +200 د.ع
+              +200 $
             </span>
           ) : (
             <div className="h-1.5" />
@@ -156,7 +156,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
             ) : tile.price ? (
               <div className="bg-slate-950/90 border border-amber-500/50 text-amber-300 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full flex items-center justify-center gap-0.5 shadow-sm">
                 <span>{tile.price}</span>
-                <span className="text-[6.5px] text-amber-200/80">د.ع</span>
+                <span className="text-[6.5px] text-amber-200/80">$</span>
               </div>
             ) : tile.taxAmount ? (
               <div className="bg-rose-950/90 border border-rose-500/50 text-rose-200 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full flex items-center justify-center">

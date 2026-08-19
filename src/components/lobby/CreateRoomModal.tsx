@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, PlusCircle, Users, Clock, Coins, Sparkles, ArrowRight } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { GameSettings } from '../../types/game';
@@ -105,7 +105,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({ isOpen, onClos
                       : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
                   }`}
                 >
-                  {cash} د.ع
+                  {cash} $
                 </button>
               ))}
             </div>

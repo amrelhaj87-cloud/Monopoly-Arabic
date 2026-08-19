@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useGame } from '../../context/GameContext';
 import { useAuth } from '../../context/AuthContext';
 import { Coins, Home, Lock, Crown, Users, Bot, User } from 'lucide-react';
@@ -127,7 +127,7 @@ export const PlayerListHUD: React.FC = () => {
                     <div className="flex items-center gap-1 font-mono font-black text-emerald-400 text-xs">
                       <Coins size={12} className="text-emerald-400" />
                       <span>{player.cash}</span>
-                      <span className="text-[9px] text-emerald-400/70 font-normal">د.ع</span>
+                      <span className="text-[9px] text-emerald-400/70 font-normal">$</span>
                     </div>
                   </>
                 )}

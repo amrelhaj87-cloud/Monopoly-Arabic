@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { ShoppingCart, Gavel, X } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { BOARD_TILES, GROUP_COLORS } from '../../constants/boardData';
@@ -35,34 +35,34 @@ export const PropertyBuyModal: React.FC = () => {
           <div className="p-4 space-y-2 text-xs text-slate-300">
             <div className="flex justify-between py-1 border-b border-slate-800">
               <span>سعر الشراء:</span>
-              <span className="font-bold font-mono text-amber-400 text-sm">{tile.price} د.ع</span>
+              <span className="font-bold font-mono text-amber-400 text-sm">{tile.price} $</span>
             </div>
 
             {tile.rentTiers && (
               <>
                 <div className="flex justify-between py-1 border-b border-slate-800">
                   <span>الإيجار الأساسي (أرض فضاء):</span>
-                  <span className="font-mono text-white">{tile.rentTiers[0]} د.ع</span>
+                  <span className="font-mono text-white">{tile.rentTiers[0]} $</span>
                 </div>
                 <div className="flex justify-between py-0.5 text-slate-400">
                   <span>مع منزل واحد 🏠:</span>
-                  <span className="font-mono">{tile.rentTiers[1]} د.ع</span>
+                  <span className="font-mono">{tile.rentTiers[1]} $</span>
                 </div>
                 <div className="flex justify-between py-0.5 text-slate-400">
                   <span>مع منزلين 🏠🏠:</span>
-                  <span className="font-mono">{tile.rentTiers[2]} د.ع</span>
+                  <span className="font-mono">{tile.rentTiers[2]} $</span>
                 </div>
                 <div className="flex justify-between py-0.5 text-slate-400">
                   <span>مع 3 منازل 🏠🏠🏠:</span>
-                  <span className="font-mono">{tile.rentTiers[3]} د.ع</span>
+                  <span className="font-mono">{tile.rentTiers[3]} $</span>
                 </div>
                 <div className="flex justify-between py-0.5 text-slate-400">
                   <span>مع 4 منازل 🏠🏠🏠🏠:</span>
-                  <span className="font-mono">{tile.rentTiers[4]} د.ع</span>
+                  <span className="font-mono">{tile.rentTiers[4]} $</span>
                 </div>
                 <div className="flex justify-between py-1 border-t border-slate-800 text-emerald-400 font-bold">
                   <span>مع فندق فاخر 🏨:</span>
-                  <span className="font-mono">{tile.rentTiers[5]} د.ع</span>
+                  <span className="font-mono">{tile.rentTiers[5]} $</span>
                 </div>
               </>
             )}
@@ -70,14 +70,14 @@ export const PropertyBuyModal: React.FC = () => {
             {tile.houseCost && (
               <div className="flex justify-between py-1 border-t border-slate-800 text-slate-400">
                 <span>تكلفة بناء كل منزل:</span>
-                <span className="font-mono text-white">{tile.houseCost} د.ع</span>
+                <span className="font-mono text-white">{tile.houseCost} $</span>
               </div>
             )}
 
             {tile.mortgageValue && (
               <div className="flex justify-between py-1 text-slate-400">
                 <span>قيمة الرهن العقاري:</span>
-                <span className="font-mono text-white">{tile.mortgageValue} د.ع</span>
+                <span className="font-mono text-white">{tile.mortgageValue} $</span>
               </div>
             )}
           </div>
@@ -92,7 +92,7 @@ export const PropertyBuyModal: React.FC = () => {
               className={`btn btn-gold flex-1 ${!canAfford ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <ShoppingCart size={16} />
-              شراء العقار ({tile.price} د.ع)
+              شراء العقار ({tile.price} $)
             </button>
             <button onClick={declineCurrentProperty} className="btn btn-outline flex-1">
               <Gavel size={16} className="text-amber-400" />

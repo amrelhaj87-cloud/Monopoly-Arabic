@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Bot, PlusCircle, LogIn, BookOpen, Crown, ChevronLeft, ArrowRight, Dices } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
@@ -274,7 +274,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                     onClick={() => setStartingCash(cash)}
                     className={`selector-btn ${startingCash === cash ? 'selector-btn-active-gold' : ''}`}
                   >
-                    <span>{cash} د.ع</span>
+                    <span>{cash} $</span>
                   </button>
                 ))}
               </div>

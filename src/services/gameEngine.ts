@@ -1,4 +1,4 @@
-import { GameState, Player, TileData, Card, TradeOffer, AuctionState, GameLog, GameSettings } from '../types/game';
+﻿import { GameState, Player, TileData, Card, TradeOffer, AuctionState, GameLog, GameSettings } from '../types/game';
 import { RoomMember } from '../types/room';
 import { BOARD_TILES, COLOR_GROUP_TILES } from '../constants/boardData';
 import { CHANCE_CARDS, COMMUNITY_CARDS } from '../constants/cardsData';
@@ -418,7 +418,7 @@ export class GameEngine {
     };
 
     newState.phase = 'auction';
-    this.addLog(newState, 'system', `📢 بدأ مزاد علني على (${tile.name}) بسعر افتتاحي 10 د.ع!`);
+    this.addLog(newState, 'system', `📢 بدأ مزاد علني على (${tile.name}) بسعر افتتاحي 10 $!`);
     return newState;
   }
 
@@ -437,7 +437,7 @@ export class GameEngine {
     auction.highestBidderId = playerId;
     auction.timeLeftSeconds = 15;
 
-    this.addLog(newState, 'buy', `🔨 رفع ${player.name} المزايدة إلى ${amount} د.ع!`, playerId);
+    this.addLog(newState, 'buy', `🔨 رفع ${player.name} المزايدة إلى ${amount} $!`, playerId);
     return newState;
   }
 
@@ -511,7 +511,7 @@ export class GameEngine {
       winner.cash -= auction.currentBid;
       winner.properties.push(auction.tileId);
       winner.stats.propertiesBought += 1;
-      this.addLog(newState, 'buy', `🏆 فاز ${winner.name} بالمزاد واشترى (${tile.name}) بمبلغ ${auction.currentBid} د.ع!`, winner.id);
+      this.addLog(newState, 'buy', `🏆 فاز ${winner.name} بالمزاد واشترى (${tile.name}) بمبلغ ${auction.currentBid} $!`, winner.id);
     } else if (tile) {
       this.addLog(newState, 'system', `❌ انتهى المزاد على (${tile.name}) دون مشتري.`);
     }
@@ -764,7 +764,7 @@ export class GameEngine {
     player.cash += refund;
     player.houses[tileId] = currentHouses - 1;
 
-    this.addLog(newState, 'house', `🔨 باع ${player.name} منزلاً من (${tile.name}) واسترجع ${refund} د.ع.`, playerId);
+    this.addLog(newState, 'house', `🔨 باع ${player.name} منزلاً من (${tile.name}) واسترجع ${refund} $.`, playerId);
     return newState;
   }
 

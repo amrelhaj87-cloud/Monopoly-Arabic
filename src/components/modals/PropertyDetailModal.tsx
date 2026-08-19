@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { X, Building2, Home, Lock, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { GROUP_COLORS } from '../../constants/boardData';
@@ -128,32 +128,32 @@ export const PropertyDetailModal: React.FC = () => {
 
               <div className="flex justify-between items-center px-3 py-1.5 text-slate-300">
                 <span>الإيجار الأساسي</span>
-                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[0]} د.ع</span>
+                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[0]} $</span>
               </div>
 
               <div className="flex justify-between items-center px-3 py-1.5 text-slate-300">
                 <span className="flex items-center gap-1">مع منزل واحد 🏠</span>
-                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[1]} د.ع</span>
+                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[1]} $</span>
               </div>
 
               <div className="flex justify-between items-center px-3 py-1.5 text-slate-300">
                 <span className="flex items-center gap-1">مع منزلين 🏠🏠</span>
-                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[2]} د.ع</span>
+                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[2]} $</span>
               </div>
 
               <div className="flex justify-between items-center px-3 py-1.5 text-slate-300">
                 <span className="flex items-center gap-1">مع 3 منازل 🏠🏠🏠</span>
-                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[3]} د.ع</span>
+                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[3]} $</span>
               </div>
 
               <div className="flex justify-between items-center px-3 py-1.5 text-slate-300">
                 <span className="flex items-center gap-1">مع 4 منازل 🏠🏠🏠🏠</span>
-                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[4]} د.ع</span>
+                <span className="font-mono font-bold text-amber-300">{tile.rentTiers[4]} $</span>
               </div>
 
               <div className="flex justify-between items-center px-3 py-2 bg-emerald-950/30 text-emerald-300 font-bold">
                 <span className="flex items-center gap-1">مع فندق فاخر 🏨</span>
-                <span className="font-mono text-sm">{tile.rentTiers[5]} د.ع</span>
+                <span className="font-mono text-sm">{tile.rentTiers[5]} $</span>
               </div>
             </div>
           )}
@@ -167,19 +167,19 @@ export const PropertyDetailModal: React.FC = () => {
               </div>
               <div className="flex justify-between px-3 py-1.5 text-slate-300">
                 <span>محطة واحدة</span>
-                <span className="font-mono font-bold text-amber-300">25 د.ع</span>
+                <span className="font-mono font-bold text-amber-300">25 $</span>
               </div>
               <div className="flex justify-between px-3 py-1.5 text-slate-300">
                 <span>محطتان</span>
-                <span className="font-mono font-bold text-amber-300">50 د.ع</span>
+                <span className="font-mono font-bold text-amber-300">50 $</span>
               </div>
               <div className="flex justify-between px-3 py-1.5 text-slate-300">
                 <span>3 محطات</span>
-                <span className="font-mono font-bold text-amber-300">100 د.ع</span>
+                <span className="font-mono font-bold text-amber-300">100 $</span>
               </div>
               <div className="flex justify-between px-3 py-1.5 bg-amber-950/30 text-amber-300 font-bold">
                 <span>4 محطات (الكاملة)</span>
-                <span className="font-mono text-sm">200 د.ع</span>
+                <span className="font-mono text-sm">200 $</span>
               </div>
             </div>
           )}
@@ -214,28 +214,28 @@ export const PropertyDetailModal: React.FC = () => {
               <div className="bg-slate-900/90 border border-slate-800 p-2 rounded-xl text-center">
                 <span className="text-[10px] text-slate-400 block">سعر الشراء</span>
                 <span className="font-mono font-black text-amber-400 text-sm">
-                  {tile.price} د.ع
+                  {tile.price} $
                 </span>
               </div>
 
               <div className="bg-slate-900/90 border border-slate-800 p-2 rounded-xl text-center">
                 <span className="text-[10px] text-slate-400 block">سعر المنزل 🏠</span>
                 <span className="font-mono font-black text-slate-200 text-sm">
-                  {tile.houseCost || '-'} {tile.houseCost ? 'د.ع' : ''}
+                  {tile.houseCost || '-'} {tile.houseCost ? '$' : ''}
                 </span>
               </div>
 
               <div className="bg-slate-900/90 border border-slate-800 p-2 rounded-xl text-center">
                 <span className="text-[10px] text-slate-400 block">سعر الفندق 🏨</span>
                 <span className="font-mono font-black text-slate-200 text-sm">
-                  {tile.houseCost || '-'} {tile.houseCost ? 'د.ع' : ''}
+                  {tile.houseCost || '-'} {tile.houseCost ? '$' : ''}
                 </span>
               </div>
 
               <div className="bg-slate-900/90 border border-slate-800 p-2 rounded-xl text-center">
                 <span className="text-[10px] text-slate-400 block">قيمة الرهن 🔒</span>
                 <span className="font-mono font-black text-rose-300 text-sm">
-                  {tile.mortgageValue || '-'} {tile.mortgageValue ? 'د.ع' : ''}
+                  {tile.mortgageValue || '-'} {tile.mortgageValue ? '$' : ''}
                 </span>
               </div>
             </div>

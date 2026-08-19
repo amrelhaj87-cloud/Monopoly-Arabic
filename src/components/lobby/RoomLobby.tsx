@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Users, Bot, Crown, CheckCircle2, Circle, Trash2, Send, Copy, Check, Play, UserPlus, Link2 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { useAuth } from '../../context/AuthContext';
@@ -63,7 +63,7 @@ export const RoomLobby: React.FC = () => {
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            رصيد البداية: {room.settings.startingCash} د.ع • مهلة الدور: {room.settings.turnTimeSeconds}ث • المزادات: {room.settings.enableAuctions ? 'مفعلة' : 'معطلة'}
+            رصيد البداية: {room.settings.startingCash} $ • مهلة الدور: {room.settings.turnTimeSeconds}ث • المزادات: {room.settings.enableAuctions ? 'مفعلة' : 'معطلة'}
           </p>
         </div>
 
@@ -204,13 +204,13 @@ export const RoomLobby: React.FC = () => {
                     onChange={(e) => updateRoomSettings({ startingCash: Number(e.target.value) })}
                     className="bg-slate-900 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-lg px-2 py-1 focus:outline-none"
                   >
-                    <option value={1000}>1,000 د.ع (تحدي)</option>
-                    <option value={1500}>1,500 د.ع (قياسي)</option>
-                    <option value={2000}>2,000 د.ع (ثراء)</option>
-                    <option value={2500}>2,500 د.ع (هامور)</option>
+                    <option value={1000}>1,000 $ (تحدي)</option>
+                    <option value={1500}>1,500 $ (قياسي)</option>
+                    <option value={2000}>2,000 $ (ثراء)</option>
+                    <option value={2500}>2,500 $ (هامور)</option>
                   </select>
                 ) : (
-                  <span className="font-mono font-bold text-amber-300 text-sm">{room.settings.startingCash} د.ع</span>
+                  <span className="font-mono font-bold text-amber-300 text-sm">{room.settings.startingCash} $</span>
                 )}
               </div>
 
@@ -245,11 +245,11 @@ export const RoomLobby: React.FC = () => {
                       room.settings.doubleCashOnGoLanding ? 'btn-gold' : 'btn-outline opacity-60'
                     }`}
                   >
-                    {room.settings.doubleCashOnGoLanding ? 'مفعلة (400 د.ع)' : 'معطلة (200 د.ع)'}
+                    {room.settings.doubleCashOnGoLanding ? 'مفعلة (400 $)' : 'معطلة (200 $)'}
                   </button>
                 ) : (
                   <span className="font-bold text-amber-300 text-xs">
-                    {room.settings.doubleCashOnGoLanding ? 'مفعلة (400 د.ع)' : 'معطلة (200 د.ع)'}
+                    {room.settings.doubleCashOnGoLanding ? 'مفعلة (400 $)' : 'معطلة (200 $)'}
                   </span>
                 )}
               </div>

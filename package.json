@@ -6,20 +6,25 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:android": "npm run build && npx cap sync android",
     "preview": "vite preview",
     "push": "git add . && git commit -m \"Update monopoly-arabic\" && git push",
     "deploy": "npm run build && git add . && git commit -m \"Update & Deploy to Vercel\" && git push",
     "deploy:vercel": "npx vercel --prod"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "firebase": "^11.3.1",
     "lucide-react": "^1.16.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-zoom-pan-pinch": "^4.0.4"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.13.4",

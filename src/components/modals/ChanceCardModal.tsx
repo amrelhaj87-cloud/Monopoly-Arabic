@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Check, Sparkles, ArrowRight, DollarSign, ScrollText, Home, X, Clock, Play } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { BOARD_TILES } from '../../constants/boardData';
@@ -122,13 +122,13 @@ export const ChanceCardModal: React.FC = () => {
             {action.type === 'receive_cash' && (
               <span className="text-xs font-bold font-mono px-3 py-1 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 shadow">
                 <DollarSign size={13} />
-                مكافأة نقدية: +{action.amount} د.ع
+                مكافأة نقدية: +{action.amount} $
               </span>
             )}
             {action.type === 'pay_cash' && (
               <span className="text-xs font-bold font-mono px-3 py-1 rounded-full bg-rose-950/90 text-rose-300 border border-rose-500/40 flex items-center gap-1 shadow">
                 <DollarSign size={13} />
-                دفع غرامة: -{action.amount} د.ع
+                دفع غرامة: -{action.amount} $
               </span>
             )}
             {action.type === 'move_to' && destinationTile && (
@@ -156,7 +156,7 @@ export const ChanceCardModal: React.FC = () => {
             )}
             {action.type === 'collect_from_all' && (
               <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-500/40 shadow">
-                تحصيل {action.amount} د.ع من جميع اللاعبين
+                تحصيل {action.amount} $ من جميع اللاعبين
               </span>
             )}
           </div>

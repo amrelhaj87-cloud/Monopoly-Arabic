@@ -1,14 +1,14 @@
 /**
- * Unified Pan-Arab Currency Constants
- * Fits all represented Arab nations (Egypt, Saudi Arabia, Morocco, Algeria, UAE, Jordan, etc.)
+ * Game Currency Constants
+ * Using $ as the universal currency symbol for this game
  */
 export const CURRENCY = {
-  symbol: 'د.ع', // دينار عربي
-  name: 'دينار عربي',
-  icon: '🪙',
-  format: (amount: number | string) => `${Number(amount).toLocaleString()} د.ع`
+  symbol: '$',
+  name: 'دولار',
+  icon: '💵',
+  format: (amount: number | string) => `$${Number(amount).toLocaleString()}`
 };
 
 export const formatCash = (amount: number): string => {
-  return `${amount.toLocaleString()} ${CURRENCY.symbol}`;
+  return `$${amount.toLocaleString()}`;
 };

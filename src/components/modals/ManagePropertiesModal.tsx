@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Home, Plus, Minus, Lock, Unlock, X, Sparkles, Building2 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { BOARD_TILES, GROUP_COLORS, COLOR_GROUP_TILES } from '../../constants/boardData';
@@ -62,15 +62,15 @@ export const ManagePropertiesModal: React.FC<ManagePropertiesModalProps> = ({ is
         <div className="grid grid-cols-3 gap-2 p-2.5 bg-slate-900/90 rounded-xl border border-slate-700 mb-3 text-xs text-center">
           <div className="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
             <span className="text-[10px] text-slate-400 block">السيولة النقدية:</span>
-            <span className="text-sm font-black font-mono text-emerald-400">{myPlayer.cash} د.ع</span>
+            <span className="text-sm font-black font-mono text-emerald-400">{myPlayer.cash} $</span>
           </div>
           <div className="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
             <span className="text-[10px] text-slate-400 block">قيمة الأراضي والمباني:</span>
-            <span className="text-sm font-black font-mono text-amber-300">{totalPropertyCost + totalHousesCost} د.ع</span>
+            <span className="text-sm font-black font-mono text-amber-300">{totalPropertyCost + totalHousesCost} $</span>
           </div>
           <div className="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
             <span className="text-[10px] text-slate-400 block">سيولة الرهن المتاحة:</span>
-            <span className="text-sm font-black font-mono text-rose-300">+{totalMortgagePower} د.ع</span>
+            <span className="text-sm font-black font-mono text-rose-300">+{totalMortgagePower} $</span>
           </div>
         </div>
 
@@ -165,7 +165,7 @@ export const ManagePropertiesModal: React.FC<ManagePropertiesModalProps> = ({ is
                               <span className="text-[10px] text-slate-400">
                                 {isMortgaged 
                                   ? 'لا يوجد إيجار (مرهون)' 
-                                  : `الإيجار الحالي: ${currentRent} د.ع • ${houses === 5 ? 'فندق 🏨' : `${houses} منازل 🏠`}`
+                                  : `الإيجار الحالي: ${currentRent} $ • ${houses === 5 ? 'فندق 🏨' : `${houses} منازل 🏠`}`
                                 }
                               </span>
                             </div>
@@ -180,7 +180,7 @@ export const ManagePropertiesModal: React.FC<ManagePropertiesModalProps> = ({ is
                                   onClick={() => sellHouseOnTile(tile.id)}
                                   disabled={!canSell}
                                   className="p-1 text-rose-400 hover:bg-slate-800 rounded disabled:opacity-20 transition-all"
-                                  title={canSell ? `بيع منزل (+${Math.floor(tile.houseCost! / 2)} د.ع)` : 'لا يمكن البيع (قاعدة التساوي أو لا توجد مباني)'}
+                                  title={canSell ? `بيع منزل (+${Math.floor(tile.houseCost! / 2)} $)` : 'لا يمكن البيع (قاعدة التساوي أو لا توجد مباني)'}
                                 >
                                   <Minus size={13} />
                                 </button>
@@ -191,7 +191,7 @@ export const ManagePropertiesModal: React.FC<ManagePropertiesModalProps> = ({ is
                                   onClick={() => buildHouseOnTile(tile.id)}
                                   disabled={!canBuild}
                                   className="p-1 text-emerald-400 hover:bg-slate-800 rounded disabled:opacity-20 transition-all"
-                                  title={canBuild ? `بناء منزل (${tile.houseCost} د.ع)` : 'لا يمكن البناء (غير متساوٍ، مرهون، أو لا توجد سيولة)'}
+                                  title={canBuild ? `بناء منزل (${tile.houseCost} $)` : 'لا يمكن البناء (غير متساوٍ، مرهون، أو لا توجد سيولة)'}
                                 >
                                   <Plus size={13} />
                                 </button>
@@ -204,20 +204,20 @@ export const ManagePropertiesModal: React.FC<ManagePropertiesModalProps> = ({ is
                                 onClick={() => unmortgageTile(tile.id)}
                                 disabled={myPlayer.cash < unmortgageCost}
                                 className="btn btn-emerald btn-sm text-[10px] py-1 px-2.5"
-                                title={`فك الرهن ودفع ${unmortgageCost} د.ع (شامل 10% فائدة)`}
+                                title={`فك الرهن ودفع ${unmortgageCost} $ (شامل 10% فائدة)`}
                               >
                                 <Unlock size={11} />
-                                فك الرهن ({unmortgageCost} د.ع)
+                                فك الرهن ({unmortgageCost} $)
                               </button>
                             ) : (
                               <button
                                 onClick={() => mortgageTile(tile.id)}
                                 disabled={houses > 0}
                                 className="btn btn-outline btn-sm text-[10px] py-1 px-2 text-rose-300 hover:border-rose-500 disabled:opacity-30"
-                                title={houses > 0 ? 'يجب بيع جميع مباني المجموعة أولاً' : `رهن العقار (+${tile.mortgageValue} د.ع)`}
+                                title={houses > 0 ? 'يجب بيع جميع مباني المجموعة أولاً' : `رهن العقار (+${tile.mortgageValue} $)`}
                               >
                                 <Lock size={11} />
-                                رهن (+{tile.mortgageValue} د.ع)
+                                رهن (+{tile.mortgageValue} $)
                               </button>
                             )}
                           </div>

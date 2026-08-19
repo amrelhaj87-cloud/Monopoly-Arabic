@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { AlertTriangle, X, Skull } from 'lucide-react';
 
 interface BankruptcyConfirmModalProps {
@@ -44,7 +44,7 @@ export const BankruptcyConfirmModal: React.FC<BankruptcyConfirmModalProps> = ({
           </div>
           <p>
             إذا أعلنت الإفلاس، ستخرج من المباراة فوراً وستخسر جميع عقاراتك
-            {playerCash !== undefined && playerCash > 0 && ` وأموالك (${playerCash} د.ع)`}.
+            {playerCash !== undefined && playerCash > 0 && ` وأموالك (${playerCash} $)`}.
           </p>
           <p className="text-slate-400">
             قبل الاستسلام، فكّر في رهن عقاراتك أو بيع المنازل لتوفير السيولة.

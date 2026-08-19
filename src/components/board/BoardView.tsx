@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TileComponent, TileSide } from './TileComponent';
 import { BoardCenter } from './BoardCenter';
 import { BOARD_TILES } from '../../constants/boardData';
 import { useGame } from '../../context/GameContext';
 import { TileData } from '../../types/game';
-import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize2, MousePointer2 } from 'lucide-react';
+import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
 
 interface BoardViewProps {
   is3D: boolean;
@@ -13,23 +14,48 @@ interface BoardViewProps {
   onDeclareBankruptcy?: () => void;
 }
 
+const ZoomControls = () => {
+  const { zoomIn, zoomOut, resetTransform } = useControls();
+  return (
+    <div className="absolute top-1 left-2 z-30 flex items-center gap-1 bg-slate-900/90 border border-slate-700/80 rounded-xl p-1 shadow-lg backdrop-blur-sm select-none">
+      <button
+        onClick={() => zoomOut()}
+        className="p-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+        title="تصغير اللوحة"
+      >
+        <ZoomOut size={14} />
+      </button>
+
+      <button
+        onClick={() => resetTransform()}
+        className="p-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-amber-400 transition-colors"
+        title="إعادة ضبط الحجم الطبيعي"
+      >
+        <Maximize2 size={14} />
+      </button>
+
+      <button
+        onClick={() => zoomIn()}
+        className="p-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+        title="تكبير اللوحة"
+      >
+        <ZoomIn size={14} />
+      </button>
+
+      <div className="w-px h-4 bg-slate-700 mx-1"></div>
+      
+      <div className="px-1 text-[9px] text-slate-400 flex items-center gap-1">
+        <MousePointer2 size={10} />
+        اسحب للتحريك
+      </div>
+    </div>
+  );
+};
+
 export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpenTrade, onDeclareBankruptcy }) => {
   const { gameState, setSelectedTileDetail } = useGame();
-  const [zoomLevel, setZoomLevel] = useState<number>(1.0);
 
   if (!gameState) return null;
-
-  const handleZoomIn = () => {
-    setZoomLevel((prev) => Math.min(1.35, Math.round((prev + 0.1) * 10) / 10));
-  };
-
-  const handleZoomOut = () => {
-    setZoomLevel((prev) => Math.max(0.75, Math.round((prev - 0.1) * 10) / 10));
-  };
-
-  const handleResetZoom = () => {
-    setZoomLevel(1.0);
-  };
 
   // Helper to map tile ID (0 to 39) to 15x7 Grid Row, Col & Orientation Side
   const getGridPosition = (id: number): { row: number; col: number; side: TileSide } => {
@@ -57,74 +83,50 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
   };
 
   return (
-    <div className="relative w-full flex flex-col items-center">
-      {/* Floating Zoom & View Toolbar */}
-      <div className="absolute top-1 left-2 z-30 flex items-center gap-1 bg-slate-900/90 border border-slate-700/80 rounded-xl p-1 shadow-lg backdrop-blur-sm select-none">
-        <button
-          onClick={handleZoomOut}
-          disabled={zoomLevel <= 0.75}
-          className="p-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          title="تصغير اللوحة"
-        >
-          <ZoomOut size={14} />
-        </button>
+    <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden">
+      <TransformWrapper
+        initialScale={1}
+        minScale={0.4}
+        maxScale={3}
+        centerOnInit={true}
+        wheel={{ step: 0.1 }}
+        pinch={{ step: 5 }}
+      >
+        <ZoomControls />
+        <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
+          <div className="board-perspective-wrapper flex items-center justify-center p-2 min-w-max min-h-max">
+            <div 
+              className={`monopoly-board-grid ${is3D ? 'board-3d-active' : ''}`}
+            >
+              {/* Render Center Area */}
+              <BoardCenter onOpenManage={onOpenManage} onOpenTrade={onOpenTrade} onDeclareBankruptcy={onDeclareBankruptcy} />
 
-        <button
-          onClick={handleResetZoom}
-          className="px-1.5 py-0.5 text-[10px] font-mono font-bold text-amber-300 hover:bg-slate-800 rounded transition-colors"
-          title="إعادة ضبط الحجم الطبيعي"
-        >
-          {Math.round(zoomLevel * 100)}%
-        </button>
+              {/* Render 40 Tiles */}
+              {BOARD_TILES.map((tile) => {
+                const { row, col, side } = getGridPosition(tile.id);
+                const owner = gameState.players.find((p) => p.properties.includes(tile.id));
+                const playersOnTile = gameState.players.filter((p) => p.position === tile.id && !p.isBankrupt);
+                const isHighlighted = gameState.pendingBuyTileId === tile.id;
 
-        <button
-          onClick={handleZoomIn}
-          disabled={zoomLevel >= 1.35}
-          className="p-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          title="تكبير اللوحة"
-        >
-          <ZoomIn size={14} />
-        </button>
-      </div>
-
-      {/* Perspective / Zoom Container */}
-      <div className="board-perspective-wrapper w-full overflow-auto flex items-center justify-center p-2">
-        <div 
-          className={`monopoly-board-grid ${is3D ? 'board-3d-active' : ''}`}
-          style={{
-            transform: zoomLevel !== 1.0 
-              ? `${is3D ? 'rotateX(22deg) ' : ''}scale(${zoomLevel})` 
-              : undefined,
-            transformOrigin: 'center center'
-          }}
-        >
-          {/* Render Center Area */}
-          <BoardCenter onOpenManage={onOpenManage} onOpenTrade={onOpenTrade} onDeclareBankruptcy={onDeclareBankruptcy} />
-
-          {/* Render 40 Tiles */}
-          {BOARD_TILES.map((tile) => {
-            const { row, col, side } = getGridPosition(tile.id);
-            const owner = gameState.players.find((p) => p.properties.includes(tile.id));
-            const playersOnTile = gameState.players.filter((p) => p.position === tile.id && !p.isBankrupt);
-            const isHighlighted = gameState.pendingBuyTileId === tile.id;
-
-            return (
-              <TileComponent
-                key={tile.id}
-                tile={tile}
-                gridRow={row}
-                gridCol={col}
-                side={side}
-                owner={owner}
-                allPlayers={gameState.players}
-                playersOnTile={playersOnTile}
-                onTileClick={handleTileClick}
-                isHighlighted={isHighlighted}
-              />
-            );
-          })}
-        </div>
-      </div>
+                return (
+                  <TileComponent
+                    key={tile.id}
+                    tile={tile}
+                    gridRow={row}
+                    gridCol={col}
+                    side={side}
+                    owner={owner}
+                    allPlayers={gameState.players}
+                    playersOnTile={playersOnTile}
+                    onTileClick={handleTileClick}
+                    isHighlighted={isHighlighted}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </TransformComponent>
+      </TransformWrapper>
     </div>
   );
 };

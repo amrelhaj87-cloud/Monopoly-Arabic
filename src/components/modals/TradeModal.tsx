@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Handshake, X, ArrowLeftRight, Check, Ban, Sparkles, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { BOARD_TILES, GROUP_COLORS, COLOR_GROUP_TILES } from '../../constants/boardData';
@@ -121,7 +121,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                 {activeTrade.offeredCash > 0 && (
                   <div className="bg-emerald-900/60 text-emerald-200 p-2 rounded-lg font-mono font-bold text-sm mb-2 flex items-center gap-1">
                     <DollarSign size={14} />
-                    +{activeTrade.offeredCash} د.ع نقدياً
+                    +{activeTrade.offeredCash} $ نقدياً
                   </div>
                 )}
                 <div className="space-y-1.5 max-h-40 overflow-y-auto">
@@ -142,7 +142,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
               <div className="mt-2 pt-2 border-t border-emerald-500/20 text-[10px] text-slate-400">
-                القيمة الإجمالية: <strong className="text-emerald-300 font-mono">{incomingOfferedVal} د.ع</strong>
+                القيمة الإجمالية: <strong className="text-emerald-300 font-mono">{incomingOfferedVal} $</strong>
               </div>
             </div>
 
@@ -153,7 +153,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                 {activeTrade.requestedCash > 0 && (
                   <div className="bg-rose-900/60 text-rose-200 p-2 rounded-lg font-mono font-bold text-sm mb-2 flex items-center gap-1">
                     <DollarSign size={14} />
-                    -{activeTrade.requestedCash} د.ع نقدياً
+                    -{activeTrade.requestedCash} $ نقدياً
                   </div>
                 )}
                 <div className="space-y-1.5 max-h-40 overflow-y-auto">
@@ -174,7 +174,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
               <div className="mt-2 pt-2 border-t border-rose-500/20 text-[10px] text-slate-400">
-                القيمة الإجمالية: <strong className="text-rose-300 font-mono">{incomingRequestedVal} د.ع</strong>
+                القيمة الإجمالية: <strong className="text-rose-300 font-mono">{incomingRequestedVal} $</strong>
               </div>
             </div>
           </div>
@@ -236,7 +236,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                   <span className="text-base">{p.avatar}</span>
                   <div className="text-right">
                     <span className="block font-bold">{p.name}</span>
-                    <span className="text-[10px] text-emerald-400 font-mono">{p.cash} د.ع • {p.properties.length} عقار</span>
+                    <span className="text-[10px] text-emerald-400 font-mono">{p.cash} $ • {p.properties.length} عقار</span>
                   </div>
                 </button>
               );
@@ -248,11 +248,11 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between p-2.5 bg-slate-900/90 rounded-xl border border-slate-800 mb-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="text-slate-400">قيمة عرضك:</span>
-            <span className="font-mono font-bold text-amber-300">{totalOfferedValue} د.ع</span>
+            <span className="font-mono font-bold text-amber-300">{totalOfferedValue} $</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-slate-400">قيمة طلبك:</span>
-            <span className="font-mono font-bold text-emerald-300">{totalRequestedValue} د.ع</span>
+            <span className="font-mono font-bold text-emerald-300">{totalRequestedValue} $</span>
           </div>
           <div className={`px-2 py-0.5 rounded-full font-bold text-[10px] flex items-center gap-1 ${
             valuationDiff > 0 
@@ -262,7 +262,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
               : 'bg-slate-800 text-slate-300'
           }`}>
             {valuationDiff > 0 ? <TrendingUp size={11} /> : valuationDiff < 0 ? <TrendingDown size={11} /> : null}
-            <span>{valuationDiff === 0 ? 'صفقة متكافئة' : `${Math.abs(valuationDiff)} د.ع ${valuationDiff > 0 ? 'لصالح الخصم' : 'لصالحك'}`}</span>
+            <span>{valuationDiff === 0 ? 'صفقة متكافئة' : `${Math.abs(valuationDiff)} $ ${valuationDiff > 0 ? 'لصالح الخصم' : 'لصالحك'}`}</span>
           </div>
         </div>
 
@@ -316,7 +316,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                           <span className="font-bold">{tile?.name}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-amber-300 font-mono">{tile?.price} د.ع</span>
+                          <span className="text-[10px] text-amber-300 font-mono">{tile?.price} $</span>
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: groupStyle.main }} />
                         </div>
                       </div>
@@ -375,7 +375,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                           <span className="font-bold">{tile?.name}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-emerald-300 font-mono">{tile?.price} د.ع</span>
+                          <span className="text-[10px] text-emerald-300 font-mono">{tile?.price} $</span>
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: groupStyle.main }} />
                         </div>
                       </div>
