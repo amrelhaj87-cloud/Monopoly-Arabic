@@ -13,7 +13,7 @@ export const App: React.FC = () => {
   const { room, gameState, joinRoom } = useGame();
 
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
-  const [is3D, setIs3D] = useState<boolean>(true);
+  const [is3D, setIs3D] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
   const initialRoomAttempted = useRef<boolean>(false);
 

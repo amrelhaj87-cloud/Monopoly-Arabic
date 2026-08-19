@@ -60,7 +60,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px', maxWidth: '1000px', width: '100%', margin: '0 auto' }}>
       
       {/* 1. Player Header Greeting Pill (التاجر الصغير) */}
-      {user && (
+      {user && !showSoloConfig && (
         <div className="user-greeting-pill">
           <span className="user-greeting-avatar">{user.photoURL || '👳‍♂️'}</span>
           <span className="user-greeting-name">
@@ -188,20 +188,20 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         /* Solo Game Configuration View */
         <div className="solo-config-card animate-fadeIn">
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '16px', borderBottom: '1.5px solid rgba(255,255,255,0.12)', marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Bot className="text-amber-400" size={24} /> إعدادات اللعب ضد الذكاء الاصطناعي
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: '1.5px solid rgba(255,255,255,0.12)', marginBottom: '14px' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Bot className="text-amber-400" size={20} /> إعدادات اللعب ضد الذكاء الاصطناعي
             </h3>
             <button
               onClick={() => setShowSoloConfig(false)}
               className="btn btn-outline btn-sm"
-              style={{ fontSize: '0.85rem' }}
+              style={{ fontSize: '0.8rem', minHeight: '32px', padding: '4px 12px' }}
             >
-              <ChevronLeft size={16} /> العودة للقائمة
+              <ChevronLeft size={14} /> العودة للقائمة
             </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {/* Number of Bots */}
             <div>
               <label style={{ display: 'block', fontWeight: 900, color: '#f8fafc', marginBottom: '6px', fontSize: '0.95rem' }}>

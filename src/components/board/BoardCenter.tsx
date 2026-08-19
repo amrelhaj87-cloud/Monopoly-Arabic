@@ -1,4 +1,4 @@
-﻿import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Dice3D } from '../dice/Dice3D';
 import { useGame } from '../../context/GameContext';
 import { Dices, ArrowRight, Home, Handshake, ScrollText, Skull } from 'lucide-react';
@@ -39,9 +39,9 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
   const recentLogs = gameState.logs.slice(0, 5);
 
   return (
-    <div className="board-center-stage select-none flex flex-col items-center justify-between p-2 sm:p-2.5 text-center w-full h-full">
+    <div className="board-center-stage select-none flex flex-col items-center justify-between p-3 sm:p-4 text-center w-full h-full gap-2">
       {/* 1. TOP HEADER ROW: Brand, Turn Info & Jackpot */}
-      <div className="flex items-center justify-between w-full max-w-[540px] px-1 sm:px-2">
+      <div className="flex items-center justify-between w-full px-2 sm:px-6 shrink-0">
         {/* Brand */}
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="text-sm sm:text-base">🎲</span>
@@ -83,104 +83,31 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
         )}
       </div>
 
-      {/* 2. MIDDLE AREA: 3D Dice + Live Activity Feed (Side-by-side on wide screens) */}
-      <div className="w-full max-w-[540px] flex flex-col md:flex-row items-center justify-center gap-2 my-0.5 px-1">
-        {/* Left/Main: 3D Dice & Action Button */}
-        <div className="flex flex-col items-center justify-center shrink-0">
-          <div className="transform scale-85 sm:scale-95">
-            <Dice3D 
-              dice={gameState.dice} 
-              isRolling={isMovingPawn} 
-              onRollClick={canRoll ? rollDice : undefined}
-              canRoll={canRoll}
-            />
-          </div>
-
-          {/* In-Jail Warning & Options for Active Player */}
-          {currentPlayer.inJail && isMyTurn && !isMovingPawn && (
-            <div className="bg-rose-950/90 border border-rose-500/60 px-2.5 py-1 rounded-xl text-center mt-1 text-xs shadow-lg flex items-center gap-1.5">
-              <span className="text-rose-200 font-bold text-[9.5px]">
-                🔒 في السجن ({currentPlayer.jailTurns + 1}/3)
-              </span>
-              <div className="flex gap-1">
-                {myPlayer && myPlayer.cash >= 50 && (
-                  <button onClick={payJailBail} className="btn btn-ruby btn-xs py-0.2 px-1.5 text-[9px]">
-                    كفالة (50)
-                  </button>
-                )}
-                {myPlayer && myPlayer.getOutOfJailCards > 0 && (
-                  <button onClick={useJailCard} className="btn btn-gold btn-xs py-0.2 px-1.5 text-[9px]">
-                    عفو ملكي
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Primary Action Button directly under dice */}
-          <div className="mt-1 w-full min-w-[130px] max-w-[170px]">
-            {canRoll && (
-              <button onClick={rollDice} className="btn btn-gold btn-sm w-full shadow-lg py-1 text-xs font-black animate-bounce-gentle">
-                <Dices size={14} />
-                ارمِ النرد! 🎲
-              </button>
-            )}
-
-            {canEndTurn && (
-              <button onClick={endCurrentTurn} className="btn btn-emerald btn-sm w-full shadow-lg py-1 text-xs font-black">
-                <ArrowRight size={14} />
-                إنهاء الدور 👉
-              </button>
-            )}
-
-            {isMovingPawn && (
-              <div className="text-center py-1 px-2 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[10px] font-bold animate-pulse">
-                🏃‍♂️ جاري التقدم...
-              </div>
-            )}
-
-            {!isMyTurn && !isMovingPawn && !canRoll && !canEndTurn && (
-              <div className="text-center py-1 text-[9.5px] text-slate-300 font-medium bg-slate-950/80 rounded-xl border border-slate-800">
-                {currentPlayer?.isBot ? (
-                  <span className="flex items-center justify-center gap-1.5 text-violet-300">
-                    <span className="inline-flex gap-0.5">
-                      <span className="w-1 h-1 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1 h-1 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1 h-1 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                    </span>
-                    <span className="font-bold">{currentPlayer.name} بيفكر...</span>
-                    <span>🤖</span>
-                  </span>
-                ) : (
-                  <span>⏳ دور {currentPlayer?.name}</span>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right: Live Real-Time Activity Log Feed (Next to Dice!) */}
-        <div className="flex-1 w-full max-w-[310px] bg-slate-950/85 border border-slate-800/90 rounded-xl p-2 text-right shadow-inner flex flex-col justify-between min-h-[95px] max-h-[115px]">
-          <div className="flex items-center justify-between pb-1 border-b border-slate-800/80 text-[10px] text-slate-400 font-bold">
+      {/* 2. MIDDLE AREA: Log (Left) | Dice (Center) | Actions (Right) */}
+      <div className="flex-1 w-full flex flex-row items-center justify-between px-2 sm:px-8 gap-4 my-2">
+        
+        {/* Right (Visual Left in RTL): Live Real-Time Activity Log Feed */}
+        <div className="w-[240px] sm:w-[280px] shrink-0 bg-slate-950/85 border border-slate-800/90 rounded-xl p-2.5 text-right shadow-inner flex flex-col min-h-[110px] max-h-[130px]">
+          <div className="flex items-center justify-between pb-1.5 border-b border-slate-800/80 text-[11px] text-slate-400 font-bold mb-1">
             <span className="flex items-center gap-1">
-              <ScrollText size={11} className="text-amber-400" />
+              <ScrollText size={12} className="text-amber-400" />
               سجل الأحداث المباشر
             </span>
-            <span className="text-[8.5px] text-slate-500 font-mono">لحظة بلحظة</span>
+            <span className="text-[9px] text-slate-500 font-mono">لحظة بلحظة</span>
           </div>
 
-          <div ref={logContainerRef} className="space-y-1 overflow-y-auto pr-0.5 flex-1 my-0.5">
+          <div ref={logContainerRef} className="space-y-1.5 overflow-y-auto pr-1 flex-1">
             {recentLogs.length === 0 ? (
-              <div className="text-[10px] text-slate-500 text-center py-2">بدأت المباراة، بانتظار الرمية الأولى...</div>
+              <div className="text-[10px] text-slate-500 text-center py-4">بدأت المباراة، بانتظار الرمية الأولى...</div>
             ) : (
               recentLogs.map((log, idx) => {
                 const isLatest = idx === 0;
                 return (
                   <div
                     key={log.id}
-                    className={`text-[9.5px] sm:text-[10px] leading-tight p-1 rounded-lg transition-all flex items-start gap-1 ${
+                    className={`text-[10px] sm:text-[11px] leading-tight p-1.5 rounded-lg transition-all flex items-start gap-1.5 ${
                       isLatest
-                        ? 'bg-slate-900 border border-amber-500/40 text-amber-200 font-bold'
+                        ? 'bg-slate-900 border border-amber-500/40 text-amber-200 font-bold shadow-sm'
                         : 'text-slate-400'
                     }`}
                   >
@@ -192,17 +119,94 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
             )}
           </div>
         </div>
+
+        {/* Center: 3D Dice */}
+        <div className="flex flex-col items-center justify-center shrink-0">
+          <div className="transform scale-100">
+            <Dice3D 
+              dice={gameState.dice} 
+              isRolling={isMovingPawn} 
+              onRollClick={canRoll ? rollDice : undefined}
+              canRoll={canRoll}
+            />
+          </div>
+        </div>
+
+        {/* Left (Visual Right in RTL): Primary Action Buttons */}
+        <div className="w-[200px] shrink-0 flex flex-col items-center justify-center gap-3">
+          {/* In-Jail Warning & Options for Active Player */}
+          {currentPlayer.inJail && isMyTurn && !isMovingPawn && (
+            <div className="bg-rose-950/90 border border-rose-500/60 px-3 py-2 rounded-xl text-center text-xs shadow-lg flex flex-col items-center gap-2 w-full">
+              <span className="text-rose-200 font-bold text-[10px]">
+                🔒 في السجن ({currentPlayer.jailTurns + 1}/3)
+              </span>
+              <div className="flex gap-2 w-full">
+                {myPlayer && myPlayer.cash >= 50 && (
+                  <button onClick={payJailBail} className="btn btn-ruby btn-sm flex-1 py-1 text-[10px]">
+                    كفالة (50)
+                  </button>
+                )}
+                {myPlayer && myPlayer.getOutOfJailCards > 0 && (
+                  <button onClick={useJailCard} className="btn btn-gold btn-sm flex-1 py-1 text-[10px]">
+                    عفو ملكي
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Roll / End Turn Buttons */}
+          <div className="w-full">
+            {canRoll && (
+              <button onClick={rollDice} className="btn btn-gold btn-sm w-full shadow-lg py-2.5 text-sm font-black animate-bounce-gentle">
+                <Dices size={16} />
+                ارمِ النرد! 🎲
+              </button>
+            )}
+
+            {canEndTurn && (
+              <button onClick={endCurrentTurn} className="btn btn-emerald btn-sm w-full shadow-lg py-2.5 text-sm font-black">
+                <ArrowRight size={16} />
+                إنهاء الدور 👉
+              </button>
+            )}
+
+            {isMovingPawn && (
+              <div className="text-center py-2 px-3 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold animate-pulse">
+                🏃‍♂️ جاري التقدم...
+              </div>
+            )}
+
+            {!isMyTurn && !isMovingPawn && !canRoll && !canEndTurn && (
+              <div className="text-center py-2 text-[11px] text-slate-300 font-medium bg-slate-950/80 rounded-xl border border-slate-800">
+                {currentPlayer?.isBot ? (
+                  <span className="flex items-center justify-center gap-1.5 text-violet-300">
+                    <span className="inline-flex gap-0.5">
+                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </span>
+                    <span className="font-bold">{currentPlayer.name} بيفكر...</span>
+                    <span>🤖</span>
+                  </span>
+                ) : (
+                  <span>⏳ دور {currentPlayer?.name}</span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* 3. BOTTOM ROW CONTROLS: Property Management, Trade & Bankruptcy */}
-      <div className="w-full max-w-[540px] flex items-center justify-center gap-2 px-1">
+      <div className="w-full flex items-center justify-center gap-4 px-4 pb-2 shrink-0">
         {myPlayer && !myPlayer.isBankrupt && !isMovingPawn && (
           <button
             onClick={onOpenManage}
-            className="btn btn-outline btn-xs sm:btn-sm px-2.5 py-1 text-[10.5px] sm:text-xs bg-slate-900/90 hover:bg-slate-800 flex items-center gap-1 border border-slate-700 shadow-md"
+            className="btn btn-outline btn-sm px-4 py-1.5 text-xs bg-slate-900/90 hover:bg-slate-800 flex items-center gap-1.5 border border-slate-700 shadow-md"
             title="بناء ورهن وتطوير العقارات"
           >
-            <Home size={13} className="text-emerald-400" />
+            <Home size={16} className="text-emerald-400" />
             <span className="font-bold">إدارة وبناء العقارات</span>
           </button>
         )}
@@ -210,10 +214,10 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
         {myPlayer && !myPlayer.isBankrupt && !isMovingPawn && (
           <button
             onClick={onOpenTrade}
-            className="btn btn-outline btn-xs sm:btn-sm px-2.5 py-1 text-[10.5px] sm:text-xs bg-slate-900/90 hover:bg-slate-800 flex items-center gap-1 border border-slate-700 shadow-md"
+            className="btn btn-outline btn-sm px-4 py-1.5 text-xs bg-slate-900/90 hover:bg-slate-800 flex items-center gap-1.5 border border-slate-700 shadow-md"
             title="تقديم عرض مقايضة أو صفقة"
           >
-            <Handshake size={13} className="text-amber-400" />
+            <Handshake size={16} className="text-amber-400" />
             <span className="font-bold">عرض صفقة ومقايضة</span>
           </button>
         )}
@@ -221,10 +225,10 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
         {myPlayer && !myPlayer.isBankrupt && !isMovingPawn && onDeclareBankruptcy && (
           <button
             onClick={onDeclareBankruptcy}
-            className="btn btn-outline btn-xs sm:btn-sm px-2.5 py-1 text-[10.5px] sm:text-xs bg-slate-900/90 hover:bg-rose-950 flex items-center gap-1 border border-rose-800/60 hover:border-rose-500 text-rose-400 shadow-md transition-colors"
+            className="btn btn-outline btn-sm px-4 py-1.5 text-xs bg-slate-900/90 hover:bg-rose-950 flex items-center gap-1.5 border border-rose-800/60 hover:border-rose-500 text-rose-400 shadow-md transition-colors"
             title="إعلان الإفلاس (لا رجعة فيه)"
           >
-            <Skull size={13} />
+            <Skull size={16} />
             <span className="font-bold">إفلاس</span>
           </button>
         )}

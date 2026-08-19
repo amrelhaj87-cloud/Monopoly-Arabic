@@ -148,27 +148,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
         )}
 
-        {/* 3D / 2D Perspective Button */}
-        {gameState && currentPage === 'game' && (
-          <button
-            onClick={() => setIs3D(!is3D)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '4px 10px',
-              borderRadius: '8px',
-              border: is3D ? '1px solid #f59e0b' : '1px solid #334155',
-              backgroundColor: is3D ? 'rgba(245, 158, 11, 0.2)' : '#0f172a',
-              color: is3D ? '#fde047' : '#94a3b8'
-            }}
-            className="text-xs font-bold transition-all"
-            title="تبديل المنظور ثلاثي الأبعاد"
-          >
-            <Layers size={14} />
-            <span>{is3D ? '3D' : '2D'}</span>
-          </button>
-        )}
+
 
         {/* Audio Toggle */}
         <button
