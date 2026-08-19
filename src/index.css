@@ -482,6 +482,7 @@ button:active {
 .game-board-area {
   flex: 1;
   min-width: 0;
+  min-height: 60vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -511,11 +512,8 @@ button:active {
   display: grid !important;
   grid-template-columns: 1.35fr repeat(13, 1fr) 1.35fr !important;
   grid-template-rows: 1.35fr repeat(5, 1fr) 1.35fr !important;
-  width: 100% !important;
-  max-width: 1080px !important;
-  height: auto !important;
-  max-height: calc(100vh - 80px) !important;
-  aspect-ratio: 15 / 8.2 !important;
+  width: 1080px !important;
+  height: 590px !important;
   background: #080c17 !important;
   border: 3px solid #f59e0b !important;
   border-radius: 18px !important;
