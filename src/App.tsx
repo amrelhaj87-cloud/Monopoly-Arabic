@@ -7,6 +7,7 @@ import { SettingsPage } from './components/pages/SettingsPage';
 import { GamePage } from './components/pages/GamePage';
 import { RoomLobby } from './components/lobby/RoomLobby';
 import { RulesModal } from './components/common/RulesModal';
+import { ContactDevModal } from './components/modals/ContactDevModal';
 
 export const App: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -15,6 +16,7 @@ export const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
   const [is3D, setIs3D] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
+  const [showContactDev, setShowContactDev] = useState<boolean>(false);
   const initialRoomAttempted = useRef<boolean>(false);
 
   // Helper to extract room code from URL (path /room/ABC123, hash #/room/ABC123, or ?room=ABC123)
@@ -96,6 +98,7 @@ export const App: React.FC = () => {
         currentPage={currentPage}
         onNavigate={(page) => setCurrentPage(page)}
         onOpenRules={() => setShowRules(true)}
+        onOpenContactDev={() => setShowContactDev(true)}
         is3D={is3D}
         setIs3D={setIs3D}
       />
@@ -132,6 +135,7 @@ export const App: React.FC = () => {
       
       {/* Global Modals */}
       <RulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
+      <ContactDevModal isOpen={showContactDev} onClose={() => setShowContactDev(false)} />
     </div>
   );
 };

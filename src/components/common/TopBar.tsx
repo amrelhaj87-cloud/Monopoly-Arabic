@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Home, Settings, Layers, LogOut, Copy, Check, Gamepad2, Users, Sparkles, HelpCircle } from 'lucide-react';
+import { Volume2, VolumeX, Home, Settings, Layers, LogOut, Copy, Check, Gamepad2, Users, Sparkles, HelpCircle, MessageSquarePlus } from 'lucide-react';
 import { audioService } from '../../services/audioService';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
@@ -11,6 +11,7 @@ interface TopBarProps {
   currentPage: AppPage;
   onNavigate: (page: AppPage) => void;
   onOpenRules: () => void;
+  onOpenContactDev: () => void;
   is3D: boolean;
   setIs3D: (val: boolean) => void;
 }
@@ -19,6 +20,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   currentPage,
   onNavigate,
   onOpenRules,
+  onOpenContactDev,
   is3D,
   setIs3D
 }) => {
@@ -204,10 +206,29 @@ export const TopBar: React.FC<TopBarProps> = ({
             backgroundColor: '#0f172a',
             border: '1px solid #334155'
           }}
-          className="hover:bg-slate-800 text-amber-400 hover:text-amber-300 transition-colors"
+          className="hover:bg-slate-800 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
           title="كيف تلعب (قواعد اللعبة)"
         >
           <HelpCircle size={15} />
+        </button>
+
+        {/* Contact Developer Button */}
+        <button
+          onClick={onOpenContactDev}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '5px 10px',
+            borderRadius: '8px',
+            backgroundColor: '#0f172a',
+            border: '1px solid rgba(56, 189, 248, 0.4)'
+          }}
+          className="hover:bg-slate-800 text-sky-300 hover:text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+          title="تواصل مع المطور (اقتراح / استفسار / مشكلة)"
+        >
+          <MessageSquarePlus size={14} className="text-sky-400" />
+          <span className="hidden md:inline">تواصل مع المطور</span>
         </button>
 
         {/* Leave Game Button */}

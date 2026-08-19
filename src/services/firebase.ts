@@ -19,6 +19,7 @@ import {
   updateDoc, 
   onSnapshot, 
   collection,
+  addDoc,
   Firestore,
   serverTimestamp
 } from 'firebase/firestore';
@@ -177,6 +178,53 @@ class FirebaseService {
         console.warn('Error saving profile to Firestore:', e);
       }
     }
+  }
+
+  // --- Send Message to Developer (Email + Cloud Archive) ---
+  public async sendDeveloperMessage(payload: {
+    name: string;
+    email?: string;
+    subjectType: string;
+    message: string;
+    userId?: string;
+  }): Promise<{ success: boolean; error?: string }> {
+    // 1. Send Email directly to Developer Inbox (amr.elhaj87@gmail.com) via FormSubmit
+    try {
+      await fetch('https://formsubmit.co/ajax/amr.elhaj87@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `[مونوبولي العربية] رسالة جديدة: ${payload.subjectType} من ${payload.name}`,
+          _captcha: 'false',
+          _template: 'table',
+          'اسم المرسل': payload.name,
+          'البريد الإلكتروني للرد': payload.email || 'لم يحدد',
+          'نوع الرسالة': payload.subjectType,
+          'نص الرسالة': payload.message,
+          'معرف اللاعب': payload.userId || 'زائر',
+          'وقت الإرسال': new Date().toLocaleString('ar-EG')
+        })
+      });
+    } catch (err) {
+      console.warn('FormSubmit notice:', err);
+    }
+
+    // 2. Archive a copy in Firestore collection 'developer_messages'
+    if (this.db) {
+      try {
+        await addDoc(collection(this.db, 'developer_messages'), {
+          ...payload,
+          createdAt: Date.now()
+        });
+      } catch (e) {
+        console.warn('Firestore message backup notice:', e);
+      }
+    }
+
+    return { success: true };
   }
 }
 
