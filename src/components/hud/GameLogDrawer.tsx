@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollText, ChevronDown, ChevronUp } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 export const GameLogDrawer: React.FC = () => {
   const { gameState } = useGame();
@@ -38,7 +39,9 @@ export const GameLogDrawer: React.FC = () => {
                   className="p-1.5 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-start gap-1.5 leading-relaxed"
                 >
                   {player && (
-                    <span className="text-xs shrink-0 mt-0.5">{player.avatar}</span>
+                    <div className="shrink-0 mt-0.5">
+                      <PlayerBlob color={player.color} size="sm" />
+                    </div>
                   )}
                   <span className="text-slate-300 font-medium text-[10.5px]">{log.message}</span>
                 </div>

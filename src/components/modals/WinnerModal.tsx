@@ -1,8 +1,9 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Trophy, Award, Home, Coins, RotateCcw, Crown, TrendingUp, ShieldCheck, Flame, Dice6 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { GameEngine } from '../../services/gameEngine';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 export const WinnerModal: React.FC = () => {
   const { gameState, leaveRoom } = useGame();
@@ -77,7 +78,9 @@ export const WinnerModal: React.FC = () => {
           className="p-4 rounded-2xl border-2 shadow-2xl mb-4 bg-gradient-to-b from-amber-950/70 via-slate-900 to-slate-950 relative overflow-hidden"
           style={{ borderColor: winner.color || '#f59e0b', boxShadow: `0 10px 30px ${winner.color || '#f59e0b'}30` }}
         >
-          <div className="text-5xl mb-1 filter drop-shadow">{winner.avatar}</div>
+          <div className="flex justify-center mb-2">
+            <PlayerBlob color={winner.color} size="xl" />
+          </div>
           <div className="text-base font-black text-white mb-2">{winner.name}</div>
 
           <div className="grid grid-cols-2 gap-2 text-xs">
@@ -176,7 +179,7 @@ export const WinnerModal: React.FC = () => {
                 >
                   <div className="flex items-center gap-2">
                     <span className="font-mono font-black text-sm w-4">{idx + 1}.</span>
-                    <span>{player.avatar}</span>
+                    <PlayerBlob color={player.color} size="sm" />
                     <span>{player.name}</span>
                     {player.isBankrupt && <span className="text-[9px] text-rose-400">(أفلس)</span>}
                   </div>

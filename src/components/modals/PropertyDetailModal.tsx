@@ -1,7 +1,8 @@
-﻿import React from 'react';
+import React from 'react';
 import { X, Building2, Home, Lock, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { GROUP_COLORS } from '../../constants/boardData';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 export const PropertyDetailModal: React.FC = () => {
   const { selectedTileDetail, setSelectedTileDetail, gameState, myPlayer } = useGame();
@@ -86,8 +87,8 @@ export const PropertyDetailModal: React.FC = () => {
                 borderColor: owner.color
               }}
             >
-              <div className="flex items-center gap-2">
-                <span className="text-xl">{owner.avatar}</span>
+              <div className="flex items-center gap-2.5">
+                <PlayerBlob color={owner.color} size="sm" />
                 <div>
                   <span className="text-[10px] text-slate-400 block">المالك الحالي:</span>
                   <span className="font-black text-sm text-white">

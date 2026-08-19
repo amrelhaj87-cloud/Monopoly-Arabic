@@ -1,7 +1,8 @@
-﻿import React from 'react';
+import React from 'react';
 import { TileData, Player } from '../../types/game';
 import { GROUP_COLORS, COLOR_GROUP_TILES } from '../../constants/boardData';
 import { Coins, Home, User, ShieldAlert, Sparkles } from 'lucide-react';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 interface TileTooltipProps {
   tile: TileData;
@@ -99,8 +100,8 @@ export const TileTooltip: React.FC<TileTooltipProps> = ({ tile, owner, allPlayer
               <User size={11} className="text-amber-400" />
               المالك:
             </span>
-            <span className="font-bold flex items-center gap-1" style={{ color: owner.color }}>
-              <span>{owner.avatar}</span>
+            <span className="font-bold flex items-center gap-1.5" style={{ color: owner.color }}>
+              <PlayerBlob color={owner.color} size="sm" />
               <span>{owner.name}</span>
             </span>
           </div>

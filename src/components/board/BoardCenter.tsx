@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Dice3D } from '../dice/Dice3D';
 import { useGame } from '../../context/GameContext';
 import { Dices, ArrowRight, Home, Handshake, ScrollText, Skull } from 'lucide-react';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 interface BoardCenterProps {
   onOpenManage: () => void;
@@ -57,10 +58,9 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
           }}
         >
           <div 
-            className="w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-xs border shrink-0"
-            style={{ backgroundColor: `${currentPlayer.color}30`, borderColor: currentPlayer.color }}
+            className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
           >
-            <span>{currentPlayer.avatar}</span>
+            <PlayerBlob color={currentPlayer.color} size="pawn" />
           </div>
           <span className="text-[10.5px] sm:text-xs font-bold text-white leading-none">
             {currentPlayer.name} {myPlayer?.id === currentPlayer.id && '(أنت)'}

@@ -1,9 +1,10 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Handshake, X, ArrowLeftRight, Check, Ban, Sparkles, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { BOARD_TILES, GROUP_COLORS, COLOR_GROUP_TILES } from '../../constants/boardData';
 import { TradeOffer } from '../../types/game';
 import { AIService } from '../../services/aiService';
+import { PlayerBlob } from '../common/PlayerBlob';
 
 interface TradeModalProps {
   isOpen: boolean;
@@ -233,7 +234,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose }) => {
                       : 'bg-slate-900/80 border-slate-700 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <span className="text-base">{p.avatar}</span>
+                  <PlayerBlob color={p.color} size="sm" />
                   <div className="text-right">
                     <span className="block font-bold">{p.name}</span>
                     <span className="text-[10px] text-emerald-400 font-mono">{p.cash} $ • {p.properties.length} عقار</span>
