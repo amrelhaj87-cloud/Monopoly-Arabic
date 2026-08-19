@@ -6,6 +6,7 @@ import { HomePage } from './components/pages/HomePage';
 import { SettingsPage } from './components/pages/SettingsPage';
 import { GamePage } from './components/pages/GamePage';
 import { RoomLobby } from './components/lobby/RoomLobby';
+import { RulesModal } from './components/common/RulesModal';
 
 export const App: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -13,6 +14,7 @@ export const App: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
   const [is3D, setIs3D] = useState<boolean>(true);
+  const [showRules, setShowRules] = useState<boolean>(false);
   const initialRoomAttempted = useRef<boolean>(false);
 
   // Helper to extract room code from URL (path /room/ABC123, hash #/room/ABC123, or ?room=ABC123)
@@ -93,6 +95,7 @@ export const App: React.FC = () => {
       <TopBar
         currentPage={currentPage}
         onNavigate={(page) => setCurrentPage(page)}
+        onOpenRules={() => setShowRules(true)}
         is3D={is3D}
         setIs3D={setIs3D}
       />
@@ -126,6 +129,9 @@ export const App: React.FC = () => {
           </>
         )}
       </main>
+      
+      {/* Global Modals */}
+      <RulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
     </div>
   );
 };

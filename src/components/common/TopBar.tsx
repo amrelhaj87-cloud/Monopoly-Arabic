@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Home, Settings, Layers, LogOut, Copy, Check, Gamepad2, Users, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Home, Settings, Layers, LogOut, Copy, Check, Gamepad2, Users, Sparkles, HelpCircle } from 'lucide-react';
 import { audioService } from '../../services/audioService';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
@@ -9,6 +9,7 @@ export type AppPage = 'home' | 'settings' | 'game';
 interface TopBarProps {
   currentPage: AppPage;
   onNavigate: (page: AppPage) => void;
+  onOpenRules: () => void;
   is3D: boolean;
   setIs3D: (val: boolean) => void;
 }
@@ -16,6 +17,7 @@ interface TopBarProps {
 export const TopBar: React.FC<TopBarProps> = ({
   currentPage,
   onNavigate,
+  onOpenRules,
   is3D,
   setIs3D
 }) => {
@@ -184,6 +186,24 @@ export const TopBar: React.FC<TopBarProps> = ({
           title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
         >
           {isMuted ? <VolumeX size={15} className="text-rose-400" /> : <Volume2 size={15} className="text-emerald-400" />}
+        </button>
+
+        {/* How to Play / Rules */}
+        <button
+          onClick={onOpenRules}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '6px',
+            borderRadius: '8px',
+            backgroundColor: '#0f172a',
+            border: '1px solid #334155'
+          }}
+          className="hover:bg-slate-800 text-amber-400 hover:text-amber-300 transition-colors"
+          title="كيف تلعب (قواعد اللعبة)"
+        >
+          <HelpCircle size={15} />
         </button>
 
         {/* Leave Game Button */}
