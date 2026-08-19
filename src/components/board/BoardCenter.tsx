@@ -87,32 +87,41 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
       <div className="flex-1 w-full flex flex-row items-center justify-between px-2 sm:px-8 gap-4 my-2">
         
         {/* Right (Visual Left in RTL): Live Real-Time Activity Log Feed */}
-        <div className="w-[240px] sm:w-[280px] shrink-0 bg-slate-950/85 border border-slate-800/90 rounded-xl p-2.5 text-right shadow-inner flex flex-col min-h-[110px] max-h-[130px]">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-800/80 text-[11px] text-slate-400 font-bold mb-1">
-            <span className="flex items-center gap-1">
-              <ScrollText size={12} className="text-amber-400" />
+        <div 
+          style={{ width: '280px', height: '125px', boxSizing: 'border-box' }}
+          className="shrink-0 bg-slate-950/90 border border-slate-800/90 rounded-2xl p-2.5 text-right shadow-inner flex flex-col overflow-hidden"
+        >
+          <div className="flex items-center justify-between pb-1.5 border-b border-slate-800/80 text-[11px] text-slate-400 font-bold mb-1 shrink-0">
+            <span className="flex items-center gap-1.5">
+              <ScrollText size={13} className="text-amber-400" />
               سجل الأحداث المباشر
             </span>
-            <span className="text-[9px] text-slate-500 font-mono">لحظة بلحظة</span>
+            <span className="text-[9px] text-emerald-400/90 font-mono flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              مباشر
+            </span>
           </div>
 
-          <div ref={logContainerRef} className="space-y-1.5 overflow-y-auto pr-1 flex-1">
+          <div 
+            ref={logContainerRef} 
+            className="space-y-1.5 overflow-hidden flex-1 flex flex-col justify-start"
+          >
             {recentLogs.length === 0 ? (
-              <div className="text-[10px] text-slate-500 text-center py-4">بدأت المباراة، بانتظار الرمية الأولى...</div>
+              <div className="text-[10px] text-slate-500 text-center py-5">بدأت المباراة، بانتظار الرمية الأولى...</div>
             ) : (
-              recentLogs.map((log, idx) => {
+              recentLogs.slice(0, 3).map((log, idx) => {
                 const isLatest = idx === 0;
                 return (
                   <div
                     key={log.id}
-                    className={`text-[10px] sm:text-[11px] leading-tight p-1.5 rounded-lg transition-all flex items-start gap-1.5 ${
+                    className={`text-[10px] sm:text-[10.5px] leading-tight p-1.5 rounded-xl transition-all flex items-start gap-1.5 ${
                       isLatest
-                        ? 'bg-slate-900 border border-amber-500/40 text-amber-200 font-bold shadow-sm'
-                        : 'text-slate-400'
+                        ? 'bg-slate-900 border border-amber-500/50 text-amber-200 font-black shadow-sm'
+                        : 'text-slate-400 font-medium opacity-80'
                     }`}
                   >
-                    <span className="shrink-0">{isLatest ? '👉' : '•'}</span>
-                    <span className="flex-1">{log.message}</span>
+                    <span className="shrink-0 text-xs">{isLatest ? '👉' : '•'}</span>
+                    <span className="flex-1 truncate">{log.message}</span>
                   </div>
                 );
               })

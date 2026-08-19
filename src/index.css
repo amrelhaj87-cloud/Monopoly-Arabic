@@ -86,18 +86,40 @@ button:active {
 
 /* Custom Luxury Scrollbars */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #0f172a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d97706;
+  background: rgba(217, 119, 6, 0.6);
   border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #f59e0b;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.subtle-scrollbar::-webkit-scrollbar {
+  width: 3.5px;
+}
+.subtle-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.subtle-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 4px;
+}
+.subtle-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.6);
 }
 
 /* Glassmorphism Containers */
