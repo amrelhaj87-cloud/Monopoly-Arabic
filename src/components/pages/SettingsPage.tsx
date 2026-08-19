@@ -43,7 +43,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
 
   // Profile Form States
   const [name, setName] = useState(user?.displayName || '');
-  const [color, setColor] = useState(PLAYER_DEFAULT_COLORS[0]);
+  const [color, setColor] = useState(user?.color || PLAYER_DEFAULT_COLORS[0]);
   const [profileSaved, setProfileSaved] = useState(false);
 
   // Audio / Sound States

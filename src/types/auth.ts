@@ -7,6 +7,7 @@ export interface UserProfile {
   photoURL: string | null;
   isGuest: boolean;
   selectedToken: PlayerTokenId;
+  color?: string;
   stats: {
     gamesPlayed: number;
     gamesWon: number;

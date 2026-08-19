@@ -199,12 +199,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await firebaseService.saveUserProfile(updated);
   };
 
-  const updateProfileCustomization = async (name: string, avatar: string, token: PlayerTokenId) => {
+  const updateProfileCustomization = async (name: string, color: string, token: PlayerTokenId) => {
     if (!user) return;
     const updated: UserProfile = {
       ...user,
       displayName: name,
-      photoURL: avatar,
+      color: color,
       selectedToken: token,
       updatedAt: Date.now()
     };
