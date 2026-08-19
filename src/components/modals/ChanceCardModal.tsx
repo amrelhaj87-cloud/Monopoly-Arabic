@@ -8,32 +8,27 @@ export const ChanceCardModal: React.FC = () => {
   const { gameState, isMyTurn, currentPlayer, executeActiveCardAction, isMovingPawn } = useGame();
   const [timeLeft, setTimeLeft] = useState<number>(6);
 
-  if (!gameState || gameState.phase !== 'tile_action' || !gameState.activeCard || isMovingPawn) {
-    return null;
-  }
+  const isVisible = Boolean(
+    gameState && gameState.phase === 'tile_action' && gameState.activeCard && !isMovingPawn
+  );
+  const card = isVisible ? gameState!.activeCard! : null;
+  const action = card?.action;
 
-  const card = gameState.activeCard;
-  const isChance = card.type === 'chance';
-  const { action } = card;
-  const cardOwnerName = currentPlayer?.name || 'اللاعب';
-
-  // Trigger celebration confetti for big reward cards or get out of jail cards
+  // ✅ HOOK 1: confetti effect — called unconditionally, guards internally
   useEffect(() => {
+    if (!isVisible || !action) return;
     if (
-      (action.type === 'receive_cash' && (action.amount || 0) >= 150) || 
+      (action.type === 'receive_cash' && (action.amount || 0) >= 150) ||
       action.type === 'get_out_of_jail' ||
       action.type === 'collect_from_all'
     ) {
-      confetti({
-        particleCount: 60,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
+      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
     }
-  }, [card.id]);
+  }, [card?.id, isVisible]);
 
-  // Manage countdown for Bot turns (gives human 6 seconds to read card, or click to proceed)
+  // ✅ HOOK 2: auto-countdown for bot turns — called unconditionally, guards internally
   useEffect(() => {
+    if (!isVisible || !card) return;
     setTimeLeft(6);
 
     if (!isMyTurn) {
@@ -50,10 +45,17 @@ export const ChanceCardModal: React.FC = () => {
 
       return () => clearInterval(interval);
     }
-  }, [card.id, isMyTurn]);
+  }, [card?.id, isMyTurn, isVisible]);
+
+  // ✅ Early return AFTER all hooks
+  if (!isVisible || !card || !action) return null;
+
+  const isChance = card.type === 'chance';
+  const cardOwnerName = currentPlayer?.name || 'اللاعب';
 
   // Destination tile name if move_to
   const destinationTile = action.tileId !== undefined ? BOARD_TILES.find(t => t.id === action.tileId) : null;
+
 
   return (
     <div className="modal-overlay">
