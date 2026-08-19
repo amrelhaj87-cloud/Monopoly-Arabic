@@ -129,7 +129,7 @@ export const RoomLobby: React.FC = () => {
 
                   {/* Avatar Blob */}
                   <div className="relative my-2">
-                    <PlayerBlob color={member.color} size="lg" />
+                    <PlayerBlob color={member.color} token={member.token} emoji={member.avatar} size="lg" />
                   </div>
 
                   {/* Name */}

@@ -111,7 +111,7 @@ export const PlayerListHUD: React.FC = () => {
               {/* Left Side: Avatar */}
               <div className="flex items-center justify-center shrink-0 border-r border-slate-700/50 pr-2 pl-1">
                 <div className="relative shrink-0">
-                  <PlayerBlob color={player.color} size="md" />
+                  <PlayerBlob color={player.color} token={player.token} emoji={player.avatar} size="md" />
                   
                   {isHost && (
                     <Crown size={12} className="text-amber-400 absolute -top-1.5 -right-1.5 drop-shadow-md z-10" />

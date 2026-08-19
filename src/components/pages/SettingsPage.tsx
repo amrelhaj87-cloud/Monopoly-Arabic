@@ -25,6 +25,7 @@ import { useGame } from '../../context/GameContext';
 import { audioService } from '../../services/audioService';
 import { firebaseService } from '../../services/firebase';
 import { GAME_TOKENS, AVATARS_LIST } from '../../constants/tokens';
+import { PlayerBlob } from '../common/PlayerBlob';
 import { PlayerTokenId } from '../../types/game';
 import { FirebaseConfigOptions } from '../../types/auth';
 
@@ -99,8 +100,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
     : 0;
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full p-2 sm:p-4 animate-fadeIn">
-      <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex-1 flex flex-col items-center justify-start p-2 sm:p-4 md:p-6 animate-fadeIn">
+      <div className="w-full max-w-4xl flex flex-col gap-4">
       {/* Page Header Banner */}
       <div className="glass-panel p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 border-2 border-amber-500/30">
         <div>
@@ -194,43 +195,110 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ is3D, setIs3D, onNav
                 </div>
               </div>
 
-                {/* Edit Profile Form */}
-                <form onSubmit={handleSaveProfile} className="space-y-5 pt-2">
-                  <div>
-                    <label className="block text-sm font-black text-amber-400 mb-2">اسم اللاعب:</label>
-                    <div className="relative max-w-sm">
-                      <User className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="input-lux pl-4 pr-10"
-                        maxLength={20}
-                        placeholder="أدخل اسمك هنا..."
-                        required
-                      />
+              {/* Edit Profile Form */}
+              <form onSubmit={handleSaveProfile} className="space-y-6 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                  {/* Left (or Form side): Inputs */}
+                  <div className="md:col-span-2 space-y-5">
+                    <div>
+                      <label className="block text-sm font-black text-amber-400 mb-2">اسم اللاعب:</label>
+                      <div className="relative max-w-sm">
+                        <User className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="input-lux pl-4 pr-10"
+                          maxLength={20}
+                          placeholder="أدخل اسمك هنا..."
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {/* Token Selection */}
+                    <div>
+                      <label className="block text-sm font-black text-amber-400 mb-2">رمز اللاعب (Token):</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {GAME_TOKENS.map((t) => {
+                          const isSelected = token === t.id;
+                          return (
+                            <button
+                              key={t.id}
+                              type="button"
+                              onClick={() => setToken(t.id)}
+                              className={`p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-center ${
+                                isSelected
+                                  ? 'border-amber-500 bg-amber-500/20 shadow-md ring-1 ring-amber-500'
+                                  : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
+                              }`}
+                            >
+                              <span className="text-2xl">{t.emoji}</span>
+                              <span className="text-xs font-bold text-slate-200">{t.name}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Avatar Selection */}
+                    <div>
+                      <label className="block text-sm font-black text-amber-400 mb-2">الشخصية الرمزية (Avatar):</label>
+                      <div className="flex flex-wrap gap-2">
+                        {AVATARS_LIST.map((av) => {
+                          const isSelected = avatar === av.emoji;
+                          return (
+                            <button
+                              key={av.id}
+                              type="button"
+                              onClick={() => setAvatar(av.emoji)}
+                              className={`w-11 h-11 rounded-xl border flex items-center justify-center text-xl transition-all ${
+                                isSelected
+                                  ? 'border-amber-500 bg-amber-500/20 ring-1 ring-amber-500 scale-105'
+                                  : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
+                              }`}
+                              title={av.name}
+                            >
+                              {av.emoji}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Removed Avatar and Token selections since we use unified PlayerBlob now. Colors are selected in the Game Lobby. */}
-
-                  {profileSaved && (
-                    <div className="p-3 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded-xl text-center text-xs font-bold mt-4">
-                      ✅ تم حفظ وتحديث الملف الشخصي بنجاح!
+                  {/* Right Preview Card */}
+                  <div className="glass-panel p-5 border-2 border-amber-500/40 flex flex-col items-center text-center gap-3 bg-gradient-to-b from-amber-500/10 to-transparent">
+                    <span className="text-xs text-amber-400 font-bold">معاينة الرمز في اللعبة</span>
+                    <div className="p-4 bg-slate-950/80 rounded-2xl border border-slate-800 flex items-center justify-center">
+                      <PlayerBlob color="#f59e0b" token={token} emoji={avatar} size="lg" />
                     </div>
-                  )}
-
-                  <div className="flex gap-4 pt-6 mt-6 border-t border-slate-800/60">
-                    <button type="submit" className="btn btn-gold flex-1 shadow-lg">
-                      <Save size={18} />
-                      حفظ التغييرات
-                    </button>
-                    <button type="button" onClick={logout} className="btn btn-ruby px-6">
-                      <LogOut size={18} />
-                      تسجيل الخروج
-                    </button>
+                    <div className="space-y-0.5">
+                      <h4 className="text-base font-black text-white">{name || 'لاعب مونوبولي'}</h4>
+                      <p className="text-xs text-slate-400">
+                        {GAME_TOKENS.find(t => t.id === token)?.name || 'رمز اللعب'}
+                      </p>
+                    </div>
                   </div>
-                </form>
+                </div>
+
+                {profileSaved && (
+                  <div className="p-3 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded-xl text-center text-xs font-bold mt-4">
+                    ✅ تم حفظ وتحديث الملف الشخصي بنجاح!
+                  </div>
+                )}
+
+                <div className="flex gap-4 pt-6 mt-6 border-t border-slate-800/60">
+                  <button type="submit" className="btn btn-gold flex-1 shadow-lg">
+                    <Save size={18} />
+                    حفظ التغييرات
+                  </button>
+                  <button type="button" onClick={logout} className="btn btn-ruby px-6">
+                    <LogOut size={18} />
+                    تسجيل الخروج
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 

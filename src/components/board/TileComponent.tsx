@@ -139,21 +139,16 @@ export const TileComponent: React.FC<TileComponentProps> = ({
           </div>
 
           {/* Price / Owner Pill */}
-          <div className="shrink-0 mb-0.5 w-full px-0.5">
+          <div className="shrink-0 mb-0.5 w-full px-1">
             {owner ? (
               <div 
-                className="w-full py-0.5 px-1 rounded flex items-center justify-center gap-1 shadow font-black border border-black/30"
+                className="w-full h-2 sm:h-2.5 rounded-full shadow-md border border-white/20 transition-all"
                 style={{ 
                   backgroundColor: owner.color, 
-                  color: '#080c17'
+                  boxShadow: `0 0 10px ${owner.color}90, inset 0 1px 2px rgba(255,255,255,0.4)`
                 }}
                 title={`عقار مملوك لـ: ${owner.name}`}
-              >
-                <PlayerBlob color={owner.color} size="sm" />
-                <span className="text-[7.5px] sm:text-[8px] font-black truncate max-w-[38px] leading-none">
-                  {owner.name.split(' ')[0]}
-                </span>
-              </div>
+              />
             ) : tile.price ? (
               <div className="bg-slate-950/90 border border-amber-500/50 text-amber-300 font-bold font-mono text-[7.5px] sm:text-[8.5px] md:text-[9px] px-1.5 py-0.2 rounded-full flex items-center justify-center gap-0.5 shadow-sm">
                 <span>{tile.price}</span>
@@ -188,7 +183,7 @@ export const TileComponent: React.FC<TileComponentProps> = ({
               }}
               title={p.name}
             >
-              <PlayerBlob color={p.color} size="pawn" />
+              <PlayerBlob color={p.color} token={p.token} emoji={p.avatar} size="pawn" />
             </div>
           ))}
         </div>
