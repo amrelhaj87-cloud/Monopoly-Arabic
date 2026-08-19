@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Sparkles, Flame } from 'lucide-react';
 
 interface Dice3DProps {
   dice: [number, number];
@@ -7,48 +8,79 @@ interface Dice3DProps {
   canRoll?: boolean;
 }
 
-export const Dice3D: React.FC<Dice3DProps> = ({ dice, isRolling = false, onRollClick, canRoll = false }) => {
+export const Dice3D: React.FC<Dice3DProps> = ({ 
+  dice, 
+  isRolling = false, 
+  onRollClick, 
+  canRoll = false 
+}) => {
   const [animating, setAnimating] = useState(false);
+  const [displayValues, setDisplayValues] = useState<[number, number]>(dice);
+  const prevDiceRef = useRef<[number, number]>(dice);
 
+  // Trigger animation whenever dice changes OR when isRolling is true
   useEffect(() => {
-    if (isRolling) {
+    const hasChanged = prevDiceRef.current[0] !== dice[0] || prevDiceRef.current[1] !== dice[1];
+    prevDiceRef.current = dice;
+
+    if (isRolling || hasChanged) {
       setAnimating(true);
-      const t = setTimeout(() => setAnimating(false), 600);
-      return () => clearTimeout(t);
+      
+      // Fast lightweight rapid tumble interval (60ms)
+      const interval = setInterval(() => {
+        setDisplayValues([
+          Math.floor(Math.random() * 6) + 1,
+          Math.floor(Math.random() * 6) + 1
+        ]);
+      }, 60);
+
+      // Settle smoothly on real values at 480ms
+      const timeout = setTimeout(() => {
+        clearInterval(interval);
+        setDisplayValues(dice);
+        setAnimating(false);
+      }, 480);
+
+      return () => {
+        clearInterval(interval);
+        clearTimeout(timeout);
+      };
+    } else {
+      setDisplayValues(dice);
     }
-  }, [isRolling, dice]);
+  }, [dice, isRolling]);
 
   const renderDiceFace = (value: number) => {
     switch (value) {
       case 1:
         return (
-          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="w-full h-full flex items-center justify-center">
             <div className="dice-dot-red" />
           </div>
         );
       case 2:
         return (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px' }}>
-            <div className="dice-dot-black" style={{ alignSelf: 'flex-start' }} />
-            <div className="dice-dot-black" style={{ alignSelf: 'flex-end' }} />
+          <div className="w-full h-full flex flex-col justify-between p-2.5">
+            <div className="dice-dot-black self-start" />
+            <div className="dice-dot-black self-end" />
           </div>
         );
       case 3:
         return (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px' }}>
-            <div className="dice-dot-black" style={{ alignSelf: 'flex-start' }} />
-            <div className="dice-dot-black" style={{ alignSelf: 'center' }} />
-            <div className="dice-dot-black" style={{ alignSelf: 'flex-end' }} />
+          <div className="w-full h-full flex flex-col justify-between p-2.5">
+            <div className="dice-dot-black self-start" />
+            <div className="dice-dot-black self-center" />
+            <div className="dice-dot-black self-end" />
           </div>
         );
       case 4:
         return (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="w-full h-full flex flex-col justify-between p-2.5">
+            <div className="flex justify-between">
               <div className="dice-dot-black" />
               <div className="dice-dot-black" />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex justify-between">
               <div className="dice-dot-black" />
               <div className="dice-dot-black" />
             </div>
@@ -56,15 +88,15 @@ export const Dice3D: React.FC<Dice3DProps> = ({ dice, isRolling = false, onRollC
         );
       case 5:
         return (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px', position: 'relative' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="w-full h-full flex flex-col justify-between p-2.5 relative">
+            <div className="flex justify-between">
               <div className="dice-dot-black" />
               <div className="dice-dot-black" />
             </div>
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div className="dice-dot-red" style={{ width: '16px', height: '16px' }} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="dice-dot-red w-4 h-4" />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex justify-between">
               <div className="dice-dot-black" />
               <div className="dice-dot-black" />
             </div>
@@ -72,103 +104,91 @@ export const Dice3D: React.FC<Dice3DProps> = ({ dice, isRolling = false, onRollC
         );
       case 6:
         return (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="w-full h-full flex flex-col justify-between p-2">
+            <div className="flex justify-between">
               <div className="dice-dot-black" />
               <div className="dice-dot-black" />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex justify-between">
               <div className="dice-dot-black" />
               <div className="dice-dot-black" />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex justify-between">
               <div className="dice-dot-black" />
               <div className="dice-dot-black" />
             </div>
           </div>
         );
       default:
-        return <span style={{ fontSize: '2rem', fontWeight: 900, color: '#0f172a' }}>{value}</span>;
+        return <span className="text-2xl font-black text-slate-900">{value}</span>;
     }
   };
 
-  const isDouble = dice[0] === dice[1];
-  const total = (dice[0] || 1) + (dice[1] || 1);
+  const val1 = displayValues[0] || 1;
+  const val2 = displayValues[1] || 1;
+  const isDouble = val1 === val2;
+  const total = val1 + val2;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '8px 0', userSelect: 'none' }}>
-      {/* Dice Cubes Row */}
+    <div className="flex flex-col items-center justify-center my-1 select-none">
+      {/* Dice Cubes Interactive Area */}
       <div
-        onClick={canRoll ? onRollClick : undefined}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px',
-          cursor: canRoll ? 'pointer' : 'default',
-          padding: '8px 16px',
-          borderRadius: '20px',
-          background: 'rgba(15, 23, 42, 0.6)',
-          border: '1.5px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
-        }}
-        title={canRoll ? 'انقر لرمي النرد' : undefined}
+        onClick={canRoll && !animating ? onRollClick : undefined}
+        className={`flex items-center gap-3.5 px-4 py-2 rounded-2xl transition-all ${
+          canRoll
+            ? 'cursor-pointer hover:bg-slate-900/90 active:scale-95 ring-2 ring-amber-400/50 shadow-lg shadow-amber-500/20 bg-slate-950/80'
+            : 'bg-slate-950/50'
+        } border border-slate-700/60`}
+        title={canRoll ? 'انقر هنا لرمي النرد!' : undefined}
       >
         {/* Die 1 */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-          <div className={`dice-cube-large ${animating ? 'dice-rolling' : ''}`}>
-            {renderDiceFace(dice[0] || 1)}
+        <div className="flex flex-col items-center gap-1.5">
+          <div 
+            className={`dice-cube-large ${canRoll ? 'dice-clickable' : ''} ${
+              animating ? 'dice-rolling-1' : ''
+            }`}
+          >
+            {renderDiceFace(val1)}
           </div>
-          <span style={{ fontSize: '0.85rem', fontWeight: 900, background: '#090d16', color: '#f59e0b', border: '1px solid #f59e0b', padding: '2px 10px', borderRadius: '9999px' }}>
-            {dice[0] || 1}
+          <span className="text-xs font-mono font-black bg-slate-950 text-amber-400 border border-amber-500/60 px-2.5 py-0.5 rounded-full shadow-sm">
+            {val1}
           </span>
         </div>
 
         {/* Plus Symbol */}
-        <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fcd34d' }}>+</span>
+        <span className="text-xl font-black text-amber-400/80 drop-shadow-sm">+</span>
 
         {/* Die 2 */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-          <div className={`dice-cube-large ${animating ? 'dice-rolling' : ''}`} style={{ animationDelay: '0.08s' }}>
-            {renderDiceFace(dice[1] || 1)}
+        <div className="flex flex-col items-center gap-1.5">
+          <div 
+            className={`dice-cube-large ${canRoll ? 'dice-clickable' : ''} ${
+              animating ? 'dice-rolling-2' : ''
+            }`}
+          >
+            {renderDiceFace(val2)}
           </div>
-          <span style={{ fontSize: '0.85rem', fontWeight: 900, background: '#090d16', color: '#f59e0b', border: '1px solid #f59e0b', padding: '2px 10px', borderRadius: '9999px' }}>
-            {dice[1] || 1}
+          <span className="text-xs font-mono font-black bg-slate-950 text-amber-400 border border-amber-500/60 px-2.5 py-0.5 rounded-full shadow-sm">
+            {val2}
           </span>
         </div>
       </div>
 
-      {/* Dice Total Banner */}
-      <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95))',
-          border: '1.5px solid #f59e0b',
-          padding: '6px 16px',
-          borderRadius: '9999px',
-          boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          fontSize: '0.9rem',
-          fontWeight: 800
-        }}>
-          <span style={{ color: '#94a3b8' }}>المجموع:</span>
-          <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fde047' }}>{total}</span>
-          <span style={{ color: '#cbd5e1' }}>خطوات</span>
+      {/* Dice Result / Total Steps Banner */}
+      <div className="mt-2.5 flex items-center gap-2 flex-wrap justify-center">
+        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-amber-500/70 px-4 py-1 rounded-full shadow-md flex items-center gap-2 text-xs font-bold">
+          <span className="text-slate-400">المجموع:</span>
+          <span className="text-base font-black font-mono text-amber-300 drop-shadow">
+            {total}
+          </span>
+          <span className="text-slate-300">خطوات</span>
         </div>
 
+        {/* Doubles Flare */}
         {isDouble && !animating && (
-          <span style={{
-            fontSize: '0.85rem',
-            fontWeight: 900,
-            color: '#fef08a',
-            background: 'rgba(180, 83, 9, 0.8)',
-            border: '1.5px solid #f59e0b',
-            padding: '6px 14px',
-            borderRadius: '9999px',
-            boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)'
-          }}>
-            🔥 دبل ({dice[0]} + {dice[1]})!
-          </span>
+          <div className="bg-gradient-to-r from-amber-600 to-rose-600 border border-amber-300 px-3 py-1 rounded-full shadow-lg flex items-center gap-1 text-xs font-black text-white animate-bounce-gentle">
+            <Flame size={14} className="text-yellow-300 animate-pulse" />
+            <span>دبل ({val1} + {val2})!</span>
+          </div>
         )}
       </div>
     </div>
