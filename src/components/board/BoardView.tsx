@@ -21,16 +21,20 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
   useEffect(() => {
     const updateScale = () => {
       if (!wrapperRef.current) return;
-      const { clientWidth, clientHeight } = wrapperRef.current;
-      
-      // The board's intrinsic CSS layout size is 1080x590
-      // We add a tiny 20px padding margin
-      const scaleX = (clientWidth - 20) / 1080;
-      const scaleY = (clientHeight - 20) / 590;
-      
-      // Calculate the perfect scale to fit everything on screen without scrolling
-      const optimalScale = Math.min(scaleX, scaleY, 1); 
-      setBoardScale(optimalScale);
+      const isMobile = window.innerWidth < 1024;
+      const clientWidth = wrapperRef.current.clientWidth || window.innerWidth;
+
+      if (isMobile) {
+        // On mobile, scale cleanly to available width without extra black margins
+        const scaleX = (clientWidth - 8) / 1080;
+        setBoardScale(Math.min(scaleX, 1));
+      } else {
+        const clientHeight = wrapperRef.current.clientHeight || window.innerHeight;
+        const scaleX = (clientWidth - 20) / 1080;
+        const scaleY = (clientHeight - 20) / 590;
+        const optimalScale = Math.min(scaleX, scaleY, 1); 
+        setBoardScale(optimalScale);
+      }
     };
 
     updateScale();

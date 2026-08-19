@@ -533,7 +533,7 @@ button:active {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  order: 1;
+  order: 2;
 }
 
 @media (min-width: 1024px) {
@@ -548,17 +548,17 @@ button:active {
 .game-board-area {
   flex: 1;
   min-width: 0;
-  min-height: 60vh;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  order: 2;
+  order: 1;
 }
 
 @media (min-width: 1024px) {
   .game-board-area {
     order: 2;
+    min-height: 60vh;
   }
 }
 
@@ -570,7 +570,10 @@ button:active {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 4px;
+  height: calc(590px * var(--board-scale, 1) + 8px);
+  min-height: calc(590px * var(--board-scale, 1) + 8px);
+  overflow: visible;
+  padding: 2px 0;
 }
 
 /* 15x7 Widescreen Rectangular Grid Layout for Monopoly Board */
