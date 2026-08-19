@@ -54,6 +54,14 @@ const ZoomControls = () => {
 
 export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpenTrade, onDeclareBankruptcy }) => {
   const { gameState, setSelectedTileDetail } = useGame();
+  const [isDesktop, setIsDesktop] = React.useState(typeof window !== 'undefined' ? window.innerWidth >= 1024 : false);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (!gameState) return null;
 
@@ -82,53 +90,63 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
     setSelectedTileDetail(tile);
   };
 
+  const boardContent = (
+    <div dir="rtl" className="board-perspective-wrapper flex items-center justify-center p-2 w-full h-full min-h-max min-w-max">
+      <div 
+        className={`monopoly-board-grid ${is3D ? 'board-3d-active' : ''}`}
+      >
+        {/* Render Center Area */}
+        <BoardCenter onOpenManage={onOpenManage} onOpenTrade={onOpenTrade} onDeclareBankruptcy={onDeclareBankruptcy} />
+
+        {/* Render 40 Tiles */}
+        {BOARD_TILES.map((tile) => {
+          const { row, col, side } = getGridPosition(tile.id);
+          const owner = gameState.players.find((p) => p.properties.includes(tile.id));
+          const playersOnTile = gameState.players.filter((p) => p.position === tile.id && !p.isBankrupt);
+          const isHighlighted = gameState.pendingBuyTileId === tile.id;
+
+          return (
+            <TileComponent
+              key={tile.id}
+              tile={tile}
+              gridRow={row}
+              gridCol={col}
+              side={side}
+              owner={owner}
+              allPlayers={gameState.players}
+              playersOnTile={playersOnTile}
+              onTileClick={handleTileClick}
+              isHighlighted={isHighlighted}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden" dir="ltr">
-      <TransformWrapper
-        initialScale={1}
-        minScale={0.4}
-        maxScale={3}
-        centerOnInit={true}
-        wheel={{ step: 0.1 }}
-        pinch={{ step: 5 }}
-      >
-        <div dir="rtl">
-          <ZoomControls />
+      {isDesktop ? (
+        <div className="w-full h-full overflow-auto flex items-center justify-center custom-scrollbar">
+          {boardContent}
         </div>
-        <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
-          <div dir="rtl" className="board-perspective-wrapper flex items-center justify-center p-2 w-full h-full">
-            <div 
-              className={`monopoly-board-grid ${is3D ? 'board-3d-active' : ''}`}
-            >
-              {/* Render Center Area */}
-              <BoardCenter onOpenManage={onOpenManage} onOpenTrade={onOpenTrade} onDeclareBankruptcy={onDeclareBankruptcy} />
-
-              {/* Render 40 Tiles */}
-              {BOARD_TILES.map((tile) => {
-                const { row, col, side } = getGridPosition(tile.id);
-                const owner = gameState.players.find((p) => p.properties.includes(tile.id));
-                const playersOnTile = gameState.players.filter((p) => p.position === tile.id && !p.isBankrupt);
-                const isHighlighted = gameState.pendingBuyTileId === tile.id;
-
-                return (
-                  <TileComponent
-                    key={tile.id}
-                    tile={tile}
-                    gridRow={row}
-                    gridCol={col}
-                    side={side}
-                    owner={owner}
-                    allPlayers={gameState.players}
-                    playersOnTile={playersOnTile}
-                    onTileClick={handleTileClick}
-                    isHighlighted={isHighlighted}
-                  />
-                );
-              })}
-            </div>
+      ) : (
+        <TransformWrapper
+          initialScale={1}
+          minScale={0.4}
+          maxScale={3}
+          centerOnInit={true}
+          wheel={{ step: 0.1 }}
+          pinch={{ step: 5 }}
+        >
+          <div dir="rtl">
+            <ZoomControls />
           </div>
-        </TransformComponent>
-      </TransformWrapper>
+          <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
+            {boardContent}
+          </TransformComponent>
+        </TransformWrapper>
+      )}
     </div>
   );
 };

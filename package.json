@@ -6,11 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "publish:web": "npm run build && git add . && git commit -m \"Auto-deploy update\" && git push && npx vercel --prod",
     "build:android": "npm run build && npx cap sync android",
-    "preview": "vite preview",
-    "push": "git add . && git commit -m \"Update monopoly-arabic\" && git push",
-    "deploy": "npm run build && git add . && git commit -m \"Update & Deploy to Vercel\" && git push",
-    "deploy:vercel": "npx vercel --prod"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
@@ -23,6 +21,7 @@
     "clsx": "^2.1.1",
     "firebase": "^11.3.1",
     "lucide-react": "^1.16.0",
+    "puppeteer": "^25.8.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-zoom-pan-pinch": "^4.0.4"

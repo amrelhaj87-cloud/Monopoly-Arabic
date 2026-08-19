@@ -64,20 +64,20 @@ export const App: React.FC = () => {
     }
   }, [room?.id]);
 
-  const hasAutoSwitchedToGame = useRef<boolean>(false);
+  const lastStartedRoomId = useRef<string | null>(null);
 
-  // Automatically switch to 'game' page when a game match starts for the first time
+  // Automatically switch to 'game' page when a NEW game match starts
   useEffect(() => {
-    if (gameState && !hasAutoSwitchedToGame.current) {
-      hasAutoSwitchedToGame.current = true;
+    if (gameState && gameState.roomId !== lastStartedRoomId.current) {
+      lastStartedRoomId.current = gameState.roomId;
       setCurrentPage('game');
     } else if (!gameState) {
-      hasAutoSwitchedToGame.current = false;
+      lastStartedRoomId.current = null;
       if (currentPage === 'game') {
         setCurrentPage('home');
       }
     }
-  }, [gameState]);
+  }, [gameState, currentPage]);
 
   if (isLoading) {
     return (
