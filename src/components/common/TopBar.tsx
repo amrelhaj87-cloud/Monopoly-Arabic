@@ -44,106 +44,130 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header 
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        height: '56px',
-        padding: '0 16px',
-        backgroundColor: 'rgba(4, 7, 15, 0.95)',
-        borderBottom: '1px solid rgba(245, 158, 11, 0.3)',
-        zIndex: 50,
-        boxSizing: 'border-box'
-      }}
-      className="backdrop-blur-md select-none shadow-md"
-    >
-      {/* Brand Title / Logo */}
-      <div 
-        onClick={() => onNavigate('home')} 
-        style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-        className="hover:opacity-90 transition-opacity"
-      >
-        <span className="text-2xl filter drop-shadow">🎲</span>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span className="text-sm sm:text-base font-black font-gold tracking-wide leading-tight">
-            مونوبولي العربية
-          </span>
-          <span className="text-[9px] text-amber-300/80 font-medium leading-none">
-            لعبة التجارة والاستثمار
-          </span>
+    <header className="w-full bg-slate-950/95 border-b border-amber-500/30 backdrop-blur-md select-none shadow-md z-50 px-3 sm:px-4 py-2 sm:py-0 sm:h-14 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 box-border">
+      {/* Row 1 on Mobile / Left Section on Desktop: Brand Logo + Quick Actions */}
+      <div className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2">
+        {/* Brand Title / Logo */}
+        <div 
+          onClick={() => onNavigate('home')} 
+          className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity"
+        >
+          <span className="text-xl sm:text-2xl filter drop-shadow">🎲</span>
+          <div className="flex flex-col">
+            <span className="text-sm sm:text-base font-black font-gold tracking-wide leading-tight">
+              مونوبولي العربية
+            </span>
+            <span className="text-[8px] sm:text-[9px] text-amber-300/80 font-medium leading-none">
+              لعبة التجارة والاستثمار
+            </span>
+          </div>
+        </div>
+
+        {/* Action Controls on Mobile (Right Side of Row 1) */}
+        <div className="flex sm:hidden items-center gap-1.5">
+          {/* User Profile Blob */}
+          {user && (
+            <button
+              onClick={() => onNavigate('settings')}
+              className="p-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/60 transition-all cursor-pointer"
+              title={user.displayName}
+            >
+              <PlayerBlob color={user.color || '#f59e0b'} size="sm" />
+            </button>
+          )}
+
+          {/* Audio */}
+          <button
+            onClick={handleToggleSound}
+            className="p-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 transition-colors"
+            title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
+          >
+            {isMuted ? <VolumeX size={14} className="text-rose-400" /> : <Volume2 size={14} className="text-emerald-400" />}
+          </button>
+
+          {/* Help */}
+          <button
+            onClick={onOpenRules}
+            className="p-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 text-amber-400 transition-colors cursor-pointer"
+            title="قواعد اللعبة"
+          >
+            <HelpCircle size={14} />
+          </button>
+
+          {/* Contact Dev */}
+          <button
+            onClick={onOpenContactDev}
+            className="p-1.5 rounded-lg bg-slate-900 border border-sky-500/40 hover:bg-slate-800 text-sky-400 transition-colors cursor-pointer"
+            title="تواصل مع المطور"
+          >
+            <MessageSquarePlus size={14} />
+          </button>
+
+          {/* Ko-fi Button */}
+          <KofiButton username="zerocold" />
         </div>
       </div>
 
-      {/* Center Navigation Pills */}
-      <nav 
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px',
-          backgroundColor: 'rgba(15, 23, 42, 0.9)',
-          padding: '4px 6px',
-          borderRadius: '12px',
-          border: '1px solid rgba(51, 65, 85, 0.8)'
-        }}
-      >
+      {/* Center Navigation Pills (Row 2 on Mobile / Center on Desktop) */}
+      <nav className="flex items-center justify-center gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800/90 w-full sm:w-auto max-w-sm sm:max-w-none">
         <button
           onClick={() => onNavigate('home')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+          className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
             currentPage === 'home'
               ? 'bg-amber-500 text-slate-950 shadow-md'
               : 'text-slate-400 hover:text-slate-200'
           }`}
         >
-          <Home size={14} />
+          <Home size={13} />
           <span>الرئيسية</span>
         </button>
 
         {gameState && (
           <button
             onClick={() => onNavigate('game')}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+            className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
               currentPage === 'game'
                 ? 'bg-amber-500 text-slate-950 shadow-md'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Gamepad2 size={14} />
+            <Gamepad2 size={13} />
             <span>المباراة</span>
           </button>
         )}
 
         <button
           onClick={() => onNavigate('settings')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+          className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
             currentPage === 'settings'
               ? 'bg-amber-500 text-slate-950 shadow-md'
               : 'text-slate-400 hover:text-slate-200'
           }`}
         >
-          <Settings size={14} />
+          <Settings size={13} />
           <span>الإعدادات</span>
         </button>
+
+        {/* Room Code on Mobile inline with nav */}
+        {room && (
+          <button
+            onClick={handleCopyRoomCode}
+            className="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded-lg border border-amber-500/40 text-[10px] font-mono text-amber-300 font-bold sm:hidden"
+            title="نسخ كود الغرفة"
+          >
+            <span>{room.id}</span>
+            {copied ? <Check size={10} className="text-emerald-400" /> : <Copy size={10} />}
+          </button>
+        )}
       </nav>
 
-      {/* Action Controls & Room Code */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {/* Desktop Action Controls (Hidden on Mobile, Shown on sm:) */}
+      <div className="hidden sm:flex items-center gap-2">
         {/* Room Code Badge */}
         {room && (
           <button
             onClick={handleCopyRoomCode}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: '#0f172a',
-              padding: '4px 10px',
-              borderRadius: '8px',
-              border: '1px solid rgba(245, 158, 11, 0.4)'
-            }}
-            className="hover:bg-slate-800 text-xs font-mono transition-colors"
+            className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 px-3 py-1 rounded-lg border border-amber-500/40 text-xs font-mono transition-colors"
             title="نسخ كود الغرفة"
           >
             <span className="text-[10px] text-amber-400 font-bold">كود:</span>
@@ -152,26 +176,15 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
         )}
 
-
-
         {/* User Profile Mini Badge */}
         {user && (
           <button
             onClick={() => onNavigate('settings')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: '#0f172a',
-              padding: '3px 8px',
-              borderRadius: '8px',
-              border: '1px solid #334155'
-            }}
-            className="hover:border-amber-500/60 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700 hover:border-amber-500/60 transition-all cursor-pointer"
             title="الملف الشخصي والإعدادات"
           >
             <PlayerBlob color={user.color || '#f59e0b'} size="sm" />
-            <span className="text-xs font-bold text-slate-200 hidden sm:inline truncate max-w-[90px]">
+            <span className="text-xs font-bold text-slate-200 truncate max-w-[90px]">
               {user.displayName}
             </span>
           </button>
@@ -180,16 +193,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Audio Toggle */}
         <button
           onClick={handleToggleSound}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '6px',
-            borderRadius: '8px',
-            backgroundColor: '#0f172a',
-            border: '1px solid #334155'
-          }}
-          className="hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+          className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
           title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
         >
           {isMuted ? <VolumeX size={15} className="text-rose-400" /> : <Volume2 size={15} className="text-emerald-400" />}
@@ -198,16 +202,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* How to Play / Rules */}
         <button
           onClick={onOpenRules}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '6px',
-            borderRadius: '8px',
-            backgroundColor: '#0f172a',
-            border: '1px solid #334155'
-          }}
-          className="hover:bg-slate-800 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+          className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
           title="كيف تلعب (قواعد اللعبة)"
         >
           <HelpCircle size={15} />
@@ -216,16 +211,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Contact Developer Button */}
         <button
           onClick={onOpenContactDev}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-            padding: '5px 10px',
-            borderRadius: '8px',
-            backgroundColor: '#0f172a',
-            border: '1px solid rgba(56, 189, 248, 0.4)'
-          }}
-          className="hover:bg-slate-800 text-sky-300 hover:text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-sky-500/40 hover:bg-slate-800 text-sky-300 hover:text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
           title="تواصل مع المطور (اقتراح / استفسار / مشكلة)"
         >
           <MessageSquarePlus size={14} className="text-sky-400" />
@@ -242,21 +228,11 @@ export const TopBar: React.FC<TopBarProps> = ({
               leaveRoom();
               onNavigate('home');
             }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '4px 10px',
-              borderRadius: '8px',
-              backgroundColor: 'rgba(225, 29, 72, 0.2)',
-              border: '1px solid rgba(244, 63, 94, 0.5)',
-              color: '#fecdd3'
-            }}
-            className="hover:bg-rose-600 hover:text-white text-xs font-bold transition-colors"
+            className="flex items-center gap-1 px-3 py-1 rounded-lg bg-rose-950/40 border border-rose-500/50 text-rose-200 hover:bg-rose-600 hover:text-white text-xs font-bold transition-colors"
             title="مغادرة المباراة"
           >
             <LogOut size={13} />
-            <span className="hidden sm:inline">خروج</span>
+            <span>خروج</span>
           </button>
         )}
       </div>

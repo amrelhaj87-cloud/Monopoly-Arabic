@@ -15,7 +15,19 @@ interface BoardViewProps {
 export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpenTrade, onDeclareBankruptcy }) => {
   const { gameState, setSelectedTileDetail } = useGame();
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [boardScale, setBoardScale] = useState(1);
+  const getInitialScale = () => {
+    if (typeof window === 'undefined') return 1;
+    const isMobile = window.innerWidth < 1024;
+    const screenW = window.innerWidth;
+    if (isMobile) {
+      return Math.min(Math.max(screenW - 12, 280) / 1080, 1);
+    }
+    const clientW = screenW - 300;
+    const clientH = window.innerHeight - 100;
+    return Math.min((clientW - 20) / 1080, (clientH - 20) / 590, 1);
+  };
+
+  const [boardScale, setBoardScale] = useState<number>(getInitialScale);
 
   // Auto-scale the board to perfectly fit any screen size (Mobile & Desktop)
   useEffect(() => {
