@@ -26,14 +26,15 @@ import { UserProfile, FirebaseConfigOptions } from '../types/auth';
 import { Room } from '../types/room';
 import { GameState } from '../types/game';
 
-// Default demo configuration or user-defined configuration from localStorage
+// Real Firebase configuration provided by the user
 const DEFAULT_FIREBASE_CONFIG: FirebaseConfigOptions = {
-  apiKey: "AIzaSyDemo-MonopolyArabicKeyPlaceholder001",
-  authDomain: "monopoly-arabic-demo.firebaseapp.com",
-  projectId: "monopoly-arabic-demo",
-  storageBucket: "monopoly-arabic-demo.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef12345678"
+  apiKey: "AIzaSyCtHR_1TLm32nyIc413i47B3SAx2ibhxSI",
+  authDomain: "monopoly-arabic-db839.firebaseapp.com",
+  projectId: "monopoly-arabic-db839",
+  storageBucket: "monopoly-arabic-db839.firebasestorage.app",
+  messagingSenderId: "277273972666",
+  appId: "1:277273972666:web:3aaa8f9e15c382cf4a5783",
+  measurementId: "G-4E0BD5MFD6"
 };
 
 class FirebaseService {
@@ -63,8 +64,7 @@ class FirebaseService {
       const savedConfig = localStorage.getItem('monopoly_arabic_firebase_config');
       const config = customConfig || (savedConfig ? JSON.parse(savedConfig) : DEFAULT_FIREBASE_CONFIG);
       
-      const isPlaceholder = config.apiKey.includes('Placeholder');
-      if (!isPlaceholder && config.apiKey && config.projectId) {
+      if (config.apiKey && config.projectId) {
         if (!getApps().length) {
           this.app = initializeApp(config);
         } else {
@@ -77,7 +77,7 @@ class FirebaseService {
         this.isConfigured = false;
       }
     } catch (err) {
-      console.warn('Firebase initialization in offline/local mode:', err);
+      console.warn('Firebase initialization error:', err);
       this.isConfigured = false;
     }
   }
