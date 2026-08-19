@@ -567,15 +567,11 @@ button:active {
 .board-perspective-wrapper {
   perspective: 1400px;
   perspective-origin: 50% 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: calc(590px * var(--board-scale, 1));
-  min-height: calc(590px * var(--board-scale, 1));
-  overflow: visible;
-  padding: 0;
-  margin: 0;
+  display: block !important;
+  position: relative !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
 }
 
 /* 15x7 Widescreen Rectangular Grid Layout for Monopoly Board */
@@ -590,9 +586,9 @@ button:active {
   border-radius: 18px !important;
   position: relative !important;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(245, 158, 11, 0.25) !important;
-  transform-origin: center center !important;
+  transform-origin: top left !important;
   transform: scale(var(--board-scale, 1)) !important;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .board-3d-active {

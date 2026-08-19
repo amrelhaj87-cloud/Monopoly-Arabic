@@ -20,16 +20,17 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
   // Auto-scale the board to perfectly fit any screen size (Mobile & Desktop)
   useEffect(() => {
     const updateScale = () => {
-      if (!wrapperRef.current) return;
       const isMobile = window.innerWidth < 1024;
-      const clientWidth = wrapperRef.current.clientWidth || window.innerWidth;
-
+      const screenW = window.innerWidth;
+      
       if (isMobile) {
-        // On mobile, scale cleanly to available width without extra black margins
-        const scaleX = (clientWidth - 8) / 1080;
-        setBoardScale(Math.min(scaleX, 1));
+        // On mobile portrait, fit available screen width with 12px margin
+        const targetW = Math.max(screenW - 12, 280);
+        const scale = Math.min(targetW / 1080, 1);
+        setBoardScale(scale);
       } else {
-        const clientHeight = wrapperRef.current.clientHeight || window.innerHeight;
+        const clientWidth = wrapperRef.current?.parentElement?.clientWidth || (screenW - 300);
+        const clientHeight = window.innerHeight - 100;
         const scaleX = (clientWidth - 20) / 1080;
         const scaleY = (clientHeight - 20) / 590;
         const optimalScale = Math.min(scaleX, scaleY, 1); 
@@ -69,12 +70,20 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
     setSelectedTileDetail(tile);
   };
 
+  const scaledWidth = Math.round(1080 * boardScale);
+  const scaledHeight = Math.round(590 * boardScale);
+
   return (
-    <div className="relative w-full flex flex-col items-center justify-start overflow-visible" dir="ltr">
+    <div className="w-full flex flex-col items-center justify-start overflow-visible py-1" dir="ltr">
       <div 
         ref={wrapperRef}
         dir="rtl" 
-        className="board-perspective-wrapper flex items-center justify-center w-full overflow-visible"
+        className="board-perspective-wrapper"
+        style={{
+          width: `${scaledWidth}px`,
+          height: `${scaledHeight}px`,
+          '--board-scale': boardScale
+        } as React.CSSProperties}
       >
         <div 
           className={`monopoly-board-grid ${is3D ? 'board-3d-active' : ''}`}
