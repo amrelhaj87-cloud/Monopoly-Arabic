@@ -4,7 +4,7 @@ interface KofiButtonProps {
   username?: string;
 }
 
-export const KofiButton: React.FC<KofiButtonProps> = ({ username = "amrelhaj" }) => {
+export const KofiButton: React.FC<KofiButtonProps> = ({ username = "zerocold" }) => {
   return (
     <a
       href={`https://ko-fi.com/${username}`}

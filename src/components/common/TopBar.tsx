@@ -233,7 +233,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </button>
 
         {/* Ko-fi Support Button */}
-        <KofiButton username="amrelhaj" />
+        <KofiButton username="zerocold" />
 
         {/* Leave Game Button */}
         {room && (
