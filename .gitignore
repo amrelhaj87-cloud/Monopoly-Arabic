@@ -29,3 +29,11 @@ dist-ssr
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Android / Capacitor Temporary Files (if placed at root)
+.gradle/
+build/
+local.properties
+*.jks
+*.keystore
+# Note: The 'android' folder itself contains its own .gitignore which ignores all heavy build files (like android/app/build), so it is safe to push the android source files!
