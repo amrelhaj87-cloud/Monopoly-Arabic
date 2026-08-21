@@ -18,7 +18,7 @@ interface TileComponentProps {
   isHighlighted?: boolean;
 }
 
-export const TileComponent: React.FC<TileComponentProps> = ({
+export const TileComponent: React.FC<TileComponentProps> = React.memo(({
   tile,
   gridRow,
   gridCol,
@@ -190,4 +190,12 @@ export const TileComponent: React.FC<TileComponentProps> = ({
       )}
     </div>
   );
-};
+}, (prev, next) => {
+  return prev.tile.id === next.tile.id &&
+         prev.isHighlighted === next.isHighlighted &&
+         prev.owner?.id === next.owner?.id &&
+         prev.owner?.houses[prev.tile.id] === next.owner?.houses[next.tile.id] &&
+         prev.owner?.mortgaged[prev.tile.id] === next.owner?.mortgaged[next.tile.id] &&
+         prev.playersOnTile.length === next.playersOnTile.length &&
+         prev.playersOnTile.every((p, i) => p.id === next.playersOnTile[i].id);
+});

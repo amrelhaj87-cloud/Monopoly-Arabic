@@ -35,6 +35,7 @@ export class AIService {
     const personality = this.getBotPersonality(bot);
     const remainingCash = bot.cash - tile.price;
     const isMonopolyPiece = this.isCompletingMonopoly(bot, tile);
+    const ownsSameColor = this.ownsSameColorGroupProperty(bot, tile);
 
     // If it completes a color set monopoly, almost everyone buys
     if (isMonopolyPiece) {
@@ -44,34 +45,40 @@ export class AIService {
       return true; // All other personalities buy monopoly piece 100%
     }
 
+    let requiredBuffer = 100;
+
     switch (personality) {
       case 'aggressive_tycoon': // أبو فهد (الهامور)
-        // Aggressive: Buys almost everything, keeps minimum buffer of 20
-        return remainingCash >= 20;
+        requiredBuffer = 20;
+        break;
 
       case 'dealmaker_trader': // شهاب التاجر
-        // Loves railroads, utilities, and high-traffic sets (orange, red, yellow)
-        if (tile.type === 'railroad' || tile.type === 'utility') return remainingCash >= 40;
-        if (['orange', 'red', 'yellow'].includes(tile.group)) return remainingCash >= 50;
-        return remainingCash >= 80;
+        if (tile.type === 'railroad' || tile.type === 'utility') requiredBuffer = 40;
+        else if (['orange', 'red', 'yellow'].includes(tile.group)) requiredBuffer = 50;
+        else requiredBuffer = 80;
+        break;
 
       case 'strategic_investor': // ليلى المستثمرة
-        // Strategic: High ROI sets (light blue, orange, red, yellow), maintains 120 buffer
-        if (['light_blue', 'orange', 'red'].includes(tile.group)) return remainingCash >= 70;
-        return remainingCash >= 130;
+        if (['light_blue', 'orange', 'red'].includes(tile.group)) requiredBuffer = 70;
+        else requiredBuffer = 130;
+        break;
 
       case 'conservative_cautious': // طارق الحذر
-        // Cautious: Only buys if wealthy and keeps 220+ cash reserve
         if (tile.price <= 100 && remainingCash >= 120) return true;
-        return remainingCash >= 220;
+        requiredBuffer = 220;
+        break;
 
       case 'diplomat_collaborator': // سارة الدبلوماسية
-        // Balanced: Standard moderate buffer
-        return remainingCash >= 75;
-
-      default:
-        return remainingCash >= 100;
+        requiredBuffer = 75;
+        break;
     }
+
+    // AI is smarter: if it already owns a property in this group, it reduces the required cash buffer to prioritize acquiring the set.
+    if (ownsSameColor && requiredBuffer > 30) {
+      requiredBuffer = Math.floor(requiredBuffer * 0.6); // 40% discount on their strictness
+    }
+
+    return remainingCash >= requiredBuffer;
   }
 
   /**
@@ -367,5 +374,11 @@ export class AIService {
     const groupTiles = COLOR_GROUP_TILES[tile.group];
     if (!groupTiles) return false;
     return groupTiles.every(id => player.properties.includes(id));
+  }
+
+  private static ownsSameColorGroupProperty(player: Player, tile: TileData): boolean {
+    const groupTiles = COLOR_GROUP_TILES[tile.group];
+    if (!groupTiles) return false;
+    return groupTiles.some(id => id !== tile.id && player.properties.includes(id));
   }
 }

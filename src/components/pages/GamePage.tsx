@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 import { BoardView } from '../board/BoardView';
 import { PlayerListHUD } from '../hud/PlayerListHUD';
 import { MyPropertiesHUD } from '../hud/MyPropertiesHUD';
@@ -21,8 +22,33 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
   const [showManageProps, setShowManageProps] = useState(false);
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [showBankruptcyConfirm, setShowBankruptcyConfirm] = useState(false);
+  const [bankruptIds, setBankruptIds] = useState<Set<string>>(new Set());
 
-  const { myPlayer, declareBankruptcy } = useGame();
+  const { myPlayer, declareBankruptcy, gameState } = useGame();
+
+  useEffect(() => {
+    if (gameState) {
+      const newlyBankrupt = gameState.players.filter(p => p.isBankrupt && !bankruptIds.has(p.id));
+      if (newlyBankrupt.length > 0) {
+        setBankruptIds(prev => {
+          const next = new Set(prev);
+          newlyBankrupt.forEach(p => next.add(p.id));
+          return next;
+        });
+
+        // Trigger sad/explosion confetti for bankruptcy
+        confetti({
+          particleCount: 100,
+          spread: 120,
+          origin: { y: 0.2 },
+          colors: ['#0f172a', '#dc2626', '#450a0a', '#b91c1c'],
+          gravity: 1.5,
+          ticks: 300,
+          startVelocity: 45
+        });
+      }
+    }
+  }, [gameState, bankruptIds]);
 
   const handleBankruptcyRequest = useCallback(() => {
     setShowBankruptcyConfirm(true);

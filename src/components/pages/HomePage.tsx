@@ -6,6 +6,7 @@ import { MainMenu } from '../lobby/MainMenu';
 import { CreateRoomModal } from '../lobby/CreateRoomModal';
 import { JoinRoomModal } from '../lobby/JoinRoomModal';
 import { RulesModal } from '../common/RulesModal';
+import { ar } from '../../locales/ar';
 
 interface HomePageProps {
   onNavigateToSettings: () => void;
@@ -38,7 +39,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToSettings }) => {
 
       {/* Copyright Footer */}
       <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
-        <p className="text-[10px] text-slate-500/60 font-medium">جميع الحقوق محفوظة zerocold 2026 ©</p>
+        <p className="text-[10px] text-slate-500/60 font-medium">{ar.home.copyright}</p>
       </div>
     </div>
   );
