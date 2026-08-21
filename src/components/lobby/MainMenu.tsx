@@ -6,6 +6,7 @@ import { GameSettings } from '../../types/game';
 import { Dice3D } from '../dice/Dice3D';
 import { audioService } from '../../services/audioService';
 import { ar } from '../../locales/ar';
+import { isNativePlatform, handleRewardAd } from '../../services/adService';
 
 interface MainMenuProps {
   onOpenCreateRoom: () => void;
@@ -27,6 +28,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   const [botDifficulty, setBotDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [startingCash, setStartingCash] = useState<number>(1500);
   const [quickMode, setQuickMode] = useState<boolean>(false);
+  const [bankBoostActive, setBankBoostActive] = useState<boolean>(false);
+  
+  const canShowAds = !isNativePlatform();
+  const timeShieldAvailable = canShowAds && localStorage.getItem('timeShieldDate') !== new Date().toDateString();
 
   // Home preview dice
   const [previewDice, setPreviewDice] = useState<[number, number]>([5, 6]);
@@ -54,7 +59,26 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       freeParkingJackpot: true,
       quickMode
     };
-    startSinglePlayerGame(botCount, botDifficulty, settings);
+    startSinglePlayerGame(botCount, botDifficulty, settings, bankBoostActive);
+  };
+
+  const handleChargeTimeShield = () => {
+    handleRewardAd(() => {
+      localStorage.setItem('hasTimeShield', 'true');
+      localStorage.setItem('timeShieldDate', new Date().toDateString());
+      // Force re-render to update UI
+      setBotCount(prev => prev);
+    });
+  };
+
+  const handleToggleBankBoost = () => {
+    if (!bankBoostActive) {
+      handleRewardAd(() => {
+        setBankBoostActive(true);
+      });
+    } else {
+      setBankBoostActive(false);
+    }
   };
 
   return (
@@ -273,6 +297,49 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                 ))}
               </div>
             </div>
+
+            {/* Ad-based Boosts (Web Only) */}
+            {canShowAds && (
+              <div className="flex flex-col gap-2 mt-2">
+                {/* Bank Boost */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                  <div>
+                    <span style={{ fontWeight: 900, color: '#34d399', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      💰 تعزيز رصيد البداية (+10% كاش)
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>شاهد إعلاناً قصيراً لتبدأ الجولة برصيد إضافي.</span>
+                  </div>
+                  <button 
+                    onClick={handleToggleBankBoost}
+                    className={`btn btn-sm ${bankBoostActive ? 'btn-emerald' : 'btn-outline'}`}
+                    style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                  >
+                    {bankBoostActive ? 'مُفعل ✓' : 'تفعيل'}
+                  </button>
+                </div>
+
+                {/* Time Shield */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                  <div>
+                    <span style={{ fontWeight: 900, color: '#38bdf8', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      ⚡ شحن درع المهلة (+20 ثانية)
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{timeShieldAvailable ? 'شاهد إعلاناً واحصل على درع طوارئ (مرة يومياً).' : 'تم شحن الدرع اليوم أو هو متوفر لديك!'}</span>
+                  </div>
+                  {timeShieldAvailable ? (
+                    <button 
+                      onClick={handleChargeTimeShield}
+                      className="btn btn-sm btn-outline"
+                      style={{ fontSize: '0.8rem', padding: '6px 12px', color: '#38bdf8', borderColor: '#38bdf8' }}
+                    >
+                      شحن الآن
+                    </button>
+                  ) : (
+                    <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#38bdf8' }}>مشحون 🔋</span>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Quick Play Toggle */}
             <div style={{

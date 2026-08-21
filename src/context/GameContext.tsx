@@ -29,7 +29,7 @@ interface GameContextType {
   updateRoomSettings: (newSettings: Partial<GameSettings>) => Promise<void>;
   sendChatMessage: (text: string) => Promise<void>;
   startRoomGame: () => Promise<void>;
-  startSinglePlayerGame: (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings) => void;
+  startSinglePlayerGame: (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings, bankBoostActive?: boolean) => void;
   // Game In-Play Actions
   rollDice: () => void;
   buyCurrentProperty: () => void;
@@ -47,6 +47,8 @@ interface GameContextType {
   respondToTrade: (offerId: string, accept: boolean) => void;
   endCurrentTurn: () => void;
   declareBankruptcy: () => void;
+  addTurnTime: (seconds: number) => void;
+  grantRevival: (amount: number) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -455,7 +457,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await updateAndBroadcastState(initialGameState);
   };
 
-  const startSinglePlayerGame = (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings) => {
+  const startSinglePlayerGame = (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings, bankBoostActive?: boolean) => {
     const hostUser = user || {
       uid: 'player_local_1',
       displayName: 'أنت',
@@ -472,7 +474,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         color: '#3b82f6',
         isHost: true,
         isReady: true,
-        isBot: false
+        isBot: false,
+        startingCashOverride: settings.startingCash * (bankBoostActive ? 1.1 : 1) // Apply 10% boost if active
       }
     ];
 
@@ -701,6 +704,20 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateAndBroadcastState(newState);
   };
 
+  const addTurnTime = (seconds: number) => {
+    if (!gameState || !myPlayer || isMovingPawn) return;
+    audioService.playClick();
+    const newState = GameEngine.addTurnTime(gameState, seconds);
+    updateAndBroadcastState(newState);
+  };
+
+  const grantRevival = (amount: number) => {
+    if (!gameState || !myPlayer || isMovingPawn) return;
+    audioService.playCash();
+    const newState = GameEngine.grantRevival(gameState, myPlayer.id, amount);
+    updateAndBroadcastState(newState);
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -739,7 +756,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         proposeTrade,
         respondToTrade,
         endCurrentTurn,
-        declareBankruptcy
+        declareBankruptcy,
+        addTurnTime,
+        grantRevival
       }}
     >
       {children}

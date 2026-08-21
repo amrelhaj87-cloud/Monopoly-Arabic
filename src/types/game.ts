@@ -65,6 +65,7 @@ export interface Player {
     propertiesBought: number;
     doublesRolled: number;
   };
+  hasUsedRevival?: boolean;
 }
 
 export interface Card {

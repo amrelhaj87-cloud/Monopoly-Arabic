@@ -1,8 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { Dice3D } from '../dice/Dice3D';
 import { useGame } from '../../context/GameContext';
-import { Dices, ArrowRight, Home, Handshake, ScrollText, Skull } from 'lucide-react';
+import { Dices, ArrowRight, Home, Handshake, ScrollText, Skull, Shield } from 'lucide-react';
 import { PlayerBlob } from '../common/PlayerBlob';
+import { isNativePlatform, handleRewardAd } from '../../services/adService';
 
 interface BoardCenterProps {
   onOpenManage: () => void;
@@ -20,7 +21,8 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
     rollDice, 
     endCurrentTurn,
     payJailBail,
-    useJailCard
+    useJailCard,
+    addTurnTime
   } = useGame();
 
   const logContainerRef = useRef<HTMLDivElement>(null);
@@ -179,6 +181,21 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
               <button onClick={endCurrentTurn} className="btn btn-emerald btn-sm w-full shadow-lg py-2.5 text-sm font-black">
                 <ArrowRight size={16} />
                 إنهاء الدور 👉
+              </button>
+            )}
+
+            {/* Time Shield Ad Button (Web Only) */}
+            {isMyTurn && !isMovingPawn && !isNativePlatform() && localStorage.getItem('hasTimeShield') === 'true' && (
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('hasTimeShield');
+                  addTurnTime(20);
+                }} 
+                className="btn btn-sm w-full shadow-lg py-2 mt-2 text-xs font-black transition-all hover:brightness-110"
+                style={{ backgroundColor: '#0ea5e9', color: 'white', borderColor: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+              >
+                <Shield size={14} />
+                تفعيل درع الوقت (+20ث)
               </button>
             )}
 

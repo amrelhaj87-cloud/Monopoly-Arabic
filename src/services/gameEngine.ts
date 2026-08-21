@@ -17,7 +17,7 @@ export class GameEngine {
       color: m.color,
       isBot: m.isBot,
       botDifficulty: m.botDifficulty,
-      cash: settings.startingCash,
+      cash: m.startingCashOverride !== undefined ? m.startingCashOverride : settings.startingCash,
       position: 0,
       inJail: false,
       jailTurns: 0,
@@ -1057,5 +1057,36 @@ export class GameEngine {
 
   private static clone<T>(obj: T): T {
     return JSON.parse(JSON.stringify(obj));
+  }
+
+  /**
+   * Add extra time to the current turn (Time Shield)
+   */
+  public static addTurnTime(state: GameState, seconds: number): GameState {
+    const newState = this.clone(state);
+    if (newState.phase === 'game_over' || newState.phase === 'auction') return newState;
+    
+    newState.remainingTurnTime += seconds;
+    const player = newState.players[newState.currentTurnIndex];
+    if (player) {
+      this.addLog(newState, 'system', `⏳ تم شحن وقت إضافي! +${seconds} ثانية لدور ${player.name}.`, player.id);
+    }
+    return newState;
+  }
+
+  /**
+   * Grant a Second Chance Revival to a player
+   */
+  public static grantRevival(state: GameState, playerId: string, amount: number): GameState {
+    const newState = this.clone(state);
+    const player = newState.players.find(p => p.id === playerId);
+    
+    if (player && !player.hasUsedRevival) {
+      player.hasUsedRevival = true;
+      player.cash += amount;
+      this.addLog(newState, 'system', `💰 البنك يتدخل! تم منح ${player.name} قرض إنقاذ طارئ بقيمة ${amount} $.`, playerId);
+    }
+    
+    return newState;
   }
 }

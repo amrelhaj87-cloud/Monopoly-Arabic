@@ -1,5 +1,6 @@
-﻿import React from 'react';
-import { AlertTriangle, X, Skull } from 'lucide-react';
+import React from 'react';
+import { AlertTriangle, X, Skull, Heart } from 'lucide-react';
+import { isNativePlatform, handleRewardAd } from '../../services/adService';
 
 interface BankruptcyConfirmModalProps {
   isOpen: boolean;
@@ -7,6 +8,8 @@ interface BankruptcyConfirmModalProps {
   playerCash?: number;
   onConfirm: () => void;
   onCancel: () => void;
+  hasUsedRevival?: boolean;
+  onRevival?: () => void;
 }
 
 /**
@@ -19,6 +22,8 @@ export const BankruptcyConfirmModal: React.FC<BankruptcyConfirmModalProps> = ({
   playerCash,
   onConfirm,
   onCancel,
+  hasUsedRevival,
+  onRevival,
 }) => {
   if (!isOpen) return null;
 
@@ -56,6 +61,25 @@ export const BankruptcyConfirmModal: React.FC<BankruptcyConfirmModalProps> = ({
           <p className="text-[11px] text-slate-400 mb-4">
             اللاعب: <strong className="text-white">{playerName}</strong>
           </p>
+        )}
+
+        {/* Second Chance Revival Ad (Web Only) - Once per day */}
+        {!isNativePlatform() && onRevival && !hasUsedRevival && localStorage.getItem('revivalDate') !== new Date().toDateString() && (
+          <div className="mb-4">
+            <button
+              onClick={() => {
+                handleRewardAd(() => {
+                  localStorage.setItem('revivalDate', new Date().toDateString());
+                  onRevival();
+                });
+              }}
+              className="btn w-full text-sm font-black animate-pulse-gentle transition-transform hover:scale-105"
+              style={{ backgroundColor: '#10b981', color: 'white', border: '1px solid #059669', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+              <Heart size={16} />
+              فرصة ثانية: إنقاذ البنك (1000 $) - شاهد إعلان
+            </button>
+          </div>
         )}
 
         {/* Actions */}

@@ -10,6 +10,7 @@ export interface RoomMember {
   isReady: boolean;
   isBot: boolean;
   botDifficulty?: 'easy' | 'medium' | 'hard';
+  startingCashOverride?: number;
 }
 
 export interface ChatMessage {

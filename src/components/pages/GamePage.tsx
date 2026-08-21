@@ -24,7 +24,12 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
   const [showBankruptcyConfirm, setShowBankruptcyConfirm] = useState(false);
   const [bankruptIds, setBankruptIds] = useState<Set<string>>(new Set());
 
-  const { myPlayer, declareBankruptcy, gameState } = useGame();
+  const { myPlayer, declareBankruptcy, gameState, grantRevival } = useGame();
+
+  const handleRevival = useCallback(() => {
+    grantRevival(1000);
+    setShowBankruptcyConfirm(false); // Close the modal since player is revived
+  }, [grantRevival]);
 
   useEffect(() => {
     if (gameState) {
@@ -90,8 +95,10 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
         isOpen={showBankruptcyConfirm}
         playerName={myPlayer?.name}
         playerCash={myPlayer?.cash}
+        hasUsedRevival={myPlayer?.hasUsedRevival}
         onConfirm={handleBankruptcyConfirmed}
         onCancel={() => setShowBankruptcyConfirm(false)}
+        onRevival={handleRevival}
       />
     </div>
   );
