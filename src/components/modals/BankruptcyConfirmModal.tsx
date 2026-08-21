@@ -63,22 +63,20 @@ export const BankruptcyConfirmModal: React.FC<BankruptcyConfirmModalProps> = ({
           </p>
         )}
 
-        {/* Second Chance Revival Ad (Web Only) - Once per day */}
-        {!isNativePlatform() && onRevival && !hasUsedRevival && localStorage.getItem('revivalDate') !== new Date().toDateString() && (
+        {/* Second Chance Revival (Pre-charged) */}
+        {!isNativePlatform() && onRevival && !hasUsedRevival && localStorage.getItem('hasRevival') === 'true' && (
           <div className="mb-4">
             <button
               onClick={() => {
-                handleRewardAd(() => {
-                  localStorage.setItem('revivalDate', new Date().toDateString());
-                  onRevival();
-                });
+                localStorage.removeItem('hasRevival');
+                onRevival();
               }}
-              className="btn w-full text-sm font-black animate-pulse-gentle transition-transform hover:scale-105"
-              style={{ backgroundColor: '#10b981', color: 'white', border: '1px solid #059669', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              className="btn w-full shadow-lg py-2.5 font-black transition-all hover:brightness-110"
+              style={{ backgroundColor: '#ef4444', color: 'white', borderColor: '#b91c1c', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             >
-              <Heart size={16} />
-              فرصة ثانية: إنقاذ البنك (1000 $) - شاهد إعلان
+              ❤️ استخدام رصيد الإنقاذ (1000$)
             </button>
+            <p className="text-xs text-center text-gray-400 mt-2">لقد قمت بشحن رصيد الإنقاذ مسبقاً، سيتم إضافة 1000$ إلى رصيدك.</p>
           </div>
         )}
 

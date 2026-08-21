@@ -29,9 +29,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   const [startingCash, setStartingCash] = useState<number>(1500);
   const [quickMode, setQuickMode] = useState<boolean>(false);
   const [bankBoostActive, setBankBoostActive] = useState<boolean>(false);
+  const [showBoosts, setShowBoosts] = useState<boolean>(false);
   
   const canShowAds = !isNativePlatform();
   const timeShieldAvailable = canShowAds && localStorage.getItem('timeShieldDate') !== new Date().toDateString();
+  const revivalAvailable = canShowAds && localStorage.getItem('revivalDate') !== new Date().toDateString();
 
   // Home preview dice
   const [previewDice, setPreviewDice] = useState<[number, number]>([5, 6]);
@@ -67,6 +69,14 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       localStorage.setItem('hasTimeShield', 'true');
       localStorage.setItem('timeShieldDate', new Date().toDateString());
       // Force re-render to update UI
+      setBotCount(prev => prev);
+    });
+  };
+
+  const handleChargeRevival = () => {
+    handleRewardAd(() => {
+      localStorage.setItem('hasRevival', 'true');
+      localStorage.setItem('revivalDate', new Date().toDateString());
       setBotCount(prev => prev);
     });
   };
@@ -301,43 +311,81 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             {/* Ad-based Boosts (Web Only) */}
             {canShowAds && (
               <div className="flex flex-col gap-2 mt-2">
-                {/* Bank Boost */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                  <div>
-                    <span style={{ fontWeight: 900, color: '#34d399', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      💰 تعزيز رصيد البداية (+10% كاش)
-                    </span>
-                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>شاهد إعلاناً قصيراً لتبدأ الجولة برصيد إضافي.</span>
-                  </div>
-                  <button 
-                    onClick={handleToggleBankBoost}
-                    className={`btn btn-sm ${bankBoostActive ? 'btn-emerald' : 'btn-outline'}`}
-                    style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-                  >
-                    {bankBoostActive ? 'مُفعل ✓' : 'تفعيل'}
-                  </button>
-                </div>
+                <button
+                  onClick={() => setShowBoosts(!showBoosts)}
+                  className="btn w-full flex items-center justify-between shadow-md py-3 transition-all hover:brightness-110"
+                  style={{ background: 'linear-gradient(to right, #1e293b, #0f172a)', border: '1px solid #334155' }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 900, color: '#fcd34d' }}>
+                    🎁 مكافآت وتعزيزات (إعلانات)
+                  </span>
+                  <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
+                    {showBoosts ? 'إخفاء ▲' : 'إظهار ▼'}
+                  </span>
+                </button>
 
-                {/* Time Shield */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                  <div>
-                    <span style={{ fontWeight: 900, color: '#38bdf8', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      ⚡ شحن درع المهلة (+20 ثانية)
-                    </span>
-                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{timeShieldAvailable ? 'شاهد إعلاناً واحصل على درع طوارئ (مرة يومياً).' : 'تم شحن الدرع اليوم أو هو متوفر لديك!'}</span>
+                {showBoosts && (
+                  <div className="flex flex-col gap-2 animate-fadeIn p-3 rounded-xl" style={{ background: 'rgba(15, 23, 42, 0.4)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    {/* Bank Boost */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                      <div>
+                        <span style={{ fontWeight: 900, color: '#34d399', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          💰 تعزيز رصيد البداية (+10%)
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>شاهد إعلاناً لتبدأ برصيد أعلى.</span>
+                      </div>
+                      <button 
+                        onClick={handleToggleBankBoost}
+                        className={`btn btn-sm ${bankBoostActive ? 'btn-emerald' : 'btn-outline'}`}
+                        style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                      >
+                        {bankBoostActive ? 'مُفعل ✓' : 'تفعيل'}
+                      </button>
+                    </div>
+
+                    {/* Time Shield */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                      <div>
+                        <span style={{ fontWeight: 900, color: '#38bdf8', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          ⚡ درع المهلة (+20 ثانية)
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{timeShieldAvailable ? 'احصل على وقت إضافي لحالات الطوارئ.' : 'تم شحن الدرع بنجاح!'}</span>
+                      </div>
+                      {timeShieldAvailable ? (
+                        <button 
+                          onClick={handleChargeTimeShield}
+                          className="btn btn-sm btn-outline"
+                          style={{ fontSize: '0.8rem', padding: '6px 12px', color: '#38bdf8', borderColor: '#38bdf8' }}
+                        >
+                          شحن الآن
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#38bdf8' }}>مشحون 🔋</span>
+                      )}
+                    </div>
+
+                    {/* Revival Boost */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '12px', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
+                      <div>
+                        <span style={{ fontWeight: 900, color: '#f87171', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          ❤️ رصيد إنقاذ (1000$)
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{revivalAvailable ? 'اشحن رصيد إنقاذ للطوارئ عند الإفلاس.' : 'رصيد الإنقاذ جاهز للاستخدام!'}</span>
+                      </div>
+                      {revivalAvailable ? (
+                        <button 
+                          onClick={handleChargeRevival}
+                          className="btn btn-sm btn-outline"
+                          style={{ fontSize: '0.8rem', padding: '6px 12px', color: '#f87171', borderColor: '#f87171' }}
+                        >
+                          شحن الآن
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#f87171' }}>مشحون ❤️</span>
+                      )}
+                    </div>
                   </div>
-                  {timeShieldAvailable ? (
-                    <button 
-                      onClick={handleChargeTimeShield}
-                      className="btn btn-sm btn-outline"
-                      style={{ fontSize: '0.8rem', padding: '6px 12px', color: '#38bdf8', borderColor: '#38bdf8' }}
-                    >
-                      شحن الآن
-                    </button>
-                  ) : (
-                    <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#38bdf8' }}>مشحون 🔋</span>
-                  )}
-                </div>
+                )}
               </div>
             )}
 
