@@ -110,8 +110,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const prep = GameEngine.prepareRoll(stateToRoll, customDice);
     const playerId = prep.state.players[prep.state.currentTurnIndex].id;
 
-    // First update the state with the dice roll values
+    // First update the state with the dice roll values to trigger 3D dice animation
     await updateAndBroadcastState(prep.state);
+
+    // Wait for the 3D dice animation to finish (approx 2 seconds)
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // If 3 doubles or stayed in jail, no pawn movement
     if (prep.wentToJail || prep.stayedInJail || prep.stepsToMove === 0) {
