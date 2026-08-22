@@ -15,6 +15,7 @@ export const AdsterraMobileBanner: React.FC = () => {
         height="50"
         frameBorder="0"
         scrolling="no"
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
         style={{ display: 'block', width: '320px', height: '50px' }}
       />
     </div>
