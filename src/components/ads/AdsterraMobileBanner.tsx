@@ -25,7 +25,7 @@ export const AdsterraMobileBanner: React.FC = () => {
             'params' : {}
           };
         </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/98cfc8d8c2810931e9c8cb1a4bb66c2c/invoke.js"></script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/98cfc8d8c2810931e9c8cb1a4bb66c2c/invoke.js"></script>
       </body>
     </html>
   `;

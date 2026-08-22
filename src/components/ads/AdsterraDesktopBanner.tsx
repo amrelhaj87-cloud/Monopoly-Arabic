@@ -25,7 +25,7 @@ export const AdsterraDesktopBanner: React.FC = () => {
             'params' : {}
           };
         </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/f31a297fcbc2dfc18b704c32b90b84df/invoke.js"></script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/f31a297fcbc2dfc18b704c32b90b84df/invoke.js"></script>
       </body>
     </html>
   `;
