@@ -557,6 +557,7 @@ button:active {
 @media (min-width: 1024px) {
   .game-board-area {
     flex: 1;
+    min-width: 0;
     order: 2;
     min-height: 60vh;
     justify-content: center;
