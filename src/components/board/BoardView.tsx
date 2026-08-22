@@ -41,9 +41,9 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
         const scale = Math.min(targetW / 1080, 1);
         setBoardScale(scale);
       } else {
-        // On desktop, we have sidebar (~280px). If screen >= 1280 (xl), we also have 180px ad banner.
+        // On desktop, we have sidebar (~280px). If screen >= 1280 (xl), we also have 300px ad banner.
         const hasAdBanner = screenW >= 1280;
-        const reservedWidth = hasAdBanner ? (280 + 180 + 48) : (280 + 32); // plus flex gaps
+        const reservedWidth = hasAdBanner ? (280 + 300 + 48) : (280 + 32); // plus flex gaps
         
         const maxAvailableWidth = screenW - reservedWidth;
         const parentW = wrapperRef.current?.parentElement?.clientWidth;

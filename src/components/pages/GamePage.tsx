@@ -86,7 +86,7 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
       </div>
 
       {/* Desktop Ad Banner (Left side in RTL layout) */}
-      <div className="hidden xl:flex w-[180px] shrink-0 justify-center items-start pt-4 order-3 bg-slate-900/50 min-h-screen">
+      <div className="hidden xl:flex w-[300px] shrink-0 justify-center items-start pt-4 order-3 bg-slate-900/50 min-h-screen">
         <AdsterraDesktopBanner />
       </div>
 
