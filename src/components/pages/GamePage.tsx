@@ -13,6 +13,8 @@ import { PropertyDetailModal } from '../modals/PropertyDetailModal';
 import { WinnerModal } from '../modals/WinnerModal';
 import { BankruptcyConfirmModal } from '../modals/BankruptcyConfirmModal';
 import { useGame } from '../../context/GameContext';
+import { AdsterraDesktopBanner } from '../ads/AdsterraDesktopBanner';
+import { AdsterraMobileBanner } from '../ads/AdsterraMobileBanner';
 
 interface GamePageProps {
   is3D: boolean;
@@ -65,7 +67,7 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
   }, [declareBankruptcy]);
 
   return (
-    <div className="game-page-layout animate-fadeIn">
+    <div className="game-page-layout animate-fadeIn pb-14 xl:pb-0">
       {/* Sidebar: Players HUD, Persistent My Properties, Live Chat */}
       <div className="game-sidebar">
         <PlayerListHUD />
@@ -81,6 +83,16 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
           onOpenTrade={() => setShowTradeModal(true)}
           onDeclareBankruptcy={handleBankruptcyRequest}
         />
+      </div>
+
+      {/* Desktop Ad Banner (Left side in RTL layout) */}
+      <div className="hidden xl:flex w-[180px] shrink-0 justify-center items-start pt-4">
+        <AdsterraDesktopBanner />
+      </div>
+
+      {/* Mobile Ad Banner (Fixed at the bottom) */}
+      <div className="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 py-1 flex justify-center">
+        <AdsterraMobileBanner />
       </div>
 
       {/* In-Game Action Modals */}

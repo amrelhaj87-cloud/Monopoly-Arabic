@@ -7,6 +7,7 @@ import { AIService } from '../services/aiService';
 import { audioService } from '../services/audioService';
 import { BOARD_TILES } from '../constants/boardData';
 import { useAuth } from './AuthContext';
+import { AdRewardService, RewardType } from '../services/AdRewardService';
 
 interface GameContextType {
   room: Room | null;
@@ -29,7 +30,7 @@ interface GameContextType {
   updateRoomSettings: (newSettings: Partial<GameSettings>) => Promise<void>;
   sendChatMessage: (text: string) => Promise<void>;
   startRoomGame: () => Promise<void>;
-  startSinglePlayerGame: (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings, bankBoostActive?: boolean) => void;
+  startSinglePlayerGame: (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings) => void;
   // Game In-Play Actions
   rollDice: () => void;
   buyCurrentProperty: () => void;
@@ -49,6 +50,7 @@ interface GameContextType {
   declareBankruptcy: () => void;
   addTurnTime: (seconds: number) => void;
   grantRevival: (amount: number) => void;
+  useTimeShield: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -457,13 +459,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await updateAndBroadcastState(initialGameState);
   };
 
-  const startSinglePlayerGame = (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings, bankBoostActive?: boolean) => {
+  const startSinglePlayerGame = (botCount: number, botDifficulty: 'easy' | 'medium' | 'hard', settings: GameSettings) => {
     const hostUser = user || {
       uid: 'player_local_1',
       displayName: 'أنت',
       photoURL: '👳‍♂️',
       selectedToken: 'falcon'
     };
+
+    const activePerks = AdRewardService.consumeActivePerks(hostUser.uid);
+    const bankBoostActive = activePerks.includes('bankBoost');
 
     const members: RoomMember[] = [
       {
@@ -513,8 +518,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       messages: []
     };
 
-    const initial = GameEngine.createInitialGameState(roomId, members, settings);
-    soloRoom.gameState = initial;
+    const initial = GameEngine.createInitialGameState(roomId, members, settings, activePerks);
     setRoom(soloRoom);
     setGameState(initial);
     audioService.playCash();
@@ -718,6 +722,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateAndBroadcastState(newState);
   };
 
+  const useTimeShield = useCallback(() => {
+    if (!gameState || !user) return;
+    const newState = GameEngine.applyTimeShield(gameState, user.uid);
+    updateAndBroadcastState(newState);
+  }, [gameState, user, updateAndBroadcastState]);
+
   return (
     <GameContext.Provider
       value={{
@@ -758,7 +768,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         endCurrentTurn,
         declareBankruptcy,
         addTurnTime,
-        grantRevival
+        grantRevival,
+        useTimeShield
       }}
     >
       {children}

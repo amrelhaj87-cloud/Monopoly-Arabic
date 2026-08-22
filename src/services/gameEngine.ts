@@ -8,7 +8,7 @@ export class GameEngine {
   /**
    * Initialize a new game state from room members and settings
    */
-  public static createInitialGameState(roomId: string, members: RoomMember[], settings: GameSettings): GameState {
+  public static createInitialGameState(roomId: string, members: RoomMember[], settings: GameSettings, hostActivePerks?: string[]): GameState {
     const players: Player[] = members.map(m => ({
       id: m.id,
       name: m.name,
@@ -31,7 +31,8 @@ export class GameEngine {
         totalRentPaid: 0,
         propertiesBought: 0,
         doublesRolled: 0
-      }
+      },
+      activePerks: m.isHost ? hostActivePerks : undefined
     }));
 
     // Quick Mode: Distribute 2 random unowned properties to each player if enabled
@@ -74,6 +75,22 @@ export class GameEngine {
       isPaused: false,
       version: 1
     };
+  }
+
+  /**
+   * Apply Time Shield Perk (adds 20 seconds to current turn)
+   */
+  public static applyTimeShield(state: GameState, playerId: string): GameState {
+    const newState = this.clone(state);
+    const player = newState.players.find(p => p.id === playerId);
+    
+    if (player && player.activePerks?.includes('timeShield') && !player.hasUsedTimeShield && newState.currentTurnIndex === newState.players.indexOf(player)) {
+      player.hasUsedTimeShield = true;
+      newState.remainingTurnTime += 20;
+      this.addLog(newState, 'system', `قام ${player.name} باستخدام درع الوقت! (+20 ثانية)`);
+    }
+    
+    return newState;
   }
 
   /**
@@ -985,6 +1002,13 @@ export class GameEngine {
     const newState = this.clone(state);
     const player = newState.players.find(p => p.id === playerId);
     if (!player || player.isBankrupt) return newState;
+
+    if (player.activePerks?.includes('secondChance') && !player.hasUsedRevival) {
+      player.hasUsedRevival = true;
+      player.cash = Math.max(0, player.cash) + 500;
+      this.addLog(newState, 'system', `✨ استخدم ${player.name} بطاقة الفرصة الثانية! نجا من الإفلاس وحصل على 500 كاش.`, player.id);
+      return newState;
+    }
 
     player.isBankrupt = true;
     player.cash = 0;

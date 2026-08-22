@@ -6,7 +6,8 @@ import { GameSettings } from '../../types/game';
 import { Dice3D } from '../dice/Dice3D';
 import { audioService } from '../../services/audioService';
 import { ar } from '../../locales/ar';
-import { isNativePlatform, handleRewardAd } from '../../services/adService';
+import { isNativePlatform } from '../../services/adService';
+import { AdRewardService, RewardType } from '../../services/AdRewardService';
 
 interface MainMenuProps {
   onOpenCreateRoom: () => void;
@@ -28,12 +29,13 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   const [botDifficulty, setBotDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [startingCash, setStartingCash] = useState<number>(1500);
   const [quickMode, setQuickMode] = useState<boolean>(false);
-  const [bankBoostActive, setBankBoostActive] = useState<boolean>(false);
   const [showBoosts, setShowBoosts] = useState<boolean>(false);
   
   const canShowAds = !isNativePlatform();
-  const timeShieldAvailable = canShowAds && localStorage.getItem('timeShieldDate') !== new Date().toDateString();
-  const revivalAvailable = canShowAds && localStorage.getItem('revivalDate') !== new Date().toDateString();
+  const claimedToday = user ? AdRewardService.getClaimedToday(user.uid) : [];
+  const timeShieldAvailable = canShowAds && !claimedToday.includes('timeShield');
+  const revivalAvailable = canShowAds && !claimedToday.includes('revival');
+  const bankBoostAvailable = canShowAds && !claimedToday.includes('bankBoost');
 
   // Home preview dice
   const [previewDice, setPreviewDice] = useState<[number, number]>([5, 6]);
@@ -61,34 +63,24 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       freeParkingJackpot: true,
       quickMode
     };
-    startSinglePlayerGame(botCount, botDifficulty, settings, bankBoostActive);
+    startSinglePlayerGame(botCount, botDifficulty, settings);
   };
 
-  const handleChargeTimeShield = () => {
-    handleRewardAd(() => {
-      localStorage.setItem('hasTimeShield', 'true');
-      localStorage.setItem('timeShieldDate', new Date().toDateString());
-      // Force re-render to update UI
-      setBotCount(prev => prev);
-    });
-  };
-
-  const handleChargeRevival = () => {
-    handleRewardAd(() => {
-      localStorage.setItem('hasRevival', 'true');
-      localStorage.setItem('revivalDate', new Date().toDateString());
-      setBotCount(prev => prev);
-    });
-  };
-
-  const handleToggleBankBoost = () => {
-    if (!bankBoostActive) {
-      handleRewardAd(() => {
-        setBankBoostActive(true);
-      });
-    } else {
-      setBankBoostActive(false);
+  const handleClaimReward = (perk: RewardType) => {
+    if (!user?.uid) return;
+    
+    const newWindow = window.open('https://omg10.com/4/11626921', '_blank');
+    
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+      alert('عذراً، متصفحك يمنع النوافذ المنبثقة أو يفعل مانع الإعلانات. يرجى السماح بها للحصول على المكافأة.');
+      return;
     }
+    
+    // Simulate slight delay before granting for UX
+    setTimeout(() => {
+      AdRewardService.claimReward(user.uid, perk);
+      setBotCount(prev => prev); // force re-render
+    }, 1500);
   };
 
   return (
@@ -332,15 +324,19 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                         <span style={{ fontWeight: 900, color: '#34d399', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           💰 تعزيز رصيد البداية (+10%)
                         </span>
-                        <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>شاهد إعلاناً لتبدأ برصيد أعلى.</span>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{bankBoostAvailable ? 'شاهد إعلاناً لتبدأ برصيد أعلى.' : 'رصيد البداية معزز ومفعل!'}</span>
                       </div>
-                      <button 
-                        onClick={handleToggleBankBoost}
-                        className={`btn btn-sm ${bankBoostActive ? 'btn-emerald' : 'btn-outline'}`}
-                        style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-                      >
-                        {bankBoostActive ? 'مُفعل ✓' : 'تفعيل'}
-                      </button>
+                      {bankBoostAvailable ? (
+                        <button 
+                          onClick={() => handleClaimReward('bankBoost')}
+                          className="btn btn-sm btn-outline"
+                          style={{ fontSize: '0.8rem', padding: '6px 12px', color: '#34d399', borderColor: '#34d399' }}
+                        >
+                          تفعيل الآن
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#34d399' }}>مُفعل ✓</span>
+                      )}
                     </div>
 
                     {/* Time Shield */}
@@ -353,7 +349,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                       </div>
                       {timeShieldAvailable ? (
                         <button 
-                          onClick={handleChargeTimeShield}
+                          onClick={() => handleClaimReward('timeShield')}
                           className="btn btn-sm btn-outline"
                           style={{ fontSize: '0.8rem', padding: '6px 12px', color: '#38bdf8', borderColor: '#38bdf8' }}
                         >
@@ -374,7 +370,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                       </div>
                       {revivalAvailable ? (
                         <button 
-                          onClick={handleChargeRevival}
+                          onClick={() => handleClaimReward('revival')}
                           className="btn btn-sm btn-outline"
                           style={{ fontSize: '0.8rem', padding: '6px 12px', color: '#f87171', borderColor: '#f87171' }}
                         >

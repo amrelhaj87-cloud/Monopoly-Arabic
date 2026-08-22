@@ -22,7 +22,8 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
     endCurrentTurn,
     payJailBail,
     useJailCard,
-    addTurnTime
+    addTurnTime,
+    useTimeShield
   } = useGame();
 
   const logContainerRef = useRef<HTMLDivElement>(null);
@@ -185,12 +186,9 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
             )}
 
             {/* Time Shield Ad Button (Web Only) */}
-            {isMyTurn && !isMovingPawn && !isNativePlatform() && localStorage.getItem('hasTimeShield') === 'true' && (
+            {isMyTurn && !isMovingPawn && myPlayer && myPlayer.activePerks?.includes('timeShield') && !myPlayer.hasUsedTimeShield && (
               <button 
-                onClick={() => {
-                  localStorage.removeItem('hasTimeShield');
-                  addTurnTime(20);
-                }} 
+                onClick={useTimeShield} 
                 className="btn btn-sm w-full shadow-lg py-2 mt-2 text-xs font-black transition-all hover:brightness-110"
                 style={{ backgroundColor: '#0ea5e9', color: 'white', borderColor: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
               >

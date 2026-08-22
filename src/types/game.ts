@@ -66,6 +66,8 @@ export interface Player {
     doublesRolled: number;
   };
   hasUsedRevival?: boolean;
+  activePerks?: string[]; // Array of RewardTypes
+  hasUsedTimeShield?: boolean;
 }
 
 export interface Card {
