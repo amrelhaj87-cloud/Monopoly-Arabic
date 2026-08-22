@@ -38,8 +38,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToSettings }) => {
       <RulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
 
       {/* Copyright Footer */}
-      <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
-        <p className="text-[10px] text-slate-500/60 font-medium">{ar.home.copyright}</p>
+      <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none flex flex-col gap-0.5">
+        <p className="text-[10px] text-slate-500/60 font-medium">جميع الحقوق محفوظة ©</p>
+        <p className="text-[10px] text-slate-500/60 font-medium">zerocold 2026</p>
       </div>
     </div>
   );
