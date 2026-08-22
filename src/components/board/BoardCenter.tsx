@@ -172,9 +172,13 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
           {/* Roll / End Turn Buttons */}
           <div className="w-full">
             {canRoll && (
-              <button onClick={rollDice} className="btn btn-gold btn-sm w-full shadow-lg py-2.5 text-sm font-black animate-bounce-gentle">
-                <Dices size={16} />
-                ارمِ النرد! 🎲
+              <button 
+                onClick={rollDice} 
+                className="w-full bg-[#f59e0b] hover:bg-[#fbbf24] text-[#0f172a] shadow-[0_4px_20px_rgba(245,158,11,0.4)] rounded-full py-3 px-4 text-[15px] font-black flex items-center justify-center gap-2 transition-all active:scale-95 animate-bounce-gentle"
+              >
+                <span className="text-lg">🎲</span>
+                <span>ارم النرد وانطلق!</span>
+                <Dices size={18} className="opacity-80" />
               </button>
             )}
 

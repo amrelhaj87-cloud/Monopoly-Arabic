@@ -8,7 +8,6 @@ import { GamePage } from './components/pages/GamePage';
 import { RoomLobby } from './components/lobby/RoomLobby';
 import { RulesModal } from './components/common/RulesModal';
 import { ContactDevModal } from './components/modals/ContactDevModal';
-import { AdTestPage } from './components/pages/AdTestPage';
 
 export const App: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -122,11 +121,6 @@ export const App: React.FC = () => {
           <GamePage is3D={is3D} />
         )}
 
-        {/* AD TEST PAGE */}
-        {currentPage === 'ad-test' && (
-          <AdTestPage onNavigateHome={() => setCurrentPage('home')} />
-        )}
-
         {/* 3. HOME / LOBBY PAGE */}
         {currentPage === 'home' && (
           <>
@@ -137,7 +131,6 @@ export const App: React.FC = () => {
               /* If in Home Main Menu / Welcome */
               <HomePage 
                 onNavigateToSettings={() => setCurrentPage('settings')} 
-                onNavigateToAdTest={() => setCurrentPage('ad-test')}
               />
             )}
           </>

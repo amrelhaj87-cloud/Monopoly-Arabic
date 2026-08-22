@@ -134,15 +134,15 @@ export const Dice3D: React.FC<Dice3DProps> = ({
       {/* Dice Cubes Interactive Area */}
       <div
         onClick={canRoll && !animating ? onRollClick : undefined}
-        className={`flex items-center gap-3.5 px-4 py-2 rounded-2xl transition-all ${
+        className={`relative flex items-center justify-center gap-4 px-8 py-5 rounded-[24px] transition-all mb-4 ${
           canRoll
-            ? 'cursor-pointer hover:bg-slate-900/90 active:scale-95 ring-2 ring-amber-400/50 shadow-lg shadow-amber-500/20 bg-slate-950/80'
-            : 'bg-slate-950/50'
-        } border border-slate-700/60`}
+            ? 'cursor-pointer hover:bg-[#131d38] active:scale-95 shadow-[0_0_30px_rgba(245,158,11,0.15)] bg-[#0f172a] border-2 border-amber-500/80'
+            : 'bg-[#0f172a]/80 border-2 border-amber-500/30'
+        }`}
         title={canRoll ? 'انقر هنا لرمي النرد!' : undefined}
       >
         {/* Die 1 */}
-        <div className="flex flex-col items-center gap-1.5">
+        <div className="flex flex-col items-center gap-2">
           <div 
             className={`dice-cube-large ${canRoll ? 'dice-clickable' : ''} ${
               animating ? 'dice-rolling-1' : ''
@@ -150,16 +150,16 @@ export const Dice3D: React.FC<Dice3DProps> = ({
           >
             {renderDiceFace(val1)}
           </div>
-          <span className="text-xs font-mono font-black bg-slate-950 text-amber-400 border border-amber-500/60 px-2.5 py-0.5 rounded-full shadow-sm">
-            {val1}
-          </span>
+          <div className="w-4 h-6 border border-amber-500/50 rounded-full flex items-center justify-center bg-[#080c17]">
+            <span className="text-[10px] font-black text-amber-500 font-mono">{val1}</span>
+          </div>
         </div>
 
         {/* Plus Symbol */}
-        <span className="text-xl font-black text-amber-400/80 drop-shadow-sm">+</span>
+        <span className="text-xl font-black text-amber-500 drop-shadow-sm mb-6">+</span>
 
         {/* Die 2 */}
-        <div className="flex flex-col items-center gap-1.5">
+        <div className="flex flex-col items-center gap-2">
           <div 
             className={`dice-cube-large ${canRoll ? 'dice-clickable' : ''} ${
               animating ? 'dice-rolling-2' : ''
@@ -167,27 +167,28 @@ export const Dice3D: React.FC<Dice3DProps> = ({
           >
             {renderDiceFace(val2)}
           </div>
-          <span className="text-xs font-mono font-black bg-slate-950 text-amber-400 border border-amber-500/60 px-2.5 py-0.5 rounded-full shadow-sm">
-            {val2}
-          </span>
-        </div>
-      </div>
-
-      {/* Dice Result / Total Steps Banner */}
-      <div className="mt-2.5 flex items-center gap-2 flex-wrap justify-center">
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-amber-500/70 px-4 py-1 rounded-full shadow-md flex items-center gap-2 text-xs font-bold">
-          <span className="text-slate-400">المجموع:</span>
-          <span className="text-base font-black font-mono text-amber-300 drop-shadow">
-            {total}
-          </span>
-          <span className="text-slate-300">خطوات</span>
+          <div className="w-4 h-6 border border-amber-500/50 rounded-full flex items-center justify-center bg-[#080c17]">
+            <span className="text-[10px] font-black text-amber-500 font-mono">{val2}</span>
+          </div>
         </div>
 
-        {/* Doubles Flare */}
-        {isDouble && !animating && (
-          <div className="bg-gradient-to-r from-amber-600 to-rose-600 border border-amber-300 px-3 py-1 rounded-full shadow-lg flex items-center gap-1 text-xs font-black text-white animate-bounce-gentle">
-            <Flame size={14} className="text-yellow-300 animate-pulse" />
-            <span>دبل ({val1} + {val2})!</span>
+        {/* Overlapping Bottom Badges */}
+        {!animating && (
+          <div className="absolute -bottom-3.5 left-0 right-0 flex items-center justify-center gap-2">
+            {isDouble && (
+              <div className="bg-gradient-to-r from-red-600 to-rose-600 border border-amber-400 px-3 py-0.5 rounded-full shadow-lg flex items-center gap-1.5 text-[11px] font-black text-white animate-bounce-gentle z-10">
+                <Flame size={12} className="text-yellow-300 animate-pulse" />
+                <span>دبل ({val1} + {val2})!</span>
+              </div>
+            )}
+            
+            <div className="bg-[#0f172a] border border-amber-500/80 px-4 py-0.5 rounded-full shadow-lg flex items-center gap-1.5 text-[11px] font-bold z-10">
+              <span className="text-slate-300">المجموع:</span>
+              <span className="text-sm font-black font-mono text-amber-400 drop-shadow">
+                {total}
+              </span>
+              <span className="text-slate-300">خطوات</span>
+            </div>
           </div>
         )}
       </div>

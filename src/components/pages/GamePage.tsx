@@ -13,6 +13,8 @@ import { PropertyDetailModal } from '../modals/PropertyDetailModal';
 import { WinnerModal } from '../modals/WinnerModal';
 import { BankruptcyConfirmModal } from '../modals/BankruptcyConfirmModal';
 import { useGame } from '../../context/GameContext';
+import { AdsterraDesktopBanner } from '../ads/AdsterraDesktopBanner';
+import { AdsterraMobileBanner } from '../ads/AdsterraMobileBanner';
 
 interface GamePageProps {
   is3D: boolean;
@@ -81,6 +83,16 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
           onOpenTrade={() => setShowTradeModal(true)}
           onDeclareBankruptcy={handleBankruptcyRequest}
         />
+      </div>
+
+      {/* Desktop Ad Banner (Left side in RTL layout) */}
+      <div className="hidden xl:flex w-[180px] shrink-0 justify-center items-start pt-4 order-3 bg-slate-900/50 min-h-screen">
+        <AdsterraDesktopBanner />
+      </div>
+
+      {/* Mobile Ad Banner (Fixed at the bottom) */}
+      <div className="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 py-1 flex justify-center">
+        <AdsterraMobileBanner />
       </div>
 
       {/* In-Game Action Modals */}

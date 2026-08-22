@@ -2,20 +2,20 @@ import React from 'react';
 
 /**
  * Adsterra Desktop Banner Component
- * 300x250 size
- * Placement ID: 30868406
+ * 160x600 size
+ * Placement ID: 30861165
  */
 export const AdsterraDesktopBanner: React.FC = () => {
   return (
-    <div style={{ width: 300, height: 250, overflow: 'hidden' }}>
+    <div style={{ width: 160, height: 600, overflow: 'hidden' }}>
       <iframe
         title="Adsterra Desktop Ad"
         src="/ad-desktop.html"
-        width="300"
-        height="250"
+        width="160"
+        height="600"
         frameBorder="0"
         scrolling="no"
-        style={{ display: 'block', width: '300px', height: '250px' }}
+        style={{ display: 'block', width: '160px', height: '600px' }}
       />
     </div>
   );

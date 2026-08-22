@@ -6,7 +6,7 @@ import { useGame } from '../../context/GameContext';
 import { PlayerBlob } from './PlayerBlob';
 import { KofiButton } from './KofiButton';
 
-export type AppPage = 'home' | 'settings' | 'game' | 'ad-test';
+export type AppPage = 'home' | 'game' | 'settings' | 'rooms';
 
 interface TopBarProps {
   currentPage: AppPage;

@@ -41,7 +41,7 @@ export const BoardView: React.FC<BoardViewProps> = ({ is3D, onOpenManage, onOpen
         const scale = Math.min(targetW / 1080, 1);
         setBoardScale(scale);
       } else {
-        const clientWidth = wrapperRef.current?.parentElement?.clientWidth || (screenW - 300);
+        const clientWidth = wrapperRef.current?.parentElement?.clientWidth || (screenW - 180);
         const clientHeight = window.innerHeight - 100;
         const scaleX = (clientWidth - 20) / 1080;
         const scaleY = (clientHeight - 20) / 590;

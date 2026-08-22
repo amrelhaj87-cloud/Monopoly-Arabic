@@ -10,10 +10,9 @@ import { ar } from '../../locales/ar';
 
 interface HomePageProps {
   onNavigateToSettings: () => void;
-  onNavigateToAdTest: () => void;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({ onNavigateToSettings, onNavigateToAdTest }) => {
+export const HomePage: React.FC<HomePageProps> = ({ onNavigateToSettings }) => {
   const { user } = useAuth();
   const [showCreateRoom, setShowCreateRoom] = React.useState(false);
   const [showJoinRoom, setShowJoinRoom] = React.useState(false);
@@ -26,20 +25,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToSettings, onNavi
         <AuthModal isOpen={true} />
       ) : (
         /* Logged In Player Mode Hub */
-        <div className="flex flex-col items-center gap-6 w-full max-w-md">
-          <MainMenu
-            onOpenCreateRoom={() => setShowCreateRoom(true)}
-            onOpenJoinRoom={() => setShowJoinRoom(true)}
-            onOpenRules={() => setShowRules(true)}
-          />
-          
-          <button
-            onClick={onNavigateToAdTest}
-            className="w-full max-w-xs px-4 py-3 bg-amber-600/20 hover:bg-amber-600/40 text-amber-200 border border-amber-600/50 rounded-xl font-bold transition-colors"
-          >
-            اختبار الإعلانات (Test Page)
-          </button>
-        </div>
+        <MainMenu
+          onOpenCreateRoom={() => setShowCreateRoom(true)}
+          onOpenJoinRoom={() => setShowJoinRoom(true)}
+          onOpenRules={() => setShowRules(true)}
+        />
       )}
 
       {/* Action Modals */}
