@@ -57,73 +57,61 @@ export const Dice3D: React.FC<Dice3DProps> = ({
     switch (value) {
       case 1:
         return (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="dice-dot-red" />
+          <div className="dice-grid">
+            <div className="dice-cell-2-2 dice-dot-red" />
           </div>
         );
       case 2:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2.5">
-            <div className="dice-dot-black self-start" />
-            <div className="dice-dot-black self-end" />
+          <div className="dice-grid">
+            <div className="dice-cell-1-3 dice-dot-black" />
+            <div className="dice-cell-3-1 dice-dot-black" />
           </div>
         );
       case 3:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2.5">
-            <div className="dice-dot-black self-start" />
-            <div className="dice-dot-black self-center" />
-            <div className="dice-dot-black self-end" />
+          <div className="dice-grid">
+            <div className="dice-cell-1-3 dice-dot-black" />
+            <div className="dice-cell-2-2 dice-dot-black" />
+            <div className="dice-cell-3-1 dice-dot-black" />
           </div>
         );
       case 4:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2.5">
-            <div className="flex justify-between">
-              <div className="dice-dot-black" />
-              <div className="dice-dot-black" />
-            </div>
-            <div className="flex justify-between">
-              <div className="dice-dot-black" />
-              <div className="dice-dot-black" />
-            </div>
+          <div className="dice-grid">
+            <div className="dice-cell-1-1 dice-dot-black" />
+            <div className="dice-cell-1-3 dice-dot-black" />
+            <div className="dice-cell-3-1 dice-dot-black" />
+            <div className="dice-cell-3-3 dice-dot-black" />
           </div>
         );
       case 5:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2.5 relative">
-            <div className="flex justify-between">
-              <div className="dice-dot-black" />
-              <div className="dice-dot-black" />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="dice-dot-red w-3.5 h-3.5" />
-            </div>
-            <div className="flex justify-between">
-              <div className="dice-dot-black" />
-              <div className="dice-dot-black" />
-            </div>
+          <div className="dice-grid">
+            <div className="dice-cell-1-1 dice-dot-black" />
+            <div className="dice-cell-1-3 dice-dot-black" />
+            <div className="dice-cell-2-2 dice-dot-red-small" />
+            <div className="dice-cell-3-1 dice-dot-black" />
+            <div className="dice-cell-3-3 dice-dot-black" />
           </div>
         );
       case 6:
         return (
-          <div className="w-full h-full flex flex-col justify-between p-2">
-            <div className="flex justify-between">
-              <div className="dice-dot-black" />
-              <div className="dice-dot-black" />
-            </div>
-            <div className="flex justify-between">
-              <div className="dice-dot-black" />
-              <div className="dice-dot-black" />
-            </div>
-            <div className="flex justify-between">
-              <div className="dice-dot-black" />
-              <div className="dice-dot-black" />
-            </div>
+          <div className="dice-grid">
+            <div className="dice-cell-1-1 dice-dot-black" />
+            <div className="dice-cell-2-1 dice-dot-black" />
+            <div className="dice-cell-3-1 dice-dot-black" />
+            <div className="dice-cell-1-3 dice-dot-black" />
+            <div className="dice-cell-2-3 dice-dot-black" />
+            <div className="dice-cell-3-3 dice-dot-black" />
           </div>
         );
       default:
-        return <span className="text-xl font-black text-slate-900">{value}</span>;
+        return (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-xl font-black text-slate-900">{value}</span>
+          </div>
+        );
     }
   };
 
