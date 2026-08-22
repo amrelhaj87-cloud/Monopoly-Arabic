@@ -1,54 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Flame } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 interface Dice3DProps {
   dice: [number, number];
   isRolling?: boolean;
   onRollClick?: () => void;
   canRoll?: boolean;
+  hasCharityBonus?: boolean;
 }
 
 export const Dice3D: React.FC<Dice3DProps> = ({ 
   dice, 
   isRolling = false, 
   onRollClick, 
-  canRoll = false 
+  canRoll = false,
+  hasCharityBonus = false
 }) => {
   const [animating, setAnimating] = useState(false);
   const [displayValues, setDisplayValues] = useState<[number, number]>(dice);
-  const prevDiceRef = useRef<[number, number]>(dice);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Trigger animation whenever dice changes OR when isRolling is true
   useEffect(() => {
-    const hasChanged = prevDiceRef.current[0] !== dice[0] || prevDiceRef.current[1] !== dice[1];
-    prevDiceRef.current = dice;
-
-    if (isRolling || hasChanged) {
+    if (isRolling) {
       setAnimating(true);
-      
-      // Fast lightweight rapid tumble interval (60ms)
-      const interval = setInterval(() => {
+
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
+
+      intervalRef.current = setInterval(() => {
         setDisplayValues([
           Math.floor(Math.random() * 6) + 1,
           Math.floor(Math.random() * 6) + 1
         ]);
-      }, 60);
+      }, 50);
 
-      // Settle smoothly on real values at 480ms
-      const timeout = setTimeout(() => {
-        clearInterval(interval);
+      timerRef.current = setTimeout(() => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
         setDisplayValues(dice);
         setAnimating(false);
-      }, 480);
-
-      return () => {
-        clearInterval(interval);
-        clearTimeout(timeout);
-      };
+      }, 420);
     } else {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
       setDisplayValues(dice);
+      setAnimating(false);
     }
-  }, [dice, isRolling]);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [isRolling, dice[0], dice[1]]);
 
   const renderDiceFace = (value: number) => {
     switch (value) {
@@ -120,18 +123,15 @@ export const Dice3D: React.FC<Dice3DProps> = ({
           </div>
         );
       default:
-        return <span className="text-2xl font-black text-slate-900">{value}</span>;
+        return <span className="text-xl font-black text-slate-900">{value}</span>;
     }
   };
 
   const val1 = displayValues[0] || 1;
   const val2 = displayValues[1] || 1;
-  const isDouble = val1 === val2;
-  const total = val1 + val2;
 
   return (
     <div className="flex flex-col items-center justify-center my-1 select-none">
-      {/* Dice Cubes Interactive Area */}
       <div
         onClick={canRoll && !animating && !isRolling ? onRollClick : undefined}
         className={`flex items-center gap-2.5 p-2 rounded-2xl transition-all ${
@@ -141,7 +141,6 @@ export const Dice3D: React.FC<Dice3DProps> = ({
         }`}
         title={canRoll && !animating && !isRolling ? 'انقر هنا لرمي النرد!' : undefined}
       >
-        {/* Die 1 */}
         <div 
           className={`dice-cube-large ${canRoll && !animating && !isRolling ? 'dice-clickable' : ''} ${
             animating ? 'dice-rolling-1' : ''
@@ -150,14 +149,15 @@ export const Dice3D: React.FC<Dice3DProps> = ({
           {renderDiceFace(val1)}
         </div>
 
-        {/* Die 2 */}
-        <div 
-          className={`dice-cube-large ${canRoll && !animating && !isRolling ? 'dice-clickable' : ''} ${
-            animating ? 'dice-rolling-2' : ''
-          }`}
-        >
-          {renderDiceFace(val2)}
-        </div>
+        {true && (
+          <div 
+            className={`dice-cube-large ${canRoll && !animating && !isRolling ? 'dice-clickable' : ''} ${
+              animating ? 'dice-rolling-2' : ''
+            }`}
+          >
+            {renderDiceFace(val2)}
+          </div>
+        )}
       </div>
     </div>
   );
