@@ -94,7 +94,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({
               <div className="dice-dot-black" />
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="dice-dot-red w-4 h-4" />
+              <div className="dice-dot-red w-3.5 h-3.5" />
             </div>
             <div className="flex justify-between">
               <div className="dice-dot-black" />

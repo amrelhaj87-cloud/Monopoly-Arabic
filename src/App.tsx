@@ -94,7 +94,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col w-full bg-slate-950/40">
+    <div className="h-screen max-h-screen bg-[#050a0e] text-slate-100 flex flex-col font-arabic select-none overflow-hidden w-full">
       {/* Top Navigation Bar with clear Page Tabs */}
       <TopBar
         currentPage={currentPage}
@@ -106,7 +106,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Pages Router */}
-      <main className="flex-1 flex flex-col items-center justify-start p-1 sm:p-2 md:p-3 w-full max-w-[1680px] mx-auto overflow-x-hidden">
+      <main className="flex-1 flex flex-col items-center justify-start p-1 sm:p-2 md:p-3 w-full max-w-[1680px] mx-auto overflow-hidden min-h-0">
         {/* 1. SETTINGS PAGE */}
         {currentPage === 'settings' && (
           <SettingsPage

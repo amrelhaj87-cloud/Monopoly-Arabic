@@ -67,9 +67,9 @@ export const GamePage: React.FC<GamePageProps> = ({ is3D }) => {
   }, [declareBankruptcy]);
 
   return (
-    <div className="game-page-layout animate-fadeIn pb-14 xl:pb-0">
+    <div className="game-page-layout animate-fadeIn pb-14 xl:pb-0 h-full w-full min-h-0">
       {/* Sidebar: Players HUD, Persistent My Properties, Live Chat */}
-      <div className="game-sidebar">
+      <div className="game-sidebar shrink-0 overflow-y-auto">
         <PlayerListHUD />
         <MyPropertiesHUD />
         <GameChatDrawer />
