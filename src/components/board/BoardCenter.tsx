@@ -88,7 +88,7 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
         )}
       </div>
 
-      {/* 2. MIDDLE AREA: Log (Left) | Dice (Center) | Actions (Right) */}
+      {/* 2. MIDDLE AREA: Log (Left) | Dice+Main Actions (Center) | Extra Actions (Right) */}
       <div className="flex-1 w-full flex flex-row items-center justify-between px-2 sm:px-8 gap-4 my-2">
         
         {/* Right (Visual Left in RTL): Live Real-Time Activity Log Feed */}
@@ -134,9 +134,9 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
           </div>
         </div>
 
-        {/* Center: 3D Dice */}
-        <div className="flex flex-col items-center justify-center shrink-0">
-          <div className="transform scale-100">
+        {/* Center: 3D Dice and Primary Action Button */}
+        <div className="flex flex-col items-center justify-center shrink-0 w-[240px]">
+          <div className="transform scale-100 mb-2">
             <Dice3D 
               dice={gameState.dice} 
               isRolling={isMovingPawn} 
@@ -144,13 +144,53 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
               canRoll={canRoll}
             />
           </div>
+
+          {/* Roll / End Turn Buttons directly under Dice */}
+          <div className="w-full">
+            {canRoll && (
+              <button
+                onClick={rollDice}
+                className="mt-1.5 px-5 py-1.5 sm:py-2 w-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-lg shadow-amber-500/30 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-1.5 animate-bounce-gentle cursor-pointer"
+              >
+                <Dices size={16} />
+                <span>ارمي النرد وانطلق! 🚀</span>
+              </button>
+            )}
+
+            {canEndTurn && (
+              <button onClick={endCurrentTurn} className="btn btn-emerald btn-sm w-full shadow-lg py-2 text-sm font-black">
+                <ArrowRight size={16} />
+                إنهاء الدور 👉
+              </button>
+            )}
+
+            {!isMyTurn && !isMovingPawn && !canRoll && !canEndTurn && (
+              <div className="text-center py-2 text-[11px] text-slate-300 font-medium bg-slate-950/80 rounded-xl border border-slate-800 w-full">
+                {currentPlayer?.isBot ? (
+                  <span className="flex items-center justify-center gap-1.5 text-violet-300">
+                    <span className="inline-flex gap-0.5">
+                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </span>
+                    <span className="font-bold">{currentPlayer.name} بيفكر...</span>
+                    <span>🤖</span>
+                  </span>
+                ) : (
+                  <span>⏳ دور {currentPlayer?.name}</span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Left (Visual Right in RTL): Primary Action Buttons */}
-        <div className="w-[200px] shrink-0 flex flex-col items-center justify-center gap-3">
+        {/* Left (Visual Right in RTL): Secondary Actions */}
+        <div className="w-[200px] shrink-0 flex flex-col items-center justify-center gap-3 opacity-0">
+           {/* We keep this div to maintain flex-between balance, but we can put Jail info here if needed.
+               Wait, let's just make it transparent if it's empty, or put the actual items inside! */}
           {/* In-Jail Warning & Options for Active Player */}
           {currentPlayer.inJail && isMyTurn && !isMovingPawn && (
-            <div className="bg-rose-950/90 border border-rose-500/60 px-3 py-2 rounded-xl text-center text-xs shadow-lg flex flex-col items-center gap-2 w-full">
+            <div className="bg-rose-950/90 border border-rose-500/60 px-3 py-2 rounded-xl text-center text-xs shadow-lg flex flex-col items-center gap-2 w-full opacity-100">
               <span className="text-rose-200 font-bold text-[10px]">
                 🔒 في السجن ({currentPlayer.jailTurns + 1}/3)
               </span>
@@ -169,62 +209,23 @@ export const BoardCenter: React.FC<BoardCenterProps> = ({ onOpenManage, onOpenTr
             </div>
           )}
 
-          {/* Roll / End Turn Buttons */}
-          <div className="w-full">
-            {canRoll && (
-              <button 
-                onClick={rollDice} 
-                className="w-full bg-[#f59e0b] hover:bg-[#fbbf24] text-[#0f172a] shadow-[0_4px_20px_rgba(245,158,11,0.4)] rounded-full py-3 px-4 text-[15px] font-black flex items-center justify-center gap-2 transition-all active:scale-95 animate-bounce-gentle"
-              >
-                <span className="text-lg">🎲</span>
-                <span>ارم النرد وانطلق!</span>
-                <Dices size={18} className="opacity-80" />
-              </button>
-            )}
+          {/* Time Shield Ad Button (Web Only) */}
+          {isMyTurn && !isMovingPawn && myPlayer && myPlayer.activePerks?.includes('timeShield') && !myPlayer.hasUsedTimeShield && (
+            <button 
+              onClick={useTimeShield} 
+              className="btn btn-sm w-full shadow-lg py-2 text-xs font-black transition-all hover:brightness-110 opacity-100"
+              style={{ backgroundColor: '#0ea5e9', color: 'white', borderColor: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+            >
+              <Shield size={14} />
+              تفعيل درع الوقت (+20ث)
+            </button>
+          )}
 
-            {canEndTurn && (
-              <button onClick={endCurrentTurn} className="btn btn-emerald btn-sm w-full shadow-lg py-2.5 text-sm font-black">
-                <ArrowRight size={16} />
-                إنهاء الدور 👉
-              </button>
-            )}
-
-            {/* Time Shield Ad Button (Web Only) */}
-            {isMyTurn && !isMovingPawn && myPlayer && myPlayer.activePerks?.includes('timeShield') && !myPlayer.hasUsedTimeShield && (
-              <button 
-                onClick={useTimeShield} 
-                className="btn btn-sm w-full shadow-lg py-2 mt-2 text-xs font-black transition-all hover:brightness-110"
-                style={{ backgroundColor: '#0ea5e9', color: 'white', borderColor: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-              >
-                <Shield size={14} />
-                تفعيل درع الوقت (+20ث)
-              </button>
-            )}
-
-            {isMovingPawn && (
-              <div className="text-center py-2 px-3 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold animate-pulse">
-                🏃‍♂️ جاري التقدم...
-              </div>
-            )}
-
-            {!isMyTurn && !isMovingPawn && !canRoll && !canEndTurn && (
-              <div className="text-center py-2 text-[11px] text-slate-300 font-medium bg-slate-950/80 rounded-xl border border-slate-800">
-                {currentPlayer?.isBot ? (
-                  <span className="flex items-center justify-center gap-1.5 text-violet-300">
-                    <span className="inline-flex gap-0.5">
-                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                    </span>
-                    <span className="font-bold">{currentPlayer.name} بيفكر...</span>
-                    <span>🤖</span>
-                  </span>
-                ) : (
-                  <span>⏳ دور {currentPlayer?.name}</span>
-                )}
-              </div>
-            )}
-          </div>
+          {isMovingPawn && (
+            <div className="text-center w-full py-2 px-3 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold animate-pulse opacity-100">
+              🏃‍♂️ جاري التقدم...
+            </div>
+          )}
         </div>
       </div>
 
