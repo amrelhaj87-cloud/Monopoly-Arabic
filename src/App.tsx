@@ -8,7 +8,6 @@ import { GamePage } from './components/pages/GamePage';
 import { RoomLobby } from './components/lobby/RoomLobby';
 import { RulesModal } from './components/common/RulesModal';
 import { ContactDevModal } from './components/modals/ContactDevModal';
-import { injectInPagePushBanner } from './services/adService';
 
 export const App: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -19,11 +18,6 @@ export const App: React.FC = () => {
   const [showRules, setShowRules] = useState<boolean>(false);
   const [showContactDev, setShowContactDev] = useState<boolean>(false);
   const initialRoomAttempted = useRef<boolean>(false);
-
-  // Inject Ads on App Mount (Web only)
-  useEffect(() => {
-    injectInPagePushBanner();
-  }, []);
 
   // Helper to extract room code from URL (path /room/ABC123, hash #/room/ABC123, or ?room=ABC123)
   const getRoomCodeFromUrl = useCallback((): string | null => {

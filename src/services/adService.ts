@@ -29,23 +29,3 @@ export const handleRewardAd = (callback: () => void) => {
     callback();
   }, 2000);
 };
-
-/**
- * Injects the Monetag In-Page Push banner script into the document body.
- * Only executes if on the web platform.
- */
-export const injectInPagePushBanner = () => {
-  if (isNativePlatform()) return;
-  
-  // Check if already injected
-  if (document.querySelector(`script[data-zone="11626918"]`)) return;
-
-  const script = document.createElement('script');
-  script.dataset.zone = '11626918';
-  script.src = 'https://nap5k.com/tag.min.js';
-
-  const targetNode = document.body || document.documentElement;
-  if (targetNode) {
-    targetNode.appendChild(script);
-  }
-};
